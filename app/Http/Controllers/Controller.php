@@ -12,8 +12,6 @@ class Controller extends BaseController
     use AuthorizesRequests, ValidatesRequests;
 
     public function index(){
-        $users = User::all();
         return view("welcome",compact('users'));
     }
-
 }

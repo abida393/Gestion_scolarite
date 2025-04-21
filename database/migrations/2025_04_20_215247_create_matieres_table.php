@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('nom_matiere');
             $table->unsignedBigInteger("module_id");
             $table->unsignedBigInteger("enseignant_id");
+            $table->unsignedBigInteger("etudiant_id");
+            $table->foreign('etudiant_id')->references('id')->on('etudiants');
             $table->foreign('module_id')->references('id')->on('modules');
             $table->foreign('enseignant_id')->references('id')->on('enseignants');
             $table->double("note");

@@ -13,11 +13,8 @@ return new class extends Migration
     {
         Schema::create('formations', function (Blueprint $table) {
             $table->id();
-            $table->string('formation');
-            $table->text('description');
+            $table->string('nom_formation');
             $table->double('prix');
-            $table->unsignedBigInteger('id_responsable');
-            $table->foreign('id_responsable')->references('id')->on('responsables');
             $table->timestamps();
         });
     }

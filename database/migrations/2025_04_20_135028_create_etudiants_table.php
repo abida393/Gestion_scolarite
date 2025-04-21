@@ -13,20 +13,22 @@ return new class extends Migration
     {
         Schema::create('etudiants', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger("type_profile");
             $table->unsignedBigInteger('centre_id');
-            $table->unsignedBigInteger('profile_id');
             $table->unsignedBigInteger('formation_id');
             $table->unsignedBigInteger('groupe_id');
+            $table->unsignedBigInteger('filiere_id');
+            $table->foreign('type_profile')->references('type_profile')->on('profiles');
             $table->foreign('centre_id')->references('id')->on('centres');
-            $table->foreign('profile_id')->references('id')->on('profiles');
             $table->foreign('formation_id')->references('id')->on('formations');
             $table->foreign('groupe_id')->references('id')->on('groupes');
-            $table->string('etudiant_matricule');
-            $table->string('etudiant_numero_dossier');
+            $table->foreign('filiere_id')->references('id')->on('filieres');
+            $table->string('etudiant_cin');
             $table->string('etudiant_serie_bac');
             $table->string('etudiant_cne');
             $table->string('etudiant_session_bac');
             $table->string('etudiant_mention_bac');
+            $table->date('annee_obtention_bac');
             $table->string('etudiant_nom');
             $table->string('etudiant_prenom');
             $table->date('etudiant_date_naissance');
@@ -34,13 +36,12 @@ return new class extends Migration
             $table->string('etudiant_sexe');
             $table->string('etudiant_nationalite');
             $table->string('PHOTOS');
-            $table->string('etudiant_adresse_postal');
+            $table->string('etudiant_adresse');
             $table->string('etudiant_code_postal');
             $table->boolean('DOSSIERCOMPLET');
             $table->string('ville');
             $table->integer('etudiant_tel');
             $table->string('etudiant_email');
-            $table->string('etudiant_email1');
             $table->string('nom_pere');
             $table->string('prenom_pere');
             $table->string('fonction_pere');

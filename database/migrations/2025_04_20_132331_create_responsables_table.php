@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger("centre_id");
             $table->unsignedBigInteger("profile_id");
+            $table->unsignedBigInteger("formation_id");
             $table->foreign("centre_id")->references("id")->on("centres");
-            $table->foreign("profile_id")->references("id")->on("profiles");
+            $table->foreign("profile_id")->references("type_profile")->on("profiles");
+            $table->foreign("formation_id")->references("id")->on("formations");
             $table->string("respo_nom");
             $table->string("respo_prenom");
             $table->string("respo_sex");
@@ -27,7 +29,7 @@ return new class extends Migration
             $table->date("respo_date_naissance");
             $table->string("respo_lieu_naissance");
             $table->string("respo_tel");
-            $table->string("respo_adresse_postale");
+            $table->string("respo_adresse");
             $table->string("respo_email");
             $table->string("respo_contrat");
             $table->date("respo_date_embauche");
