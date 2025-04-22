@@ -13,9 +13,7 @@ return new class extends Migration
     {
         Schema::create('enseignants', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('centre_id');
             $table->unsignedBigInteger('profile_id');
-            $table->foreign('centre_id')->references('id')->on('centres');
             $table->foreign('profile_id')->references('type_profile')->on('profiles');
             $table->string('enseignant_nom');
             $table->string('enseignant_prenom');

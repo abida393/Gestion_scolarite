@@ -14,14 +14,12 @@ return new class extends Migration
         Schema::create('etudiants', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger("type_profile");
-            $table->unsignedBigInteger('centre_id');
             $table->unsignedBigInteger('formation_id');
-            $table->unsignedBigInteger('groupe_id');
+            $table->unsignedBigInteger('classes_id');
             $table->unsignedBigInteger('filiere_id');
             $table->foreign('type_profile')->references('type_profile')->on('profiles');
-            $table->foreign('centre_id')->references('id')->on('centres');
             $table->foreign('formation_id')->references('id')->on('formations');
-            $table->foreign('groupe_id')->references('id')->on('groupes');
+            $table->foreign('classes_id')->references('id')->on('classes');
             $table->foreign('filiere_id')->references('id')->on('filieres');
             $table->string('etudiant_cin');
             $table->string('etudiant_serie_bac');

@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('matieres', function (Blueprint $table) {
+        Schema::create('periodes', function (Blueprint $table) {
             $table->id();
-            $table->string('nom_matiere');
             $table->unsignedBigInteger("module_id");
-            $table->foreign('module_id')->references('id')->on('modules');
-            $table->int('coefficient');
-            $table->unsignedBigInteger("enseignant_id");
-            $table->foreign('enseignant_id')->references('id')->on('enseignants');
+            $table->foreign("module_id")->references('id')->on('modeles');
+            $table->string('nom_periode')->default('semestre_1');
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('matieres');
+        Schema::dropIfExists('periodes');
     }
 };

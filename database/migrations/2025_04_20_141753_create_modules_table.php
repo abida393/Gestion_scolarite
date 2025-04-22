@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('modules', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger("filiere_id");
-            $table->foreign("filiere_id")->references("id")->on("filieres");
+            $table->unsignedBigInteger("classe_id");
+            $table->foreign("classe_id")->references("id")->on("classes");
             $table->string("nom_module");
             $table->boolean("status");
             $table->integer("nbr_matiere");
-            $table->double("note_general");
+            $table->unsignedBigInteger("note_general");
+            $table->foreign("note_generale")->references("note_general")->on("examens");
             $table->timestamps();
         });
     }
