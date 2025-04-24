@@ -17,8 +17,7 @@ return new class extends Migration
             $table->string('description');
             $table->string('entreprise');
             $table->string('duree');
-            $table->string('date_debut');
-            $table->string('date_fin');
+            $table->string('photo');
             $table->string('email_entreprise');
             $table->timestamps();
         });
