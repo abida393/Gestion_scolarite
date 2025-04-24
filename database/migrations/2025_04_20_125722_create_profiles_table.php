@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('examens', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger("matiere_id");
-            $table->foreign('matiere_id')->references('id')->on('matieres');
-            $table->Double("note1");
-            $table->Double("note2");
-            $table->double("note_general");
+        Schema::create('profiles', function (Blueprint $table) {
+            $table->unsignedBigInteger("type_profile")->primary();
+            $table->string("identifiant");
+            $table->string('email_ecole');
+            $table->string('password');
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('examens');
+        Schema::dropIfExists('profiles');
     }
 };

@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('periodes', function (Blueprint $table) {
+        Schema::create('news', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger("module_id");
-            $table->foreign("module_id")->references('id')->on('modules');
-            $table->string('nom_periode')->default('semestre_1');
+            $table->string('title');
+            $table->text('content');
+            $table->string('image');
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('periodes');
+        Schema::dropIfExists('news');
     }
 };

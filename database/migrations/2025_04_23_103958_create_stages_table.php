@@ -11,11 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('periodes', function (Blueprint $table) {
+        Schema::create('stages', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger("module_id");
-            $table->foreign("module_id")->references('id')->on('modules');
-            $table->string('nom_periode')->default('semestre_1');
+            $table->string('nom_stage');
+            $table->string('description');
+            $table->string('entreprise');
+            $table->string('duree');
+            $table->string('date_debut');
+            $table->string('date_fin');
+            $table->string('email_entreprise');
             $table->timestamps();
         });
     }
@@ -25,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('periodes');
+        Schema::dropIfExists('stages');
     }
 };

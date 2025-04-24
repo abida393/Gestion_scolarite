@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::create('responsables', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger("centre_id");
             $table->unsignedBigInteger("profile_id");
             $table->unsignedBigInteger("formation_id");
-            $table->foreign("centre_id")->references("id")->on("centres");
             $table->foreign("profile_id")->references("type_profile")->on("profiles");
             $table->foreign("formation_id")->references("id")->on("formations");
             $table->string("respo_nom");
