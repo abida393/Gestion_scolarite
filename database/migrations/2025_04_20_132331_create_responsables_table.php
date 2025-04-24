@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('responsables', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger("profile_id");
+            $table->string("type_profile");
             $table->unsignedBigInteger("formation_id");
-            $table->foreign("profile_id")->references("type_profile")->on("profiles");
+            $table->foreign("type_profile")->references("type_profile")->on("profiles");
             $table->foreign("formation_id")->references("id")->on("formations");
             $table->string("respo_nom");
             $table->string("respo_prenom");
