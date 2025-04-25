@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
         aide: "aide-page",
     };
 
-    navItems.forEach((item) => {
+    // navItems.forEach((item) => {
         // item.addEventListener("click", function (e) {
         //     // Retirer la classe active de tous les éléments
         //     navItems.forEach((navItem) => {
@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Mettre à jour le titre du header
         // const headerTitle = document.querySelector(".header-title");
         // headerTitle.textContent = this.querySelector("span").textContent;
-    });
+    // });
     // });
 
     // Gestion du formulaire
