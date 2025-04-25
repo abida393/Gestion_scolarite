@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger("id_etudiant");
             $table->foreign("id_etudiant")->references('id')->on('etudiants');
-            $table->unsignedBigInteger("nom_document");
-            $table->foreign("nom_document")->references('nom_document')->on('documents');
+            $table->unsignedBigInteger("id_document");
+            $table->foreign("id_document")->references('id')->on('documents');
             $table->string("etat_demande")->default("en attente");
             $table->timestamps();
         });

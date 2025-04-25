@@ -14,4 +14,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/',[Controller::class,'index']);
+//Route::get('/',[Controller::class,'index']);
+use App\Models\Etudiant;
+
+Route::get('/profil/{id}', function ($id) {
+    $etudiant = Etudiant::find($id);
+
+    if (!$etudiant) {
+        abort(404, 'Étudiant introuvable');
+    }
+
+    return view('profile', compact('etudiant'));
+});
+
+use App\Http\Controllers\PasswordController;
+
+Route::get('/change-password', [PasswordController::class, 'edit'])->name('password.edit');
+Route::post('/change-password', [PasswordController::class, 'update'])->name('password.update');

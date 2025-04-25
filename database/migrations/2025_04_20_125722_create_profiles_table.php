@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('profiles', function (Blueprint $table) {
             $table->unsignedBigInteger("type_profile")->primary();
+            $table->string("identifiant");
             $table->string('email_ecole');
             $table->string('password');
             $table->timestamps();

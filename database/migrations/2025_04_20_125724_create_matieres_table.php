@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nom_matiere');
             $table->unsignedBigInteger("module_id");
             $table->foreign('module_id')->references('id')->on('modules');
-            $table->int('coefficient');
+            $table->integer('coefficient');
             $table->unsignedBigInteger("enseignant_id");
             $table->foreign('enseignant_id')->references('id')->on('enseignants');
             $table->timestamps();

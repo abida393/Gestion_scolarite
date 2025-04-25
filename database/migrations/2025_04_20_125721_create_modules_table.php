@@ -18,8 +18,7 @@ return new class extends Migration
             $table->string("nom_module");
             $table->boolean("status");
             $table->integer("nbr_matiere");
-            $table->unsignedBigInteger("note_general");
-            $table->foreign("note_generale")->references("note_general")->on("examens");
+            $table->double("note_general");
             $table->timestamps();
         });
     }
