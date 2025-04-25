@@ -1,4 +1,4 @@
-<x-home titre="note-page" page_titre="note-page">
+<x-home titre="Page notes" page_titre="Page notes">
         <!-- Page notes -->
         <div id="notes-page">
             <!-- Contenu des notes -->

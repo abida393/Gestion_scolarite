@@ -36,5 +36,16 @@ class Controller extends BaseController
     public function aide(){
         return view("pages.Aide");
     }
-
+    public function paiement(){
+        return view("pages.paiement");
+    }
+    public function emploi(){
+        return view("pages.emploi");
+    }
+    public function messagerie(){
+        return view("pages.messagerie");
+    }
+    public function news(){
+        return view("pages.news");
+    }
 }

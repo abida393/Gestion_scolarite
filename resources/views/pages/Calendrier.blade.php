@@ -1,3 +1,3 @@
-<x-home titre="calendrier-page" page_titre="calendrier-page">
+<x-home titre="Page calendrier" page_titre="Page calendrier">
 
 </x-home>
