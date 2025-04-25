@@ -19,10 +19,11 @@ use Illuminate\Support\Facades\Route;
 
 // use App\Http\Controllers\TimetableController;
 
-Route::get('/welcome', [Controller::class, 'index'])->name('home');
+Route::get('/welcome', [Controller::class, 'index'])->name('home.welcome');
 Route::get('/mdpwrong', [Controller::class, 'mdpwrong'])->name('mdpwrong');
 Route::get('/newmdp', [Controller::class, 'newmdp'])->name('newmdp');
 Route::get('/calendar', [Controller::class, 'calendar'])->name('calendar');
+Route::get('/welcome', [App\Http\Controllers\HomeController::class, 'welcome'])->name('home.welcome');
 
 use App\Http\Controllers\EvenementController;
 

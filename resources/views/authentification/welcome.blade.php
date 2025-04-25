@@ -85,13 +85,13 @@
             <!-- Login form with 3D inputs -->
             <form method="POST" action="" class="space-y-6">
                 @csrf
-                <!-- Identifiant input with floating effect -->
-                <div class="relative transform transition-all duration-300 hover:-translate-y-1">
-        <div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 rounded-xl blur-sm -z-10"></div>
-        <i class="fas fa-user absolute left-4 top-1/2 transform -translate-y-1/2 text-primary/80"></i>
-        <input id="identifiant" type="text" name="identifiant" placeholder="Identifiant" required
-            class="w-full pl-12 pr-4 py-4 border border-gray-200/80 rounded-xl bg-white/90 focus:border-primary focus:ring-2 focus:ring-primary/30 outline-none shadow-sm transition-all duration-300 hover:shadow-md">
-    </div>
+                <!-- Email input with floating effect -->
+<div class="relative transform transition-all duration-300 hover:-translate-y-1">
+    <div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 rounded-xl blur-sm -z-10"></div>
+    <i class="fas fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-primary/80"></i>
+    <input id="email" type="email" name="email" placeholder="Email" required
+        class="w-full pl-12 pr-4 py-4 border border-gray-200/80 rounded-xl bg-white/90 focus:border-primary focus:ring-2 focus:ring-primary/30 outline-none shadow-sm transition-all duration-300 hover:shadow-md">
+</div>
 
                 <!-- Password input with floating effect -->
                 <div class="relative transform transition-all duration-300 hover:-translate-y-1">

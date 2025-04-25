@@ -62,7 +62,7 @@
             </div>
 
             <!-- Reset password form -->
-            <form method="POST" action="" class="space-y-6">
+            <form method="POST" action="{{ route('home.welcome') }}" class="space-y-6">
                 @csrf
                 <!-- New password input -->
                 <div class="relative transform transition-all duration-300 hover:-translate-y-1">
@@ -73,11 +73,12 @@
 </div>
 
                 <!-- Confirm password input -->
-                <div class="relative transform transition-all duration-300 hover:-translate-y-1">
+<div class="relative transform transition-all duration-300 hover:-translate-y-1">
     <div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 rounded-xl blur-sm -z-10"></div>
     <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-gradient-primary"></i>
     <input id="confirm-password" type="password" name="confirm-password" placeholder="Confirmer le mot de passe" required
         class="w-full pl-12 pr-4 py-4 border border-gray-200/80 rounded-xl bg-white/90 focus:border-primary focus:ring-2 focus:ring-primary/30 outline-none shadow-sm transition-all duration-300 hover:shadow-md">
+    <p id="error-message" class="text-red-500 text-sm mt-2 hidden">Les mots de passe ne correspondent pas.</p>
 </div>
 
                 <!-- Reset button -->
@@ -112,6 +113,27 @@
         resetContainer.addEventListener('mouseleave', () => {
             resetContainer.style.transform = 'rotateY(0) rotateX(0)';
         });
+        document.querySelector('form').addEventListener('submit', function (e) {
+        const newPassword = document.getElementById('new-password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+
+        // if (newPassword !== confirmPassword) {
+        //     e.preventDefault(); // Empêche l'envoi du formulaire
+        //     alert('Les mots de passe ne correspondent pas. Veuillez réessayer.');
+        // }
+    });
+    document.querySelector('form').addEventListener('submit', function (e) {
+        const newPassword = document.getElementById('new-password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+        const errorMessage = document.getElementById('error-message');
+
+        if (newPassword !== confirmPassword) {
+            e.preventDefault(); // Empêche l'envoi du formulaire
+            errorMessage.classList.remove('hidden'); // Affiche le message d'erreur
+        } else {
+            errorMessage.classList.add('hidden'); // Cache le message d'erreur
+        }
+    });
     </script>
 </body>
 </html>
