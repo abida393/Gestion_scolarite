@@ -116,7 +116,7 @@
 
             <!-- Back to login link -->
             <div class="text-center mt-6">
-                <a href="{{ route('home') }}" class="text-sm font-medium text-primary hover:text-primary/70 transition-colors inline-flex items-center">
+                <a href="{{ route('home.welcome') }}" class="text-sm font-medium text-primary hover:text-primary/70 transition-colors inline-flex items-center">
                     <i class="fas fa-arrow-left mr-2"></i>
                     Retour à la page de connexion
                 </a>

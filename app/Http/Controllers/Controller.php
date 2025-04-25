@@ -51,5 +51,12 @@ class Controller extends BaseController
     public function aide(){
         return view("pages.Aide");
     }
+}
 
+class HomeController extends Controller
+{
+    public function welcome()
+    {
+        return view('authentification.welcome');
+    }
 }
