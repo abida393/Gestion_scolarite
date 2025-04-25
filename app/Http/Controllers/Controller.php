@@ -59,4 +59,11 @@ class HomeController extends Controller
     {
         return view('authentification.welcome');
     }
+    public function show($id)
+{
+    $etudiant = Etudiant::findOrFail($id);
+    return view('profile', compact('etudiant'));
 }
+
+}
+

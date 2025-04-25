@@ -20,15 +20,7 @@ use Illuminate\Support\Facades\Route;
 //Route::get('/',[Controller::class,'index']);
 use App\Models\Etudiant;
 
-Route::get('/profil/{id}', function ($id) {
-    $etudiant = Etudiant::find($id);
-
-    if (!$etudiant) {
-        abort(404, 'Étudiant introuvable');
-    }
-
-    return view('profile', compact('etudiant'));
-});
+Route::get('/profile/{id}', [EtudiantController::class, 'show'])->name('profile.show');
 
 use App\Http\Controllers\PasswordController;
 
