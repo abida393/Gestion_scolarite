@@ -13,7 +13,7 @@
   <!-- FAQ Section -->
   <div class="space-y-8">
     <h2 class="text-3xl font-semibold text-gray-900 mb-8 text-center animate__animated animate__fadeIn">
-      ❓ Questions fréquentes
+       Questions fréquentes ❓
     </h2>
       <div class="space-y-4">
 
