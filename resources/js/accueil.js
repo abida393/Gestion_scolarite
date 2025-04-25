@@ -63,14 +63,14 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     navItems.forEach((item) => {
-        item.addEventListener("click", function (e) {
-            // Retirer la classe active de tous les éléments
-            navItems.forEach((navItem) => {
-                navItem.classList.remove("active");
-            });
+        // item.addEventListener("click", function (e) {
+        //     // Retirer la classe active de tous les éléments
+        //     navItems.forEach((navItem) => {
+        //         navItem.classList.remove("active");
+        //     });
 
             // Ajouter la classe active à l'élément cliqué
-            this.classList.add("active");
+            // this.classList.add("active");
 
             // Masquer toutes les pages
             // Object.values(pages).forEach((pageId) => {
@@ -78,28 +78,28 @@ document.addEventListener("DOMContentLoaded", function () {
             // });
 
               // Afficher la page correspondante
-            const page = this.getAttribute("data-page");
-            document.getElementById(pages[page]).classList.remove("hidden");
+            // const page = this.getAttribute("data-page");
+            // document.getElementById(pages[page]).classList.remove("hidden");
 
             // Mettre à jour le titre du header
             // const headerTitle = document.querySelector(".header-title");
             // headerTitle.textContent = this.querySelector("span").textContent;
         });
-    });
+    // });
 
     // Gestion du formulaire
-    const form = document.getElementById("document-request-form");
-    form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        alert("Votre demande a été soumise avec succès!");
-        form.reset();
-    });
+    // const form = document.getElementById("document-request-form");
+    // form.addEventListener("submit", function (e) {
+    //     e.preventDefault();
+    //     alert("Votre demande a été soumise avec succès!");
+    //     form.reset();
+    // });
 
     // Gestion du formulaire d'absence
-    const absenceForm = document.getElementById("absence-justification-form");
-    absenceForm.addEventListener("submit", function (e) {
-        e.preventDefault();
-        alert("Votre justification d'absence a été soumise avec succès!");
-        absenceForm.reset();
-    });
+    // const absenceForm = document.getElementById("absence-justification-form");
+    // absenceForm.addEventListener("submit", function (e) {
+    //     e.preventDefault();
+    //     alert("Votre justification d'absence a été soumise avec succès!");
+    //     absenceForm.reset();
+    // });
 });
