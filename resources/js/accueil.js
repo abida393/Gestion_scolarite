@@ -68,23 +68,19 @@ document.addEventListener("DOMContentLoaded", function () {
         //     navItems.forEach((navItem) => {
         //         navItem.classList.remove("active");
         //     });
-
-            // Ajouter la classe active à l'élément cliqué
-            // this.classList.add("active");
-
-            // Masquer toutes les pages
-            // Object.values(pages).forEach((pageId) => {
-            //     document.getElementById(pageId).classList.add("hidden");
-            // });
-
-              // Afficher la page correspondante
-            // const page = this.getAttribute("data-page");
-            // document.getElementById(pages[page]).classList.remove("hidden");
-
-            // Mettre à jour le titre du header
-            // const headerTitle = document.querySelector(".header-title");
-            // headerTitle.textContent = this.querySelector("span").textContent;
-        });
+        // Ajouter la classe active à l'élément cliqué
+        // this.classList.add("active");
+        // Masquer toutes les pages
+        // Object.values(pages).forEach((pageId) => {
+        //     document.getElementById(pageId).classList.add("hidden");
+        // });
+        // Afficher la page correspondante
+        // const page = this.getAttribute("data-page");
+        // document.getElementById(pages[page]).classList.remove("hidden");
+        // Mettre à jour le titre du header
+        // const headerTitle = document.querySelector(".header-title");
+        // headerTitle.textContent = this.querySelector("span").textContent;
+    });
     // });
 
     // Gestion du formulaire
