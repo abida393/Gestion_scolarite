@@ -24,6 +24,13 @@ Route::get('/mdpwrong', [Controller::class, 'mdpwrong'])->name('mdpwrong');
 Route::get('/newmdp', [Controller::class, 'newmdp'])->name('newmdp');
 Route::get('/calendar', [Controller::class, 'calendar'])->name('calendar');
 
+use App\Http\Controllers\EvenementController;
+
+Route::get('/events', [EvenementController::class, 'index']);
+Route::post('/events', [EvenementController::class, 'store']);
+Route::put('/events/update/{id}', [EvenementController::class, 'update']);
+Route::delete('/events/{id}', [EvenementController::class, 'destroy']);
+
 
 
 
@@ -43,3 +50,11 @@ Route::delete('/emploi/{timetable}', [EmploiTempsController::class, 'destroy'])-
 // Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
 // Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 // Route::get('/password/reset', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::get('/home',[Controller::class,'home'])->name('home');
+Route::get('/calendrier',[Controller::class, 'calendrier'])->name('calendrier');
+Route::get('/notes',[Controller::class, 'notes'])->name('notes');
+Route::get('/demande_documents',[Controller::class, 'demande_documents'])->name('demande_documents');
+Route::get('/absence_justif',[Controller::class, 'absence_justif'])->name('absence_justif');
+Route::get('/stages',[Controller::class, 'stages'])->name('stages');
+Route::get('/aide',[Controller::class, 'aide'])->name('aide');
+

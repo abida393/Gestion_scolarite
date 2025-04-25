@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger("module_id");
             $table->foreign("module_id")->references('id')->on('modules');
-            $table->string('nom_periode')->default('semestre_1');
+            $table->string('nom_periode')->default('semestre 1');
             $table->timestamps();
         });
     }

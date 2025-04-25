@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('etudiants', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger("type_profile");
+            $table->string("type_profile");
             $table->unsignedBigInteger('formation_id');
             $table->unsignedBigInteger('classes_id');
             $table->unsignedBigInteger('filiere_id');
@@ -38,18 +38,17 @@ return new class extends Migration
             $table->string('etudiant_code_postal');
             $table->boolean('DOSSIERCOMPLET');
             $table->string('ville');
-            $table->integer('etudiant_tel');
+            $table->string('etudiant_tel');
             $table->string('etudiant_email');
             $table->string('nom_pere');
             $table->string('prenom_pere');
             $table->string('fonction_pere');
-            $table->integer('telephone_pere');
+            $table->string('telephone_pere');
             $table->string('cnss');
             $table->string('nom_mere');
             $table->string('prenom_mere');
             $table->string('fonction_mere');
-            $table->integer('telephone_mere');
-            $table->tinyInteger('droit_justification');
+            $table->string('telephone_mere');
             $table->timestamps();
         });
     }

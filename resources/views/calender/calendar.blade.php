@@ -11,40 +11,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
 
-  <style>
-    .fc {
-      background-color: white;
-      border-radius: 1rem;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-      padding: 1.5rem;
-    }
 
-    .fc-header-toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-
-    .fc-button {
-      @apply bg-blue-600 text-white rounded px-3 py-1 text-sm font-medium mx-1 hover:bg-blue-700 transition;
-    }
-
-    .fc-event {
-      background-color: #3b82f6 !important;
-      color: white !important;
-      padding: 0.25rem 0.5rem !important;
-      border-radius: 0.375rem !important;
-      border: none !important;
-      transition: transform 0.2s ease-in-out;
-      font-size: 0.875rem;
-    }
-
-    .fc-event:hover {
-      transform: scale(1.05);
-      cursor: pointer;
-    }
-  </style>
 </head>
 <body class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 min-h-screen flex items-center justify-center p-6">
   <div class="w-full max-w-6xl mx-auto">

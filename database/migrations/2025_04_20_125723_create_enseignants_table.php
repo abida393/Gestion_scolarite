@@ -13,8 +13,6 @@ return new class extends Migration
     {
         Schema::create('enseignants', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('profile_id');
-            $table->foreign('profile_id')->references('type_profile')->on('profiles');
             $table->string('enseignant_nom');
             $table->string('enseignant_prenom');
             $table->string('enseignant_sexe');
@@ -28,8 +26,7 @@ return new class extends Migration
             $table->string('enseignant_tel');
             $table->string('enseignant_adresse_postale');
             $table->string('enseignant_email');
-            $table->string('enseignant_email1');
-            $table->string('enseignant_contrat');
+            $table->string('enseignant_contrat'); //cdd cdi 
             $table->date('enseignant_date_embauche');
             $table->string('enseignant_salaire');
             $table->string('enseignant_permanent_vacataire');

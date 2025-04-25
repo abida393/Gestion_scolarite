@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('profiles', function (Blueprint $table) {
-            $table->string("type_profile")->primary();
-            $table->string("identifiant");
-            $table->string('email_ecole');
-            $table->string('password');
-            $table->timestamps();
+        Schema::table('evenements', function (Blueprint $table) {
+            $table->string('color')->default('#007bff'); // Couleur par défaut
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('profiles');
+        Schema::table('evenements', function (Blueprint $table) {
+            $table->dropColumn('color');
+        });
     }
 };
