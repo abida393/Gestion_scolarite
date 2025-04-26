@@ -56,10 +56,23 @@ Route::get('/calendrier',[Controller::class, 'calendrier'])->name('calendrier');
 Route::get('/notes',[Controller::class, 'notes'])->name('notes');
 Route::get('/demande_documents',[Controller::class, 'demande_documents'])->name('demande_documents');
 Route::get('/absence_justif',[Controller::class, 'absence_justif'])->name('absence_justif');
-//Route::get('/stages',[Controller::class, 'stages'])->name('stages');
+Route::get('/stages',[Controller::class, 'stages'])->name('stages');
 Route::get('/aide',[Controller::class, 'aide'])->name('aide');
 
 
 
 use App\Http\Controllers\StageController;
-Route::get('/stages', [StageController::class, 'index'])->name('stages.index');
+Route::get('/stage', [StageController::class, 'index'])->name('stages.index');
+
+//use App\Http\Controllers\EvenementController;
+
+Route::get('/evenements', [EvenementController::class, 'index']);
+
+// Route pour afficher la page des événements
+Route::get('/evenements', [EvenementController::class, 'afficherEvenements'])->name('events');
+
+
+use App\Http\Controllers\AbsenceController;
+
+Route::get('/absences', [AbsenceController::class, 'index'])->name('absences.index');
+Route::post('/absences/justify/{id}', [AbsenceController::class, 'justify'])->name('absences.justify');

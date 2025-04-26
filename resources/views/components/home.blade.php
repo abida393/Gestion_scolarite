@@ -125,6 +125,10 @@
                 <i class="fas fa-briefcase"></i>
                 <span>Stages</span>
             </a>
+            <a href="{{ route("events") }}" class="nav-item {{ Route::is("events")  ? 'active' : ''  }}" data-page="event">
+                <i class="fas fa-briefcase"></i>
+                <span>Events</span>
+            </a>
             <a href="{{ route("aide") }}" class="nav-item {{ Route::is("aide")  ? 'active' : ''  }}" data-page="aide">
                 <i class="far fa-question-circle"></i>
                 <span>Aide</span>
