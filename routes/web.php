@@ -1,7 +1,9 @@
 <?php
 
+
+use App\Http\Controllers\auth\passwordController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Controller;
-use App\Models\emplois_temps;
 use Illuminate\Support\Facades\Route;
 
 
@@ -19,11 +21,13 @@ use Illuminate\Support\Facades\Route;
 
 // use App\Http\Controllers\TimetableController;
 
-Route::get('/welcome', [Controller::class, 'index'])->name('home.welcome');
-Route::get('/mdpwrong', [Controller::class, 'mdpwrong'])->name('mdpwrong');
-Route::get('/newmdp', [Controller::class, 'newmdp'])->name('newmdp');
+Route::get('/', [AuthController::class, 'index'])->name('home.welcome');
+Route::post('/login', [AuthController::class, 'authenticate'])->name('login');
+Route::get('/mdpwrong', [AuthController::class, 'mdpwrong'])->name('mdpwrong');
+Route::get('/newmdp', [AuthController::class, 'newmdp'])->name('newmdp');
+Route::get('/admin', [AuthController::class, 'admin'])->name('admin');
 Route::get('/calendar', [Controller::class, 'calendar'])->name('calendar');
-Route::get('/welcome', [App\Http\Controllers\HomeController::class, 'welcome'])->name('home.welcome');
+// Route::get('/welcome', [App\Http\Controllers\HomeController::class, 'welcome'])->name('home.welcome');
 
 use App\Http\Controllers\EvenementController;
 
@@ -62,3 +66,7 @@ Route::get('/aide',[Controller::class, 'aide'])->name('aide');
 Route::get('/paiement',[Controller::class, 'paiement'])->name('paiement');
 Route::get('/messagerie',[Controller::class, 'messagerie'])->name('messagerie');
 Route::get('/news',[Controller::class, 'news'])->name('news');
+
+
+Route::get('/password/forgot', [passwordController::class, 'showForgotForm'])->name('password.request');
+Route::post('/password/forgot', [passwordController::class, 'sendResetLink'])->name('password.email');

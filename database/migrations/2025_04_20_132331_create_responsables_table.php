@@ -17,6 +17,9 @@ return new class extends Migration
             $table->unsignedBigInteger("formation_id");
             $table->foreign("type_profile")->references("type_profile")->on("profiles");
             $table->foreign("formation_id")->references("id")->on("formations");
+            $table->string('email_ecole')->unique();
+            $table->string('password');
+            $table->string('identifiant')->unique();
             $table->string("respo_nom");
             $table->string("respo_prenom");
             $table->string("respo_sex");

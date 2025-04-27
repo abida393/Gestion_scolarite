@@ -1,10 +1,15 @@
+@if (session('etudiant'))
+    @php
+        $etudiant = session('etudiant');
+    @endphp
+
+@endif
 <x-home titre="Page d'accueil" page_titre="Page d'accueil" >
     <div id="accueil-page">
         <section class="welcome-section">
-            <h1>Bienvenue, <span class="student-name">Alex Johnson</span> !</h1>
+            <h1>Bienvenue, <span class="student-name">{{ $etudiant->etudiant_nom}} , {{$etudiant->etudiant_prenom }}</span> !</h1>
             <p id="current-date-time"></p> <!-- Conteneur pour la date et l'heure -->
         </section>
-
         <div class="dashboard-grid">
             <div class="dashboard-card">
                 <div class="card-header">

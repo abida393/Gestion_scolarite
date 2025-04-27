@@ -19,13 +19,10 @@ class ProfileFactory extends Factory
     public function definition(): array
     {
 
-        $type = $this->faker->unique()->randomElement(['admin','etudiant']);
+        $type = $this->faker->unique()->randomElement(['responsable','etudiant']);
 
         return [
             'type_profile' => $type,
-            'identifiant' => strtoupper(Str::random(8)), // e.g., 'A1B2C3D4'
-            'email_ecole' => $this->faker->unique()->safeEmail(),
-            'password' => Hash::make('password'), // or use Hash::make() if you prefer
         ];
     }
 }

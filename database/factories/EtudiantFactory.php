@@ -6,6 +6,7 @@ use App\Models\classe;
 use App\Models\filiere;
 use App\Models\formation;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Etudiant>
@@ -24,7 +25,9 @@ class EtudiantFactory extends Factory
             'formation_id' => formation::factory(),
             'classes_id' => classe::factory(),
             'filiere_id' => filiere::factory(),
-
+            'email_ecole' => $this->faker->unique()->safeEmail,
+            'password' => Hash::make('password'), // Use bcrypt for password hashing
+            'identifiant' => strtoupper($this->faker->bothify('??######')),
             'etudiant_cin' => strtoupper($this->faker->bothify('??######')),
             'etudiant_serie_bac' => $this->faker->randomElement(['S', 'ES', 'L', 'ST']),
             'etudiant_cne' => strtoupper($this->faker->bothify('CNE#######')),

@@ -10,58 +10,43 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
-    public function index()
-    {
-        return view("authentification.welcome");
-    }
-
-    public function mdpwrong()
-    {
-        return view("authentification.mdpwrong");
-    }
-
-    public function newmdp()
-    {
-        return view("authentification.newmdp");
-    }
-
     public function calendar()
     {
         return view("calender.calendar");
     }
 
     public function home(){
-        return view("pages.Home");
+        return view("etudiant.Home");
     }
     public function calendrier(){
-        return view("pages.Calendrier");
+        return view("etudiant.Calendrier");
     }
     public function notes(){
-        return view("pages.Notes");
+        return view("etudiant.Notes");
     }
     public function demande_documents(){
-        return view("pages.Demande_documents");
+        return view("etudiant.Demande_documents");
     }
     public function absence_justif(){
-        return view("pages.Absence_justif");
+        return view("etudiant.Absence_justif");
     }
     public function stages(){
-        return view("pages.Stages");
+        return view("etudiant.Stages");
     }
     public function aide(){
-        return view("pages.Aide");
+        return view("etudiant.Aide");
     }
     public function paiement(){
-        return view("pages.paiement");
+        return view("etudiant.paiement");
     }
     public function emploi(){
-        return view("pages.emploi");
+        return view("etudiant.emploi");
     }
     public function messagerie(){
-        return view("pages.messagerie");
+        return view("etudiant.messagerie");
     }
     public function news(){
-        return view("pages.news");
+        return view("etudiant.news");
 }
 
 }

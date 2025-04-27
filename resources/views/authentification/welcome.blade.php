@@ -61,7 +61,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen font-poppins bg-white bg-combined">
+{{-- <body class="min-h-screen font-poppins bg-white bg-combined"> --}}
     <div class="absolute inset-0 overflow-hidden">
     <body class="min-h-screen font-poppins bg-white bg-cover" style="background-image: url('{{ asset('images/tech.jpg') }}'); background-size: cover; background-position: center;">
 
@@ -83,25 +83,31 @@
             </div>
 
             <!-- Login form with 3D inputs -->
-            <form method="POST" action="" class="space-y-6">
+            <form method="POST" action="{{ route("login") }}" class="space-y-6">
                 @csrf
                 <!-- Email input with floating effect -->
 <div class="relative transform transition-all duration-300 hover:-translate-y-1">
     <div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 rounded-xl blur-sm -z-10"></div>
     <i class="fas fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-primary/80"></i>
-    <input id="email" type="email" name="email" placeholder="Email" required
+    <input id="email" type="email" name="email" placeholder="Email"
         class="w-full pl-12 pr-4 py-4 border border-gray-200/80 rounded-xl bg-white/90 focus:border-primary focus:ring-2 focus:ring-primary/30 outline-none shadow-sm transition-all duration-300 hover:shadow-md">
+        @error('email')
+        <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
+        @enderror
 </div>
 
                 <!-- Password input with floating effect -->
                 <div class="relative transform transition-all duration-300 hover:-translate-y-1">
     <div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 rounded-xl blur-sm -z-10"></div>
     <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-primary/80"></i>
-    <input id="password" type="password" name="password" placeholder="Mot de passe" required
+    <input id="password" type="password" name="password" placeholder="Mot de passe"
         class="w-full pl-12 pr-10 py-4 border border-gray-200/80 rounded-xl bg-white/90 focus:border-primary focus:ring-2 focus:ring-primary/30 outline-none shadow-sm transition-all duration-300 hover:shadow-md">
     <button type="button" id="togglePassword" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-primary/80 focus:outline-none">
         <i class="fas fa-eye"></i>
     </button>
+    @error('password')
+        <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
+    @enderror
 </div>
 
                 <!-- Remember me and forgot password -->
@@ -112,13 +118,13 @@
                     </div>
 
                     <div class="text-sm">
-                        <a href="{{ route('mdpwrong') }}" class="font-medium text-primary hover:text-primary/80">Mot de passe oublié?</a>
+                    <a href="{{ route('password.request') }}" class="font-medium text-primary hover:text-primary/80">Mot de passe oublié?</a>
                     </div>
                 </div>
 
                 <!-- Login button with 3D effect -->
                 <div>
-                    <button type="submit" 
+                    <button type="submit"
                         class="group relative w-full flex justify-center py-4 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-primary hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                         <span class="absolute left-0 inset-y-0 flex items-center pl-3">
                             <i class="fas fa-sign-in-alt"></i>

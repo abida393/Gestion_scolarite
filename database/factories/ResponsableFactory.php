@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\formation;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Responsable>
@@ -18,8 +19,11 @@ class ResponsableFactory extends Factory
     public function definition(): array
     {
         return [
-            'type_profile' => 'etudiant', // assumed static or match Profile seeded manually
+            'type_profile' => 'responsable', // assumed static or match Profile seeded manually
             'formation_id' => formation::factory(),
+            'email_ecole' => $this->faker->unique()->safeEmail,
+            'password' => Hash::make('password'), // Use bcrypt for password hashing
+            'identifiant' => strtoupper($this->faker->bothify('??######')),
             'respo_nom' => $this->faker->lastName,
             'respo_prenom' => $this->faker->firstName,
             'respo_sex' => $this->faker->randomElement(['Homme', 'Femme']),
