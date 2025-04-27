@@ -101,7 +101,7 @@ public function destroy($id)
 {
     $evenements = Evenement::all();
 
-    return view('evenements', compact('evenements'));
+    return view('pages.evenements', compact('evenements'));
 }
 
     public function showCalendar()

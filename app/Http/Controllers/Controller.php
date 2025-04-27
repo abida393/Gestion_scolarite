@@ -29,8 +29,11 @@ class Controller extends BaseController
             )
             ->get();
 // Puis on envoie les données à la vue
+$absences = EtudiantAbsence::with('seance')->where('etudiant_id', $etudiantId)->get();
 return view('absence', compact('absences'));
         return view("authentification.welcome");
+
+        
     }
 
     public function mdpwrong()
@@ -71,12 +74,17 @@ return view('absence', compact('absences'));
     public function aide(){
         return view("pages.Aide");
     }
+    public function paiement(){
+        return view("pages.paiement");
+    }
+    public function emploi(){
+        return view("pages.emploi");
+    }
+    public function messagerie(){
+        return view("pages.messagerie");
+    }
+    public function news(){
+        return view("pages.news");
 }
 
-class HomeController extends Controller
-{
-    public function welcome()
-    {
-        return view('authentification.welcome');
-    }
 }

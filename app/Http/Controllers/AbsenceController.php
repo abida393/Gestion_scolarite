@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\EtudiantAbsence;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\etudiant_absence;
 
 class AbsenceController extends Controller
 {
@@ -14,17 +15,38 @@ class AbsenceController extends Controller
         $absences = Absence::with('seance.matiere')->get();
         return view('absences', compact('absences'));
     }
-
-    public function justify(Request $request)
+    public function justifier(Request $request)
     {
-        $absence = Absence::findOrFail($id);
-
-        $absence->update([
-            'justification' => $request->input('justification'),
-            'justifier' => false, // En cours de validation
+        $request->validate([
+            'absence_id' => 'required|exists:etudiant_absences,id',
+            'justification' => 'required|string',
         ]);
 
-        return redirect()->back()->with('success', 'Justification envoyée.');
+        $absence = etudiant_absence::findOrFail($request->absence_id);
+
+        $absence->update([
+            'justification' => $request->justification,
+            'date_justif' => now(),  // date aujourd'hui
+        ]);
+
+        return back()->with('success', 'Justification envoyée avec succès.');
     }
+    
+public function store(Request $request)
+{
+    $request->validate([
+        'absence_id' => 'required|exists:etudiant_absences,id',
+        'justification' => 'required|string',
+    ]);
+
+    $absence = etudiant_absence::findOrFail($request->absence_id);
+
+    $absence->update([
+        'justification' => $request->justification,
+        'date_justif' => now(),  // Mettre la date d'aujourd'hui
+    ]);
+
+    return back()->with('success', 'Justification envoyée avec succès.');
+}
 }
 

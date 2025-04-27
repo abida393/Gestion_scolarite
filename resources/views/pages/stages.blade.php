@@ -231,12 +231,20 @@
         <h1><i class="fas fa-briefcase"></i> Offres de Stage</h1>
         <p>Trouvez le stage parfait pour votre parcours académique</p>
     </div>
+    
 
     
        <!-- Filtres optionnels -->
     <div class="dashboard-card" style="margin-bottom: 30px;">
         <div class="card-header">
             <h2><i class="fas fa-filter"></i> Filtres</h2>
+        </div>
+        <div class="filters"> 
+            <button class="filter-btn active">Tous</button>
+            <button class="filter-btn">Informatique</button>
+            <button class="filter-btn">Marketing</button>
+            <button class="filter-btn">Finance</button>
+            <button class="filter-btn">Ingénierie</button>
         </div>
     </div>
         <div class="offres-grid">

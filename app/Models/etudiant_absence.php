@@ -7,17 +7,26 @@ use Illuminate\Database\Eloquent\Model;
 
 class etudiant_absence extends Model
 {
-    protected $table = 'etudiant_absences';
+  // Assurez-vous que la table est bien définie ici
     use HasFactory;
-    protected $fillable = [
-        'seance_id', // ID de la séance associée
-        'date_justif', // Date de justification de l'absence
-        'justification', // Texte de justification
-        'justifier', // Booléen 0 ou 1
-    ];
+// Dis à Laravel la table exacte
+protected $table = 'etudiant_absences';
 
-    public function seance()
-    {
-        return $this->belongsTo(Seance::class);
-    }
+protected $fillable = [
+    'seance_id',
+    'etudiant_id',
+    'date_justif',
+    'justification',
+    'justifier',
+];
+
+public function seance()
+{
+    return $this->belongsTo(seance::class, 'seance_id');
+}
+
+public function etudiant()
+{
+    return $this->belongsTo(etudiant::class, 'etudiant_id');
+}
 }
