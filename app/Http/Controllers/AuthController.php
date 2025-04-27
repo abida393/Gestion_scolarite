@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\etudiant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -20,8 +21,7 @@ class AuthController extends Controller
         ]);
         if(Auth::guard('etudiant')->attempt(['email_ecole' => $credentials['email'], 'password' => $credentials['password']])){
             $request->session()->regenerate();
-            $etudiant = Auth::guard('etudiant')->id();
-            return redirect()->route('home')->with('etudiant', $etudiant);
+            return redirect()->route('home');
         }elseif(Auth::guard('responsable')->attempt(['email_ecole' => $credentials['email'], 'password' => $credentials['password']])){
             $request->session()->regenerate();
             return redirect()->route('admin');

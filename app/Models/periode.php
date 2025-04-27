@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class periode extends Model
 {
     use HasFactory;
+    protected $table = 'periodes';
+    public function module()
+    {
+        return $this->belongsTo(module::class);
+    }
 }

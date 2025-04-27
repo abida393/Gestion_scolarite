@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\auth;
+namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Models\etudiant;
-use App\Models\responsable;
+use App\Models\Etudiant;
+use App\Models\Responsable;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 
-
-class passwordController extends Controller
+class PasswordController extends Controller
 {
     public function showForgotForm()
     {
@@ -18,31 +20,85 @@ class passwordController extends Controller
 
     public function sendResetLink(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-        ]);
+        $request->validate(['email' => 'required|email']);
 
         $email = $request->email;
-        // Check if the email belongs to an Etudiant
-        if (etudiant::where('email_ecole', $email)->exists()) {
+        $user = null;
+        $broker = null;
+
+        // Check both models with email_ecole
+        if ($user = Etudiant::where('email_ecole', $email)->first()) {
             $broker = 'etudiants';
-            $emailField = 'email_ecole';
-        }
-        // Check if the email belongs to a Responsable
-        elseif (responsable::where('email_ecole', $email)->exists()) {
+        } elseif ($user = Responsable::where('email_ecole', $email)->first()) {
             $broker = 'responsables';
-            $emailField = 'email_ecole';
-        } else {
-            // Email not found
-            return back()->withErrors(['email' => 'Aucun compte trouvé avec cet email.']);
         }
 
-        $status = Password::broker($broker)->sendResetLink(
-            ["email" => $email]
+        if (!$user) {
+            return back()->with(
+                'status',
+                'Si cet email existe dans notre système, un lien de réinitialisation a été envoyé.'
+            );
+        }
+
+        // Manually handle token creation
+        $token = Str::random(60);
+
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $email],
+            [
+                'token' => Hash::make($token),
+                'created_at' => now()
+            ]
         );
 
-        return $status == Password::RESET_LINK_SENT
-            ? back()->with('status', __($status))
-            : back()->withErrors(['email' => __($status)]);
+        // Send notification with the plain token
+        $user->sendPasswordResetNotification($token);
+
+        return back()->with('status', 'Nous avons envoyé votre lien de réinitialisation par e-mail!');
     }
+
+    public function showResetForm(Request $request, $token = null)
+    {
+        return view('authentification.newmdp', [
+            'token' => $token,
+            'email' => $request->email
+        ]);
+    }
+
+    public function reset(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|confirmed|min:8',
+        ]);
+
+        // Find the token record
+        $record = DB::table('password_reset_tokens')
+            ->where('email', $request->email)
+            ->first();
+
+        if (!$record || !Hash::check($request->token, $record->token)) {
+            return back()->withErrors(['email' => 'Token invalide ou expiré']);
+        }
+
+        // Find user
+        $user = Etudiant::where('email_ecole', $request->email)->first() ??
+            Responsable::where('email_ecole', $request->email)->first();
+
+        if (!$user) {
+            return back()->withErrors(['email' => 'Utilisateur non trouvé']);
+        }
+
+        // Update password
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        // Delete token
+        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+
+        return redirect()->route('home.welcome')->with('status', 'Votre mot de passe a été réinitialisé!');
+    }
+
+
 }

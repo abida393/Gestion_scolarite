@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Evenement;
+use Carbon\Carbon;
 
 class EvenementController extends Controller
 {
@@ -96,6 +97,13 @@ public function destroy($id)
      *
      * @return \Illuminate\View\View
      */
+    public function afficherEvenements()
+{
+    $evenements = Evenement::all();
+
+    return view('etudiant.evenements', compact('evenements'));
+}
+
     public function showCalendar()
     {
         return view('calendar');

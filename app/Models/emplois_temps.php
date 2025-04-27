@@ -27,16 +27,17 @@ class emplois_temps extends Model
     // Relations avec les autres modèles
     public function matiere()
     {
-        return $this->belongsTo(Matiere::class);
+        return $this->belongsTo(matiere::class);
     }
 
     public function enseignant()
     {
-        return $this->belongsTo(Enseignant::class);
+        return $this->belongsTo(enseignant::class);
     }
 
     public function classe()
     {
-        return $this->belongsTo(Classe::class);
+        return $this->belongsTo(classe::class);
     }
+
 }

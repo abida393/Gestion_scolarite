@@ -59,7 +59,9 @@ document.addEventListener("DOMContentLoaded", function () {
         demandes: "demandes-page",
         absences: "absences-page",
         stage: "stage-page",
+        events:"events-page", 
         aide: "aide-page",
+
     };
 
     // navItems.forEach((item) => {

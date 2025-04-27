@@ -1,4 +1,4 @@
-<x-home titre="Page demandes de documents" page_titre="Page demandes de documents">
+<x-home titre="Page demandes de documents" page_titre="Page demandes de documents" :nom_complete="Auth::guard('etudiant')->user()->etudiant_nom . ',' . Auth::guard('etudiant')->user()->etudiant_prenom">
 <div id="demandes-page">
             <div class="document-request-container">
                 <header class="document-request-header">
