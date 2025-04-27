@@ -1,4 +1,4 @@
-<x-home titre="demandes-page" page_titre="demandes-page">
+<x-home titre="Page demandes de documents" page_titre="Page demandes de documents">
 <div id="demandes-page">
             <div class="document-request-container">
                 <header class="document-request-header">

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use App\Models\etudiant;
+use App\Models\news;
 
 class Controller extends BaseController
 {
@@ -29,6 +31,15 @@ class Controller extends BaseController
     {
         return view("calender.calendar");
     }
+    public function profile()
+    {
+        //$etudiant = Etudiant::findOrFail(1);
+        $etudiant = etudiant::where('id', 1)->first();
+        //dd($etudiant);
+      return view('pages.profile', compact('etudiant'));
+
+       
+    }
 
     public function home(){
         return view("pages.Home");
@@ -51,19 +62,32 @@ class Controller extends BaseController
     public function aide(){
         return view("pages.Aide");
     }
-}
-
-class HomeController extends Controller
-{
-    public function welcome()
-    {
-        return view('authentification.welcome');
+    public function paiement(){
+        return view("pages.paiement");
     }
-    public function show($id)
+    public function emploi(){
+        return view("pages.emploi");
+    }
+    public function messagerie(){
+        return view("pages.messagerie");
+    }
+    public function news(){
+       // return view("pages.news");
+       $news = News::orderBy('date_news', 'desc')->get();
+       return view('pages.news', compact('news'));
+
+}
+
+
+
+
+public function welcome()
 {
-    $etudiant = Etudiant::findOrFail($id);
-    return view('profile', compact('etudiant'));
+    return view('authentification.welcome');
 }
-
+/*public function show($id)
+{
+$etudiant = Etudiant::findOrFail($id);
+return view('profile', compact('etudiant'));
+}*/
 }
-

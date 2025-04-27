@@ -1,4 +1,4 @@
-<x-home titre="stage-page" page_titre="stage-page">
+<x-home titre="Offres de stage" page_titre="Offres de stage">
 <div id="stage-page">
             <div class="welcome-section">
                 <h1><i class="fas fa-briefcase"></i> Offres de Stage</h1>

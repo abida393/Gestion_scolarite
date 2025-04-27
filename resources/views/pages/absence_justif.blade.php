@@ -1,4 +1,4 @@
-<x-home titre="absences-page" page_titre="absences-page">
+<x-home titre="Page d'absences" page_titre="Page d'absences">
     <div id="absences-page">
         <div class="container">
             <header>
