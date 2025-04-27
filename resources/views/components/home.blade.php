@@ -8,8 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cascadia+Code:ital,wght@0,200..700;1,200..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Lexend+Giga:wght@100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Playwrite+RO:wght@100..400&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet"> 
+   
     @vite('resources/css/app.css')
-    <style>
+    <style> 
       @keyframes fade-in {
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
@@ -131,17 +135,17 @@
     }
   </style>
 </head>
-<body>
+<body style="">
     <!-- Sidebar -->
     <div class="sidebar" style="height: 100vh; overflow-y: auto; overflow-x: hidden;">
 
         <div class="logo">
-            <span class="logo-text">Portail Étudiant</span>
+        <img src="{{ asset('/images/logo2.png') }}" alt="Logo Établissement" style="align-items:left;width:150px">
             <div class="burger-menu" id="mobile-toggle">
                 <i class="fas fa-bars"></i>
             </div>
         </div>
-
+<br>
         <div class="nav-menu">
             <a href="{{ route("home") }}" class="nav-item {{ Route::is("home")  ? 'active' : ''  }}" data-page="accueil">
                 <i class="fas fa-home"></i>
@@ -190,8 +194,6 @@
                 <i class="far fa-question-circle"></i>
                 <span>Aide</span>
             </a>
-            <button onclick="" class="filter-btn bg-red-500 text-white-700 font-medium px-4 py-1 rounded hover:bg-indigo-200 transition"><i class="fa-solid fa-right-from-bracket"></i>Log out</button>
- 
         </div>
     </div>
 
@@ -199,17 +201,22 @@
     <header class="header">
         <div class="header-left">
             <div class="header-burger" id="header-toggle">
-                <i class="fas fa-bars"></i>
+                <i class="fa-solid fa-bars fa-lg"></i>
             </div>
-            <div class="header-title">{{ $titre }}</div>
+            <div class="header-title">Demande de documents</div>
         </div>
         <div class="header-actions">
-            <i class="fas fa-bell"></i>
-            <i class="fas fa-envelope"></i>
-            <i class="fas fa-user-circle"></i>
+      
+
+        <img src="{{ asset('/images/banner.png') }}" alt="Profile" class="profile-image"  style="height: 40px; width: 40px; border-radius: 50%; object-fit: cover;">
+      
+            <div class="profile-info">
+                <div class="profile-name" style="color:rgba(8, 0, 58, 0.868)"><b>John Doe</b></div>
+                <div class="profile-class" style="color: rgba(8, 0, 58, 0.874);">License L3</div>
+            </div>
         </div>
     </header>
-    
+     
     <!-- Main Content -->
     <main class="main-content">
         {{ $slot }}

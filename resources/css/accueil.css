@@ -26,10 +26,16 @@
 }
 
 body {
-    background-color: var(--gray-light);
-    color: var(--text-primary);
-    display: flex;
-    min-height: 100vh;
+             /* Couleur de fond de secours */
+             background: linear-gradient(rgba(255, 255, 255, 0.144), rgba(255, 255, 255, 0.144)) url(assets/images/banner.png) no-repeat center center fixed;
+             background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
 }
 
 /* ==================== SIDEBAR ==================== */

@@ -1,7 +1,7 @@
 <x-home titre="absences-page" page_titre="absences-page">
 <style>
         :root {
-            --primary: #4361ee;
+            --primary:rgb(20, 38, 118);
             --success: #4cc9f0;
             --danger: #f72585;
             --warning: #f8961e;
@@ -26,7 +26,7 @@
         }
         
         .container {
-            max-width: 800px;
+            width: 800px;
             margin: 0 auto;
         }
         
@@ -251,11 +251,10 @@
         }
     </style>
 <div class="container">
-    <header>
-        <h1><i class="fas fa-calendar-times"></i> <b>Mes Absences</b></h1>
+    <div class="welcome-section">
+    <h1><i class="fas fa-calendar-times"></i> <b>Mes Absences</b></h1>
         <p class="subtitle">Historique de vos absences enregistrées</p>
-    </header>
-    
+    </div>
     <main>
         <!-- Boutons de filtre -->
 <div class="filter-buttons" style="margin-bottom: 20px; text-align: center;">
