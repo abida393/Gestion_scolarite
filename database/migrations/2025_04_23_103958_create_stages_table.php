@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('entreprise');
             $table->string('duree');
             $table->string('photo');
+            $table->string('domaine');
             $table->string('email_entreprise');
             $table->timestamps();
         });
