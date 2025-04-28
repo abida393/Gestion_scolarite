@@ -1,10 +1,9 @@
-<x-home titre="Page d'accueil" page_titre="Page d'accueil" >
+<x-home titre="Page d'accueil" page_titre="Page d'accueil" :nom_complete="Auth::guard('etudiant')->user()->etudiant_nom.','.Auth::guard('etudiant')->user()->etudiant_prenom">
     <div id="accueil-page">
         <section class="welcome-section">
-            <h1>Bienvenue, <span class="student-name">Alex Johnson</span> !</h1>
+            <h1>Bienvenue, <span class="student-name">{{ Auth::guard("etudiant")->user()->etudiant_nom.' , '.Auth::guard("etudiant")->user()->etudiant_prenom }}</span> !</h1>
             <p id="current-date-time"></p> <!-- Conteneur pour la date et l'heure -->
         </section>
-
         <div class="dashboard-grid">
             <div class="dashboard-card">
                 <div class="card-header">

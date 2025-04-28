@@ -36,10 +36,14 @@ return [
     */
 
     'guards' => [
-        'web' => [
+        'etudiant' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'etudiants',
         ],
+        'responsable' => [
+            'driver' => 'session',
+            'provider' => 'responsables',
+        ]
     ],
 
     /*
@@ -60,9 +64,13 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'etudiants' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => App\Models\etudiant::class,
+        ],
+        'responsables' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\responsable::class,
         ],
 
         // 'users' => [
@@ -91,8 +99,21 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
+        // 'users' => [
+        //     'provider' => 'users',
+        //     'table' => 'password_reset_tokens',
+        //     'expire' => 60,
+        //     'throttle' => 60,
+        // ],
+        'etudiants' => [
+            'provider' => 'etudiants',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+        'responsables' => [
+            'provider' => 'responsables',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,

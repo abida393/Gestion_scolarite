@@ -1,7 +1,10 @@
 <?php
 
+
+use App\Http\Controllers\auth\passwordController;
+use App\Http\Controllers\passwordResetController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Controller;
-use App\Models\emplois_temps;
 use Illuminate\Support\Facades\Route;
 
 
@@ -22,16 +25,17 @@ use App\Models\Etudiant;
 
 //Route::get('/profile/{id}', [EtudiantController::class, 'show'])->name('profile.show');
 
-use App\Http\Controllers\PasswordController;
 
-Route::get('/change-password', [PasswordController::class, 'edit'])->name('password.edit');
-Route::post('/change-password', [PasswordController::class, 'update'])->name('password.update');
+Route::get('/change-password', [passwordResetController::class, 'edit'])->name('password.edit');
+Route::put('/update-password', [passwordResetController::class, 'update'])->name('password.update');
 
 // use App\Http\Controllers\TimetableController;
 
-Route::get('/welcome', [Controller::class, 'index'])->name('home.welcome');
-Route::get('/mdpwrong', [Controller::class, 'mdpwrong'])->name('mdpwrong');
-Route::get('/newmdp', [Controller::class, 'newmdp'])->name('newmdp');
+Route::get('/', [AuthController::class, 'index'])->name('home.welcome');
+Route::post('/login', [AuthController::class, 'authenticate'])->name('login');
+Route::get('/mdpwrong', [AuthController::class, 'mdpwrong'])->name('mdpwrong');
+Route::get('/newmdp', [AuthController::class, 'newmdp'])->name('newmdp');
+Route::get('/admin', [AuthController::class, 'admin'])->name('admin');
 Route::get('/calendar', [Controller::class, 'calendar'])->name('calendar');
 //Route::get('/welcome', [App\Http\Controllers\HomeController::class, 'welcome'])->name('home.welcome');
 
@@ -88,3 +92,47 @@ Route::get('/notes/{etudiantId}', [NoteController::class, 'afficherNotes']);
 
 
 
+Route::get('/home', [Controller::class, 'home'])->name('home');
+Route::get('/emploi', [Controller::class, 'emploi'])->name('emploi');
+Route::get('/calendrier', [Controller::class, 'calendrier'])->name('calendrier');
+Route::get('/notes', [Controller::class, 'notes'])->name('notes');
+Route::get('/demande_documents', [Controller::class, 'demande_documents'])->name('demande_documents');
+Route::get('/absence_justif', [Controller::class, 'absence_justif'])->name('absence_justif');
+Route::get('/stages', [Controller::class, 'stages'])->name('stages');
+Route::get('/aide', [Controller::class, 'aide'])->name('aide');
+
+
+
+use App\Http\Controllers\StageController;
+
+Route::get('/stage', [StageController::class, 'index'])->name('stages.index');
+
+//use App\Http\Controllers\EvenementController;
+
+Route::get('/evenements', [EvenementController::class, 'index']);
+
+// Route pour afficher la page des événements
+Route::get('/evenements', [EvenementController::class, 'afficherEvenements'])->name('events');
+
+
+use App\Http\Controllers\AbsenceController;
+
+Route::get('/absences', [AbsenceController::class, 'index'])->name('absences.index');
+Route::post('/absences/justify/{id}', [AbsenceController::class, 'justify'])->name('absences.justify');
+Route::get('/paiement', [Controller::class, 'paiement'])->name('paiement');
+Route::get('/messagerie', [Controller::class, 'messagerie'])->name('messagerie');
+Route::get('/news', [Controller::class, 'news'])->name('news');
+
+
+Route::get('/password/forgot', [PasswordController::class, 'showForgotForm'])
+    ->name('password.request');
+
+Route::post('/password/forgot', [PasswordController::class, 'sendResetLink'])
+    ->name('password.email');
+
+Route::get('/password/reset/{token}', [PasswordController::class, 'showResetForm'])
+    ->name('password.reset');
+
+Route::post('/password/reset', [PasswordController::class, 'reset'])
+    ->name('password.update');
+Route::post('/justifier-absence', [AbsenceController::class, 'justifier'])->name('justifier-absence');

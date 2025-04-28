@@ -1,4 +1,4 @@
-<x-home titre="calendrier-etudiant" page_titre="calendrier-etudiant">
+<x-home titre="calendrier-etudiant" page_titre="calendrier-etudiant" :nom_complete="Auth::guard('etudiant')->user()->etudiant_nom . ',' . Auth::guard('etudiant')->user()->etudiant_prenom">
 <div class="relative flex items-center justify-center min-h-screen bg-gray-50">
   <div class="w-full max-w-6xl">
     <h2 class="text-gray-800 text-4xl font-extrabold text-center mb-2 tracking-tight">

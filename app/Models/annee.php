@@ -9,5 +9,9 @@ class annee extends Model
 {
     use HasFactory;
     protected $table = 'annee';
+    public function annee_formation()
+    {
+        return $this->hasMany(annee_formation::class, 'annee_id', 'id');
+    }
 }
 

@@ -17,9 +17,11 @@ return new class extends Migration
             $table->unsignedBigInteger("etudiant_id");
             $table->foreign("seance_id")->references("id")->on("seances");
             $table->foreign("etudiant_id")->references("id")->on("etudiants");
+            $table->date("date_absence");
             $table->date("date_justif");
             $table->string("justification");
             $table->boolean("justifier")->default(false);
+            $table->string("justification_file");
             $table->timestamps();
         });
     }

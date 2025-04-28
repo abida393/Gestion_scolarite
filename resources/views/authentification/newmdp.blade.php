@@ -40,20 +40,18 @@
         }
     </style>
 </head>
-<body class="min-h-screen font-poppins bg-white bg-combined">
-    <div class="absolute inset-0 overflow-hidden">
-    <body class="min-h-screen font-poppins bg-white bg-cover" style="background-image: url('{{ asset('images/tech.jpg') }}'); background-size: cover; background-position: center;">
+<body class="min-h-screen font-poppins bg-white bg-cover" style="background-image: url('{{ asset('images/tech.jpg') }}'); background-size: cover; background-position: center;">
 
     <!-- Floating decorative elements -->
-    <div class="absolute top-1/4 left-1/4 w-16 h-16 rounded-full bg-primary/10 blur-xl animate-floating"></div>
-    <div class="absolute top-1/3 right-1/4 w-24 h-24 rounded-full bg-accent/10 blur-xl animate-floating animation-delay-2000"></div>
-    <div class="absolute bottom-1/4 right-1/3 w-20 h-20 rounded-full bg-success/10 blur-xl animate-floating animation-delay-4000"></div>
+    <div class="absolute top-1/4 left-1/4 w-16 h-16 rounded-full bg-primary/10 blur-xl floating"></div>
+    <div class="absolute top-1/3 right-1/4 w-24 h-24 rounded-full bg-accent/10 blur-xl floating" style="animation-delay: 2s"></div>
+    <div class="absolute bottom-1/4 right-1/3 w-20 h-20 rounded-full bg-success/10 blur-xl floating" style="animation-delay: 4s"></div>
 
-    <div class="relative min-h-screen flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8 card-3d">
-        <div class="w-full max-w-md bg-white/65 backdrop-blur-sm rounded-2xl shadow-3d transform transition-all duration-500 hover:rotate-y-3 hover:rotate-x-2 group p-8 sm:p-10 inner-3d shadow-lg">
-            <!-- Logo section with enhanced 3D -->
+    <div class="relative min-h-screen flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+        <div class="w-full max-w-md bg-white/65 backdrop-blur-sm rounded-2xl shadow-3d transform transition-all duration-500 hover:rotate-y-3 hover:rotate-x-2 group p-8 sm:p-10 shadow-lg">
+            <!-- Logo section -->
             <div class="text-center mb-10 transform transition-all duration-300 group-hover:-translate-y-1">
-            <div class="relative inline-block animate-pulse">
+                <div class="relative inline-block animate-pulse">
                     <i class="fas fa-key text-6xl text-gradient-primary"></i>
                     <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-md -z-10"></div>
                 </div>
@@ -61,36 +59,79 @@
                 <p class="text-gray-500 mt-2 text-sm font-medium">Réinitialiser votre mot de passe</p>
             </div>
 
+            <!-- Error/Success Messages -->
+            @if (session('status'))
+                <div class="mb-4 font-medium text-sm text-green-600">
+                    {{ session('status') }}
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="mb-4">
+                    <div class="font-medium text-red-600">
+                        {{ __('Whoops! Something went wrong.') }}
+                    </div>
+                    <ul class="mt-3 list-disc list-inside text-sm text-red-600">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <!-- Reset password form -->
-            <form method="POST" action="{{ route('home.welcome') }}" class="space-y-6">
+            <form method="POST" action="{{ route('password.update') }}" class="space-y-6">
                 @csrf
+                <input type="hidden" name="token" value="{{ $token }}">
+
+                <!-- Email Field (hidden if email is pre-filled) -->
+                @if(empty($email))
+                <div class="relative transform transition-all duration-300 hover:-translate-y-1">
+                    <div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 rounded-xl blur-sm -z-10"></div>
+                    <i class="fas fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-gradient-primary"></i>
+                    <input id="email" type="email" name="email" value="{{ $email ?? old('email') }}" required
+                        class="w-full pl-12 pr-4 py-4 border border-gray-200/80 rounded-xl bg-white/90 focus:border-primary focus:ring-2 focus:ring-primary/30 outline-none shadow-sm transition-all duration-300 hover:shadow-md"
+                        placeholder="Votre email">
+                </div>
+                @else
+                <input type="hidden" name="email" value="{{ $email }}">
+                @endif
+
                 <!-- New password input -->
                 <div class="relative transform transition-all duration-300 hover:-translate-y-1">
-    <div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 rounded-xl blur-sm -z-10"></div>
-    <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-gradient-primary"></i>
-    <input id="new-password" type="password" name="new-password" placeholder="Nouveau mot de passe" required
-        class="w-full pl-12 pr-4 py-4 border border-gray-200/80 rounded-xl bg-white/90 focus:border-primary focus:ring-2 focus:ring-primary/30 outline-none shadow-sm transition-all duration-300 hover:shadow-md">
-</div>
+                    <div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 rounded-xl blur-sm -z-10"></div>
+                    <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-gradient-primary"></i>
+                    <input id="password" type="password" name="password" required autocomplete="new-password"
+                        class="w-full pl-12 pr-10 py-4 border border-gray-200/80 rounded-xl bg-white/90 focus:border-primary focus:ring-2 focus:ring-primary/30 outline-none shadow-sm transition-all duration-300 hover:shadow-md"
+                        placeholder="Nouveau mot de passe">
+                    <button type="button" onclick="togglePassword('password')" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-primary/80">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
 
                 <!-- Confirm password input -->
-<div class="relative transform transition-all duration-300 hover:-translate-y-1">
-    <div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 rounded-xl blur-sm -z-10"></div>
-    <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-gradient-primary"></i>
-    <input id="confirm-password" type="password" name="confirm-password" placeholder="Confirmer le mot de passe" required
-        class="w-full pl-12 pr-4 py-4 border border-gray-200/80 rounded-xl bg-white/90 focus:border-primary focus:ring-2 focus:ring-primary/30 outline-none shadow-sm transition-all duration-300 hover:shadow-md">
-    <p id="error-message" class="text-red-500 text-sm mt-2 hidden">Les mots de passe ne correspondent pas.</p>
-</div>
+                <div class="relative transform transition-all duration-300 hover:-translate-y-1">
+                    <div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 rounded-xl blur-sm -z-10"></div>
+                    <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-gradient-primary"></i>
+                    <input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password"
+                        class="w-full pl-12 pr-10 py-4 border border-gray-200/80 rounded-xl bg-white/90 focus:border-primary focus:ring-2 focus:ring-primary/30 outline-none shadow-sm transition-all duration-300 hover:shadow-md"
+                        placeholder="Confirmer le mot de passe">
+                    <button type="button" onclick="togglePassword('password_confirmation')" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-primary/80">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <p id="password-error" class="text-red-500 text-sm mt-2 hidden">Les mots de passe ne correspondent pas.</p>
+                </div>
 
                 <!-- Reset button -->
                 <div>
-    <button type="submit" 
-        class="group relative w-full flex justify-center py-4 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-primary hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-            <i class="fas fa-check-circle text-gradient-primary"></i>
-        </span>
-        Réinitialiser le mot de passe
-    </button>
-</div>
+                    <button type="submit"
+                        class="group relative w-full flex justify-center py-4 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-primary hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <i class="fas fa-check-circle"></i>
+                        </span>
+                        Réinitialiser le mot de passe
+                    </button>
+                </div>
             </form>
 
             <!-- Footer -->
@@ -103,37 +144,59 @@
     <script>
         // 3D effect on mouse move
         const resetContainer = document.querySelector('.group');
-        resetContainer.addEventListener('mousemove', (e) => {
-            const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
-            const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
-            resetContainer.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-        });
+        if (resetContainer) {
+            resetContainer.addEventListener('mousemove', (e) => {
+                const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+                const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+                resetContainer.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            });
 
-        // Reset when mouse leaves
-        resetContainer.addEventListener('mouseleave', () => {
-            resetContainer.style.transform = 'rotateY(0) rotateX(0)';
-        });
-        document.querySelector('form').addEventListener('submit', function (e) {
-        const newPassword = document.getElementById('new-password').value;
-        const confirmPassword = document.getElementById('confirm-password').value;
-
-        // if (newPassword !== confirmPassword) {
-        //     e.preventDefault(); // Empêche l'envoi du formulaire
-        //     alert('Les mots de passe ne correspondent pas. Veuillez réessayer.');
-        // }
-    });
-    document.querySelector('form').addEventListener('submit', function (e) {
-        const newPassword = document.getElementById('new-password').value;
-        const confirmPassword = document.getElementById('confirm-password').value;
-        const errorMessage = document.getElementById('error-message');
-
-        if (newPassword !== confirmPassword) {
-            e.preventDefault(); // Empêche l'envoi du formulaire
-            errorMessage.classList.remove('hidden'); // Affiche le message d'erreur
-        } else {
-            errorMessage.classList.add('hidden'); // Cache le message d'erreur
+            resetContainer.addEventListener('mouseleave', () => {
+                resetContainer.style.transform = 'rotateY(0) rotateX(0)';
+            });
         }
-    });
+
+        // Password toggle functionality
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const icon = field.nextElementSibling.querySelector('i');
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                field.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
+        // Password confirmation validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const password = document.getElementById('password').value;
+            const passwordConfirmation = document.getElementById('password_confirmation').value;
+            const errorElement = document.getElementById('password-error');
+
+            if (password !== passwordConfirmation) {
+                e.preventDefault();
+                errorElement.classList.remove('hidden');
+                // Scroll to error
+                errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                errorElement.classList.add('hidden');
+            }
+        });
+
+        // Real-time password matching check
+        document.getElementById('password_confirmation').addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            const passwordConfirmation = this.value;
+            const errorElement = document.getElementById('password-error');
+
+            if (passwordConfirmation.length > 0 && password !== passwordConfirmation) {
+                errorElement.classList.remove('hidden');
+            } else {
+                errorElement.classList.add('hidden');
+            }
+        });
     </script>
 </body>
 </html>

@@ -14,4 +14,8 @@ class Note extends Model
         'examen_id',
         'note'
     ];
+    public function etudiant()
+    {
+        return $this->belongsTo(Etudiant::class);
+    }
 }

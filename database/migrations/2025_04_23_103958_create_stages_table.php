@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('stages', function (Blueprint $table) {
             $table->id();
             $table->string('nom_stage');
-            $table->string('description');
+            $table->text('description');
             $table->string('entreprise');
             $table->string('duree');
             $table->string('photo');
+            $table->string('domaine');
             $table->string('email_entreprise');
             $table->timestamps();
         });
