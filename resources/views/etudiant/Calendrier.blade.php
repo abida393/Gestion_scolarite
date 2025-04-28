@@ -29,6 +29,29 @@
     background-color: rgba(99, 102, 241, 0.1) !important;
     border-radius: 12px;
   }
+  @media (max-width: 640px) {
+    .fc-toolbar {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .fc-toolbar .fc-left, .fc-toolbar .fc-right {
+      margin-bottom: 0.5rem;
+    }
+    .fc-day-grid-event {
+      font-size: 0.75rem; /* Réduire la taille de la police */
+    }
+  }
+  .calendar-wrapper {
+    margin-top: 0; /* Supprime l'espace au-dessus */
+    padding-top: 0.5rem;
+    margin-bottom: 070%;/* Réduit le padding supérieur */
+  }
+  h2 {
+    margin-bottom: 0.5rem; /* Réduit l'espace sous le titre principal */
+  }
+  h4 {
+    margin-bottom: 0.5rem; /* Réduit l'espace sous la date */
+  }
 </style>
 
 <script>
@@ -38,15 +61,24 @@
     function updateCurrentDate() {
       const current = calendar.fullCalendar('getDate');
       const formatted = moment(current).format('dddd D MMMM YYYY');
+      moment.locale('fr');
       $('#currentDate').text(formatted.charAt(0).toUpperCase() + formatted.slice(1));
     }
 
     calendar.fullCalendar({
+      locale: 'fr', // Définit la langue en français
       header: {
         left: 'prev,next today',
         center: 'title',
         right: 'month,agendaWeek,agendaDay'
       },
+      buttonText: {
+        today: 'Aujourd\'hui',
+        month: 'Mois',
+        week: 'Semaine',
+        day: 'Jour'
+      },
+      contentHeight: 'auto',
       editable: false,
       selectable: false,
       events: '/events', // Laravel route qui retourne les événements liés à l’étudiant
