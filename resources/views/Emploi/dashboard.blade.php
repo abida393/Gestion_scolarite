@@ -6,7 +6,7 @@
     <title>Tableau de Bord</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-100 font-sans">
+<div class="bg-gray-100 font-sans">
     <div class="max-w-7xl mx-auto py-10 px-6">
         <h1 class="text-3xl font-bold text-center text-blue-800 mb-10 uppercase tracking-wide">
             Tableau de Bord - Cours de {{ ucfirst($today) }}
@@ -41,5 +41,5 @@
             </div>
         @endif
     </div>
-</body>
+</div>
 </html>

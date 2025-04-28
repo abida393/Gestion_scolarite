@@ -137,7 +137,11 @@ public function destroy(emplois_temps $timetable)
     public function createComplet()
 {
     $formations = Formation::all();
-    $filieres = Filiere::all(); // <-- Manquait ici
+    $filiere = Filiere::all();
+    $filieres = [];
+    foreach ($filiere as $item) {
+        $filieres[] = $item;
+    }
     $matieres = Matiere::all();
     $enseignants = Enseignant::all();
     $classes = Classe::all();
@@ -228,7 +232,8 @@ private function generateTimeSlots()
 }
 public function dashboard()
 {
-    $today = now()->locale('fr')->isoFormat('dddd'); // Obtenir le jour actuel en français
+    $today = now()->locale('fr')->isoFormat('dddd');
+     // Obtenir le jour actuel en français
     $emploisTemps = emplois_temps::whereDate('date', now()->toDateString())->with(['matiere', 'enseignant', 'classe'])->get();
 
     return view('Emploi.dashboard', compact('today', 'emploisTemps'));
@@ -240,13 +245,14 @@ public function dashboard()
 public function emploiEtudiant()
 {
     // Vérifier si l'utilisateur est connecté
-    $user = Auth::user();
+    $user = Auth::guard('etudiant')->user();
     if (!$user) {
         return redirect()->route('login')->with('error', 'Vous devez être connecté pour accéder à cette page.');
     }
 
     // Vérifier si l'utilisateur a une classe associée
-    $classeId = $user->classe_id;
+    $classeId = $user->classes_id;
+    
     if (!$classeId) {
         return redirect()->back()->with('error', 'Aucune classe associée à cet utilisateur.');
     }

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class enseignant extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'enseignant_nom', 'enseignant_prenom', 'enseignant_sexe', 'enseignant_nationalite',
         'enseignant_cin', 'enseignant_cnss', 'enseignant_diplomes', 'enseignant_specialite',
@@ -20,5 +21,16 @@ class enseignant extends Model
     public function getNameAttribute()
     {
         return $this->attributes['enseignant_nom'] . ' ' . $this->attributes['enseignant_prenom'];
+    }
+
+    protected $table = 'enseignants';
+
+    public function matieres()
+    {
+        return $this->hasMany(Matiere::class);
+    }
+    public function emploisTemps()
+    {
+        return $this->hasMany(emplois_temps::class);
     }
 }

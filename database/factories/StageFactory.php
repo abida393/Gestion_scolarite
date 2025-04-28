@@ -22,6 +22,7 @@ class StageFactory extends Factory
             'entreprise' => $this->faker->company,
             'duree' => $this->faker->numberBetween(1, 12) . ' months', // Random duration between 1 and 12 months
             'photo' => $this->faker->imageUrl(640, 480, 'business', true), // Random image URL
+        'domaine' => $this->faker->word,
             'email_entreprise' => $this->faker->companyEmail,
         ];
     }

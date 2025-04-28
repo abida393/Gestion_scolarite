@@ -21,6 +21,9 @@ return new class extends Migration
             $table->foreign('formation_id')->references('id')->on('formations');
             $table->foreign('classes_id')->references('id')->on('classes');
             $table->foreign('filiere_id')->references('id')->on('filieres');
+            $table->string('email_ecole')->unique();
+            $table->string('password');
+            $table->string('identifiant')->unique();
             $table->string('etudiant_cin');
             $table->string('etudiant_serie_bac');
             $table->string('etudiant_cne');

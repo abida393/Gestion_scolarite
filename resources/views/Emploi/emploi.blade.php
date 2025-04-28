@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emploi du Temps</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="bg-gray-100 font-sans">
+<x-home titre="absences-page" page_titre="absences-page" :nom_complete="Auth::guard('etudiant')->user()->etudiant_nom . ',' . Auth::guard('etudiant')->user()->etudiant_prenom">
+
+
+<div class="bg-gray-100 font-sans">
 
 @if (session('success'))
     <div class="bg-green-100 text-green-700 p-4 rounded-lg mb-4">
@@ -24,9 +19,10 @@
 
     <!-- Boutons pour ajouter un cours ou un emploi -->
     <div class="flex justify-end mb-4 space-x-2">
-        <a href="{{ route('emploi.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded shadow font-semibold text-sm sm:text-base">
-            + Ajouter un cours
-        </a>
+    <a href="{{ route('emploi.create', ['classe_id' => request('classe_id')]) }}" 
+   class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded shadow font-semibold text-sm sm:text-base">
+    + Ajouter un cours
+</a>
         <a href="{{ route('emploi.create_complet') }}" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded shadow font-semibold text-sm sm:text-base">
             ➕ Créer un nouvel emploi du temps
         </a>
@@ -78,7 +74,7 @@
                             <th class="py-3 px-4 border">Cours 5</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tdiv>
                         @foreach ($grouped as $jour => $coursDuJour)
                             <tr class="text-center hover:bg-gray-50 border-t border-gray-200" style="height: 120px;">
                                 <td class="px-4 py-2 border text-left font-semibold text-gray-800">{{ ucfirst($jour) }}</td>
@@ -138,5 +134,5 @@
     @endif
 </div>
 
-</body>
-</html>
+        </div>
+        </x-home>

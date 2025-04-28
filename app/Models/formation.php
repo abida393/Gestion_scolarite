@@ -11,8 +11,28 @@ class Formation extends Model
 
     protected $table = 'formations'; // Assurez-vous que le nom de la table est correct
 
+    
+    protected $fillable = [
+        'nom_formation',
+        'description',
+        'diplome',
+        'niveau',
+        'filiere_id',
+    ];
+    public function etudiants()
+    {
+        return $this->hasMany(etudiant::class, 'formation_id');
+    }
     public function filieres()
     {
         return $this->hasMany(Filiere::class);
+    }
+    public function responsables()
+    {
+        return $this->hasMany(Responsable::class, 'formation_id', 'id');
+    }
+    public function annee_formation()
+    {
+        return $this->hasMany(annee_formation::class, 'formation_id', 'id');
     }
 }

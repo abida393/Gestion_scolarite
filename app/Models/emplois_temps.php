@@ -40,4 +40,5 @@ public function classe()
 {
     return $this->belongsTo(Classe::class);
 }
+
 }

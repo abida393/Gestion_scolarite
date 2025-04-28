@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class examen extends Model
 {
     use HasFactory;
+    protected $table = 'examens';
+    public function matiere()
+    {
+        return $this->belongsTo(Matiere::class);
+    }
 }

@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emploi du Temps Étudiant</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="bg-gray-100 font-sans">
+<x-home titre="absences-page" page_titre="absences-page" :nom_complete="Auth::guard('etudiant')->user()->etudiant_nom . ',' . Auth::guard('etudiant')->user()->etudiant_prenom">
+
+<div class="bg-gray-100 font-sans">
 
 <div class="max-w-7xl mx-auto py-10 px-6">
     <!-- Titre principal -->
@@ -79,5 +73,5 @@
     @endif
 </div>
 
-</body>
-</html>
+</div>
+</x-home>

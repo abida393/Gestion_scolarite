@@ -13,9 +13,6 @@ return new class extends Migration
     {
         Schema::create('profiles', function (Blueprint $table) {
             $table->string("type_profile")->primary();
-            $table->string("identifiant");
-            $table->string('email_ecole');
-            $table->string('password');
             $table->timestamps();
         });
     }

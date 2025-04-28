@@ -2,16 +2,44 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\classe;
+use App\Models\emplois_temps;
+use App\Models\etudiant;
+use App\Models\etudiant_absence;
+use App\Models\module;
+use App\Models\paiement;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use App\Models\stage;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
+
     public function index()
     {
+        //         $absences = DB::table('absences')
+        //             ->join('seances', 'absences.seance_id', '=', 'seances.id')
+        //             ->join('matieres', 'seances.matiere_id', '=', 'matieres.id')
+        //             ->select(
+        //                 'absences.id as absence_id',
+        //                 'absences.date_justif',
+        //                 'absences.justifier',
+        //                 'absences.justification',
+        //                 'seances.date_seance',
+        //                 'seances.heure_debut',
+        //                 'seances.heure_fin',
+        //                 'matieres.nom_matiere'
+        //             )
+        //             ->get();
+        // // Puis on envoie les données à la vue
+        // $absences = etudiant_absence::with('seance')->where('etudiant_id', $etudiantId)->get();
+        // return view('absence', compact('absences'));
+
         return view("authentification.welcome");
     }
 
@@ -30,26 +58,73 @@ class Controller extends BaseController
         return view("calender.calendar");
     }
 
-    public function home(){
-        return view("pages.Home");
-    }
+
     public function calendrier(){
         return view("pages.Calendrier");
     }
-    public function notes(){
-        return view("pages.Notes");
-    }
+
     public function demande_documents(){
         return view("pages.Demande_documents");
     }
-    public function absence_justif(){
-        return view("pages.Absence_justif");
+
+
+
+    public function home()
+    {
+  
+        $today = now()->locale('fr')->isoFormat('dddd'); // Obtenir le jour actuel en français
+       
+        $emploisTemps = emplois_temps::whereDate('jour', $today)->where("classe_id",auth::guard("etudiant")->user()->classes_id)->with(['matiere', 'enseignant', 'classe'])->get();
+        return view("etudiant.Home", compact('today', 'emploisTemps'));
+
     }
-    public function stages(){
-        return view("pages.Stages");
+   
+    public function notes()
+    {
+        return view("etudiant.Notes");
     }
-    public function aide(){
-        return view("pages.Aide");
+   
+    public function absence_justif()
+    {
+        $etudiant = Auth::guard('etudiant')->user();
+        $absences = $etudiant->etudiant_absences;
+        return view("etudiant.Absence_justif", compact('absences'));
+    }
+    // public function stages(){
+    //     return view("etudiant.Stages");
+    //     $absences = \App\Models\etudiant_absence::all();
+    //     return view("pages.Absence_justif", compact('absences'));
+    // }
+    public function stages()
+    {
+        $stages = Stage::all();
+        return view("etudiant.stages", compact('stages'));
+    }
+    public function aide()
+    {
+        return view("etudiant.Aide");
+    }
+    public function paiement()
+    {
+        $etudiant = Auth::guard('etudiant')->user();
+        $paiements = $etudiant->paiements;
+        $montant_paye = 0;
+        foreach ($paiements as $paiement) {
+            $montant_paye += $paiement->montant_paye;
+        }
+        $montant_restant = $paiements[0]->montant_total - $montant_paye;
+        return view("etudiant.paiement",compact('paiements',"montant_paye","montant_restant"));
+    }
+    public function emploi()
+    {
+        return view("etudiant.emploi");
+    }
+    public function messagerie()
+    {
+        return view("etudiant.messagerie");
+    }
+    public function news()
+    {
+        return view("etudiant.news");
     }
 }
-
