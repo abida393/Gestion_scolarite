@@ -12,6 +12,14 @@
     <title>{{ $page_titre }}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/fr.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+  <link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
+  
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -118,7 +126,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
     <link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
-    @vite('resources/css/app.css')
+    
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Ajoutez ceci dans le fichier principal (par exemple, layouts/app.blade.php) -->
@@ -252,7 +261,7 @@
                 <i class="fa-solid fa-inbox"></i>
                 <span>Messagerie</span>
             </a>
-            <a href="{{ route('emploi') }}" class="nav-item {{ Route::is('emploi') ? 'active' : '' }}"
+            <a href="{{ route('emploi.etudiant') }}" class="nav-item {{ Route::is('emploi.etudiant') ? 'active' : '' }}"
                 data-page="emploi">
                 <i class="fas fa-clock"></i>
                 <span>Emploi du temps</span>

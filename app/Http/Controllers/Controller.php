@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\classe;
+use App\Models\emplois_temps;
 use App\Models\etudiant;
 use App\Models\etudiant_absence;
 use App\Models\module;
@@ -66,26 +67,28 @@ class Controller extends BaseController
        
     }
 
+
+    public function demande_documents(){
+        return view("pages.Demande_documents");
+    }
+
+
     public function home()
     {
-        //$etudiant = etudiant::find(1);
-        //$formation = $etudiant->formations;
-        //$filiere = $formation->filieres;
-        return view("etudiant.Home");
+  
+        $today = now()->locale('fr')->isoFormat('dddd'); // Obtenir le jour actuel en français
+       
+        $emploisTemps = emplois_temps::whereDate('jour', $today)->where("classe_id",auth::guard("etudiant")->user()->classes_id)->with(['matiere', 'enseignant', 'classe'])->get();
+        return view("etudiant.Home", compact('today', 'emploisTemps'));
+
     }
-    public function calendrier()
-    {
-        return view("etudiant.Calendrier");
-    }
+   
     public function notes()
     {
         $etudiant = Auth::guard('etudiant')->user();
         return view("etudiant.Notes", compact('etudiant'));
     }
-    public function demande_documents()
-    {
-        return view("etudiant.Demande_documents");
-    }
+   
     public function absence_justif()
     {
         $etudiant = Auth::guard('etudiant')->user();
