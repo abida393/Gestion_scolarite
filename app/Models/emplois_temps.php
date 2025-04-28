@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+// dd($matieres, $enseignants, $classes);
 class emplois_temps extends Model
 {
     use HasFactory;
@@ -26,17 +27,17 @@ class emplois_temps extends Model
 
     // Relations avec les autres modèles
     public function matiere()
-    {
-        return $this->belongsTo(Matiere::class);
-    }
+{
+    return $this->belongsTo(Matiere::class);
+}
 
-    public function enseignant()
-    {
-        return $this->belongsTo(Enseignant::class);
-    }
+public function enseignant()
+{
+    return $this->belongsTo(Enseignant::class, 'enseignant_id');
+}
 
-    public function classe()
-    {
-        return $this->belongsTo(Classe::class);
-    }
+public function classe()
+{
+    return $this->belongsTo(Classe::class);
+}
 }
