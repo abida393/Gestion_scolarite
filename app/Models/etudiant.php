@@ -40,7 +40,7 @@ class etudiant extends Authenticatable
     }
 
 
-    
+
     public function formation()
     {
         return $this->belongsTo(formation::class, 'formation_id');
@@ -72,5 +72,9 @@ class etudiant extends Authenticatable
     public function paiements()
     {
         return $this->hasMany(paiement::class);
+    }
+    public function notes()
+    {
+        return $this->hasMany(Note::class);
     }
 }

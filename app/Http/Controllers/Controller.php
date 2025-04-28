@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\classe;
 use App\Models\etudiant;
 use App\Models\etudiant_absence;
+use App\Models\filiere;
 use App\Models\module;
 use App\Models\paiement;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -59,9 +60,6 @@ class Controller extends BaseController
 
     public function home()
     {
-        $etudiant = etudiant::find(1);
-        $formation = $etudiant->formation;
-        $filiere = $formation->filieres;
         return view("etudiant.Home");
     }
     public function calendrier()

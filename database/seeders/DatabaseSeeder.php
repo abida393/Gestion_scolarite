@@ -42,7 +42,12 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        formation::factory(10)->create();
+        formation::factory()->create([
+            'id' => 1,
+            'nom_formation' => 'Informatique',
+            'prix' => 1000,
+        ]);
+
         filiere::factory(10)->create();
         annee::factory(10)->create();
         classe::factory(10)->create();
