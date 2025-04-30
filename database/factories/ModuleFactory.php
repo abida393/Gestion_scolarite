@@ -18,11 +18,11 @@ class ModuleFactory extends Factory
     public function definition(): array
     {
         return [
-            'classe_id' => classe::factory(), // creates and associates with a new Classe
-            'nom_module' => $this->faker->words(2, true), // e.g., "Mathématiques Appliquées"
-            'status' => $this->faker->boolean(80), // 80% chance of true
+            'classe_id' => classe::factory(),
+            'nom_module' => $this->faker->words(2, true),
+            'status' => $this->faker->boolean(80),
             'nbr_matiere' => $this->faker->numberBetween(1, 6),
-            'note_general' => $this->faker->randomFloat(2, 0, 20), // e.g., 14.25
+            'note_general' => $this->faker->randomFloat(2, 0, 20), 
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\auth\passwordController;
+use App\Http\Controllers\passwordResetController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//Route::get('/',[Controller::class,'index']);
+use App\Models\Etudiant;
+
+//Route::get('/profile/{id}', [EtudiantController::class, 'show'])->name('profile.show');
+
+
+Route::get('/change-password', [passwordResetController::class, 'edit'])->name('password.edit');
+Route::put('/update-password', [passwordResetController::class, 'update'])->name('password.update');
+
 // use App\Http\Controllers\TimetableController;
 
 Route::get('/', [AuthController::class, 'index'])->name('home.welcome');
@@ -27,7 +37,7 @@ Route::get('/mdpwrong', [AuthController::class, 'mdpwrong'])->name('mdpwrong');
 Route::get('/newmdp', [AuthController::class, 'newmdp'])->name('newmdp');
 Route::get('/admin', [AuthController::class, 'admin'])->name('admin');
 Route::get('/calendar', [Controller::class, 'calendar'])->name('calendar');
-// Route::get('/welcome', [App\Http\Controllers\HomeController::class, 'welcome'])->name('home.welcome');
+//Route::get('/welcome', [App\Http\Controllers\HomeController::class, 'welcome'])->name('home.welcome');
 
 use App\Http\Controllers\EvenementController;
 use App\Http\Controllers\EmploiTempsController;
@@ -73,6 +83,33 @@ Route::get('/dashboard', [EmploiTempsController::class, 'dashboard'])->name('das
 // Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
 // Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 // Route::get('/password/reset', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::get('/home',[Controller::class,'home'])->name('home');
+Route::get('/emploi',[Controller::class, 'emploi'])->name('emploi');
+Route::get('/calendrier',[Controller::class, 'calendrier'])->name('calendrier');
+Route::get('/notes',[Controller::class, 'notes'])->name('notes');
+Route::get('/demande_documents',[Controller::class, 'demande_documents'])->name('demande_documents');
+Route::get('/absence_justif',[Controller::class, 'absence_justif'])->name('absence_justif');
+Route::get('/stages',[Controller::class, 'stages'])->name('stages');
+Route::get('/aide',[Controller::class, 'aide'])->name('aide');
+Route::get('/profile',[Controller::class, 'profile'])->name('profile');
+Route::get('/paiement',[Controller::class, 'paiement'])->name('paiement');
+Route::get('/messagerie',[Controller::class, 'messagerie'])->name('messagerie');
+Route::get('/news',[Controller::class, 'news'])->name('news');
+
+
+
+
+
+
+use App\Http\Controllers\NoteController;
+
+
+
+Route::get('/notes/{etudiantId}', [NoteController::class, 'afficherNotes']);
+
+
+
+
 Route::get('/home', [Controller::class, 'home'])->name('home');
 // Route::get('/emploi', [Controller::class, 'emploi'])->name('emploi');
 Route::get('/calendrier', [Controller::class, 'calendrier'])->name('calendrier');

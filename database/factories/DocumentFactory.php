@@ -17,7 +17,7 @@ class DocumentFactory extends Factory
     public function definition(): array
     {
         return [
-            'nom_document' => $this->faker->word . '.pdf', // You can customize the extension based on your needs.
+            'nom_document' => $this->faker->word . '.pdf',
         ];
     }
 }

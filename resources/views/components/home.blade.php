@@ -19,7 +19,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/fr.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
   <link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
-  
+
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -126,7 +126,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
     <link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
-    
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -226,7 +226,7 @@
     <div class="sidebar" style="height: 100vh; overflow-y: auto; overflow-x: hidden;">
 
         <div class="logo">
-            <img src="{{ asset('/images/logo2.png') }}" alt="Logo Établissement" style="align-items:left;width:150px">
+            {{-- <img src="{{ asset('/images/logo2.png') }}" alt="Logo Établissement" style="align-items:left;width:150px"> --}}
             <div class="burger-menu" id="mobile-toggle">
                 <i class="fas fa-bars"></i>
             </div>
@@ -271,16 +271,29 @@
                 <i class="far fa-calendar-alt"></i>
                 <span>Calendrier</span>
             </a>
+            <a href="{{ route('events') }}" class="nav-item {{ Route::is('events') ? 'active' : '' }}"
+                data-page="event">
+                <i class="fas fa-briefcase"></i>
+                <span>Evenements</span>
+            </a>
             <a href="{{ route('stages') }}" class="nav-item {{ Route::is('stages') ? 'active' : '' }}"
                 data-page="stage">
                 <i class="fas fa-briefcase"></i>
                 <span>Stages</span>
             </a>
-            <a href="{{ route('events') }}" class="nav-item {{ Route::is('events') ? 'active' : '' }}"
-                data-page="event">
-                <i class="fas fa-briefcase"></i>
-                <span>Events</span>
-                <a href="{{ route('news') }}" class="nav-item {{ Route::is('news') ? 'active' : '' }}"
+            <a href="{{ route("news") }}" class="nav-item {{ Route::is("news")  ? 'active' : ''  }}" data-page="news">
+                <i class="fas fa-newspaper"></i>
+                <span>News</span>
+            </a>
+            <a href="{{ route("profile") }}" class="nav-item {{ Route::is("profile")  ? 'active' : ''  }}" data-page="profile">
+                <i class="fas fa-newspaper"></i>
+                <span>profile</span>
+            </a>
+            <a href="{{ route("aide") }}" class="nav-item {{ Route::is("aide")  ? 'active' : ''  }}" data-page="aide">
+                <i class="far fa-question-circle"></i>
+                <span>Aide</span>
+            </a>
+                {{-- <a href="{{ route('news') }}" class="nav-item {{ Route::is('news') ? 'active' : '' }}"
                     data-page="news">
                     <i class="fas fa-newspaper"></i>
                     <span>News</span>
@@ -289,7 +302,7 @@
                     data-page="aide">
                     <i class="far fa-question-circle"></i>
                     <span>Aide</span>
-                </a>
+                </a> --}}
         </div>
     </div>
 

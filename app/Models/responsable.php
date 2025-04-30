@@ -12,20 +12,18 @@ class responsable extends Authenticatable
 {
     use HasFactory, Notifiable, HasApiTokens;
     protected $table = 'responsables';
-    // Add this method to ensure proper email handling
     public function getEmailForPasswordReset()
     {
         return $this->email_ecole;
     }
 
-    // This ensures the model can provide an email attribute
     public function getEmailAttribute()
     {
         return $this->email_ecole;
     }
 
 
-    
+
     public function profile()
     {
         return $this->belongsTo(Profile::class, 'type_profile', 'type_profile');

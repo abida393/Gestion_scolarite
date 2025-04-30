@@ -19,10 +19,10 @@ class MatiereFactory extends Factory
     public function definition(): array
     {
         return [
-            'nom_matiere' => $this->faker->words(2, true), // e.g., "Analyse Mathématique"
-            'module_id' => module::factory(), // or link to an existing one
+            'nom_matiere' => $this->faker->words(2, true),
+            'module_id' => module::factory(),
             'coefficient' => $this->faker->numberBetween(1, 5),
-            'enseignant_id' => enseignant::factory(), // or link to existing enseignant
+            'enseignant_id' => enseignant::factory(),
         ];
     }
 }

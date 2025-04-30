@@ -12,6 +12,7 @@ use App\Models\paiement;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use App\Models\news;
 use App\Models\stage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -58,21 +59,35 @@ class Controller extends BaseController
     {
         return view("etudiant.Calendrier");
     }
+    public function profile()
+    {
+        $etudiant = Auth::guard('etudiant')->user();
+        $filiere =$etudiant->filiere;
+        $classe = $etudiant->classe;
+      return view('etudiant.profile', compact('etudiant', 'filiere','classe'));
+
+
+    }
+
 
     public function demande_documents(){
         return view("etudiant.Demande_documents");
     }
 
+
     public function home()
     {
-        $today = now()->locale('fr')->isoFormat('dddd'); // Obtenir le jour actuel en français
-        $emploisTemps = emplois_temps::whereDate('jour', $today)->where("classe_id",auth::guard("etudiant")->user()->classes_id)->with(['matiere', 'enseignant', 'classe'])->get();
+        $today = now()->locale('fr')->isoFormat('dddd');
+        $emploisTemps = emplois_temps::where('jour',$today)->where("classe_id",auth::guard("etudiant")->user()->classes_id)->with(['matiere', 'enseignant', 'classe'])->get();
         return view("etudiant.Home", compact('today', 'emploisTemps'));
     }
 
     public function notes()
     {
-        return view("etudiant.Notes");
+        $etudiant = Auth::guard('etudiant')->user();
+        $filiere = $etudiant->filiere;
+        $notes = $etudiant->notes;
+        return view("etudiant.Notes", compact('etudiant', 'filiere'));
     }
 
     public function absence_justif()
@@ -114,8 +129,27 @@ class Controller extends BaseController
     {
         return view("etudiant.messagerie");
     }
-    public function news()
+    /*public function news()
     {
         return view("etudiant.news");
-    }
+    }*/
+    public function news(){
+       // return view("pages.news");
+       $news = News::orderBy('date_news', 'desc')->get();
+       return view('etudiant.news', compact('news'));
+
+}
+
+
+
+
+public function welcome()
+{
+    return view('authentification.welcome');
+}
+/*public function show($id)
+{
+$etudiant = Etudiant::findOrFail($id);
+return view('profile', compact('etudiant'));
+}*/
 }

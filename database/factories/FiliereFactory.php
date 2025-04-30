@@ -18,8 +18,8 @@ class FiliereFactory extends Factory
     public function definition(): array
     {
         return [
-            'formation_id' => formation::factory(), // Creates and links to a new Formation
-            'nom_filiere' => $this->faker->words(2, true), // e.g., "Informatique Générale"
+            'formation_id' => formation::factory(),
+            'nom_filiere' => $this->faker->words(2, true),
         ];
     }
 }

@@ -21,6 +21,7 @@ class Etudiant_absenceFactory extends Factory
         return [
             'seance_id' => seance::factory(),
             'etudiant_id' => etudiant::factory(),
+            "date_absence" => $this->faker->date(),
             'date_justif' => $this->faker->date(),
             'date_absence' => $this->faker->date(),
             'justification' => $this->faker->sentence(),

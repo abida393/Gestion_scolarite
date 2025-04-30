@@ -1,0 +1,124 @@
+:root {
+    --primary-color: #3498db;
+    --success-color: #2ecc71;
+    --danger-color: #e74c3c;
+    --light-gray: #f5f5f5;
+    --dark-gray: #333;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.student-info {
+    background: var(--light-gray);
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.notes-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    overflow-x: auto;
+}
+
+.notes-table th, 
+.notes-table td {
+    padding: 12px 15px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.notes-table th {
+    background-color: var(--primary-color);
+    color: white;
+    position: sticky;
+    top: 0;
+}
+
+.module-header {
+    background-color: #e6f2ff;
+    font-weight: bold;
+}
+
+.module-header td:first-child {
+    font-weight: bold;
+    text-align: left;
+}
+
+.valid {
+    color: var(--success-color);
+    font-weight: bold;
+}
+
+.invalid {
+    color: var(--danger-color);
+    font-weight: bold;
+}
+
+.module-summary {
+    background-color: var(--light-gray);
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .notes-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .student-info {
+        flex-direction: column;
+    }
+    
+    .notes-table th, 
+    .notes-table td {
+        padding: 8px 10px;
+        font-size: 14px;
+    }
+}
+
+@media print {
+    body {
+        background: none;
+        padding: 0;
+    }
+    
+    .container {
+        box-shadow: none;
+        padding: 0;
+    }
+    
+    .student-info {
+        display: none;
+    }
+}
