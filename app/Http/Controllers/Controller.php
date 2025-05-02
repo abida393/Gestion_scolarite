@@ -60,11 +60,11 @@ class Controller extends BaseController
 
 
     public function calendrier(){
-        return view("pages.Calendrier");
+        return view("etudiant.Calendrier");
     }
 
     public function demande_documents(){
-        return view("pages.Demande_documents");
+        return view("etudiant.Demande_documents");
     }
 
 
