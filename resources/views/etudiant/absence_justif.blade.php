@@ -34,151 +34,147 @@
         
         <!-- Liste des absences -->
         <section class="space-y-5 mb-12" id="absence-list">
-    @foreach($absences as $absence)
-        <div class="absence-container">
-            <article class="absence-card bg-white rounded-xl shadow-md overflow-hidden border-l-4 
-                @if($absence->justifier==1) border-green-500
-                @elseif(!$absence->justifier && $absence->justification!=null) border-yellow-500
-                @else border-red-500 @endif
-                transition-all hover:shadow-lg hover:-translate-y-0.5"
-                data-status="@if($absence->justifier==1)justified
-                            @elseif(!$absence->justifier && $absence->justification!=null)pending
-                            @else unjustified @endif">
-                
-                <div class="p-5 border-b border-gray-100 flex justify-between items-center">
-                    <div class="flex items-center text-lg font-semibold text-gray-700">
-                        <i class="far fa-calendar-alt text-indigo-500 mr-2"></i>
-                        {{ \Carbon\Carbon::parse($absence->date_justif)->format('d/m/Y') }}
-                    </div>
-                    
-                    @if($absence->justifier==1)
-                        <span class="status px-3 py-1 rounded-full text-sm font-medium bg-green-50 text-green-600">
-                            <i class="fas fa-check-circle mr-1"></i>Justifiée
-                        </span>
-                    @elseif(!$absence->justifier && $absence->justification!=null)
-                        <span class="status px-3 py-1 rounded-full text-sm font-medium bg-yellow-50 text-yellow-600">
-                            <i class="fas fa-hourglass-half mr-1"></i>En validation
-                        </span>
-                    @else
-                        <span class="status px-3 py-1 rounded-full text-sm font-medium bg-red-50 text-red-600">
-                            <i class="fas fa-times-circle mr-1"></i>Non justifiée
-                        </span>
-                    @endif
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 p-5">
-    <div>
-        <p class="text-sm text-gray-500 flex items-center">
-            <i class="far fa-bookmark text-indigo-400 mr-2"></i>Séance
-        </p>
-        <p class="font-medium">{{ $absence->seance->matiere->nom_matiere ?? 'Séance inconnue' }}</p>
-    </div>
-    
-    <div>
-        <p class="text-sm text-gray-500 flex items-center">
-            <i class="far fa-clock text-indigo-400 mr-2"></i>Heures
-        </p>
-        <p class="font-medium">
-            {{ $absence->seance ? $absence->seance->heure_debut : '--:--' }} - 
-            {{ $absence->seance ? $absence->seance->heure_fin : '--:--' }}
-        </p>
-    </div>
-    
-    <div>
-        <p class="text-sm text-gray-500 flex items-center">
-            <i class="far fa-comment-alt text-indigo-400 mr-2"></i>Justification
-        </p>
-        <p class="font-medium">{{ $absence->justification ?? '-' }}</p>
-    </div>
-
-    <!-- Affichage du document justificatif -->
-        
-            @if($absence->justification_file)
+            @foreach($absences as $absence)
+                <div class="absence-container">
+                    <article class="absence-card bg-white rounded-xl shadow-md overflow-hidden border-l-4 
+                        @if($absence->justifier==1) border-green-500
+                        @elseif(!$absence->justifier && $absence->justification!=null) border-yellow-500
+                        @else border-red-500 @endif
+                        transition-all hover:shadow-lg hover:-translate-y-0.5"
+                        data-status="@if($absence->justifier==1)justified
+                                    @elseif(!$absence->justifier && $absence->justification!=null)pending
+                                    @else unjustified @endif">
+                        
+                        <div class="p-5 border-b border-gray-100 flex justify-between items-center">
+                            <div class="flex items-center text-lg font-semibold text-gray-700">
+                                <i class="far fa-calendar-alt text-indigo-500 mr-2"></i>
+                                {{ \Carbon\Carbon::parse($absence->date_justif)->format('d/m/Y') }}
+                            </div>
+                            
+                            @if($absence->justifier==1)
+                                <span class="status px-3 py-1 rounded-full text-sm font-medium bg-green-50 text-green-600">
+                                    <i class="fas fa-check-circle mr-1"></i>Justifiée
+                                </span>
+                            @elseif(!$absence->justifier && $absence->justification!=null)
+                                <span class="status px-3 py-1 rounded-full text-sm font-medium bg-yellow-50 text-yellow-600">
+                                    <i class="fas fa-hourglass-half mr-1"></i>En validation
+                                </span>
+                            @else
+                                <span class="status px-3 py-1 rounded-full text-sm font-medium bg-red-50 text-red-600">
+                                    <i class="fas fa-times-circle mr-1"></i>Non justifiée
+                                </span>
+                            @endif
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 p-5">
             <div>
                 <p class="text-sm text-gray-500 flex items-center">
-                    <i class="far fa-file-alt text-indigo-400 mr-2"></i>Document
+                    <i class="far fa-bookmark text-indigo-400 mr-2"></i>Séance
+                </p>
+                <p class="font-medium">{{ $absence->seance->matiere->nom_matiere ?? 'Séance inconnue' }}</p>
+            </div>
+            
+            <div>
+                <p class="text-sm text-gray-500 flex items-center">
+                    <i class="far fa-clock text-indigo-400 mr-2"></i>Heures
                 </p>
                 <p class="font-medium">
-                    <a href="{{ asset('storage/' . $absence->justification_file) }}" target="_blank" class="text-blue-500 hover:underline">
-                        {{ basename($absence->justification_file) }} <!-- Affiche uniquement le nom du fichier -->
-                    </a>
+                    {{ $absence->seance ? $absence->seance->heure_debut : '--:--' }} - 
+                    {{ $absence->seance ? $absence->seance->heure_fin : '--:--' }}
                 </p>
             </div>
-            @endif
-        </div>
+            
+            <div>
+                <p class="text-sm text-gray-500 flex items-center">
+                    <i class="far fa-comment-alt text-indigo-400 mr-2"></i>Justification
+                </p>
+                <p class="font-medium">{{ $absence->justification ?? '-' }}</p>
+            </div>
+
+            <!-- Affichage du document justificatif -->
                 
-                @if(!$absence->justifier && $absence->justification==null)
-                    <div class="px-5 pb-5">
-                        <button onclick="toggleJustificationForm('{{ $absence->id }}', this)" 
-                            class="w-full md:w-auto px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium transition-all flex items-center justify-center">
-                            <i class="fas fa-file-upload mr-2"></i>Justifier cette absence
-                        </button>
+                    @if($absence->justification_file)
+                    <div>
+                        <p class="text-sm text-gray-500 flex items-center">
+                            <i class="far fa-file-alt text-indigo-400 mr-2"></i>Document
+                        </p>
+                        <p class="font-medium">
+                            <a href="{{ asset('storage/' . $absence->justification_file) }}" target="_blank" class="text-blue-500 hover:underline">
+                                {{ basename($absence->justification_file) }} <!-- Affiche uniquement le nom du fichier -->
+                            </a>
+                        </p>
                     </div>
-                @endif
-            </article>
+                    @endif
+                </div>
+                        
+                        @if(!$absence->justifier && $absence->justification==null)
+                            <div class="px-5 pb-5">
+                                <button onclick="toggleJustificationForm('{{ $absence->id }}', this)" 
+                                    class="w-full md:w-auto px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium transition-all flex items-center justify-center">
+                                    <i class="fas fa-file-upload mr-2"></i>Justifier cette absence
+                                </button>
+                            </div>
+                        @endif
+                    </article>
 
-            <!-- Formulaire de justification pour cette absence spécifique -->
-            <div id="justification-form-{{ $absence->id }}" class="justification-form hidden bg-white rounded-xl shadow-md p-6 mt-4">
-                <header class="mb-6">
-                    <h2 class="text-xl font-bold text-indigo-800 flex items-center">
-                        <i class="far fa-edit mr-3"></i>Justifier cette absence
-                    </h2>
-                    <p class="text-gray-500 text-sm mt-1">Pour la séance du {{ \Carbon\Carbon::parse($absence->date_justif)->format('d/m/Y') }}</p>
-                </header>
+                    <!-- Formulaire de justification pour cette absence spécifique -->
+                    <div id="justification-form-{{ $absence->id }}" class="justification-form hidden bg-white rounded-xl shadow-md p-6 mt-4">
+                        <header class="mb-6">
+                            <h2 class="text-xl font-bold text-indigo-800 flex items-center">
+                                <i class="far fa-edit mr-3"></i>Justifier cette absence
+                            </h2>
+                            <p class="text-gray-500 text-sm mt-1">Pour la séance du {{ \Carbon\Carbon::parse($absence->date_justif)->format('d/m/Y') }}</p>
+                        </header>
 
-                <form action="{{ route('justifier-absence') }}" method="post" enctype="multipart/form-data">
-                    @csrf
-                    <input type="hidden" name="absence_id" value="{{ $absence->id }}">
-                    
-                    <div class="mb-6">
-                        <label for="justification-text-{{ $absence->id }}" class="block text-gray-700 font-medium mb-2 flex items-center">
-                            <i class="far fa-file-alt text-indigo-500 mr-2"></i>Motif de l'absence
-                        </label>
-                        <textarea id="justification-text-{{ $absence->id }}" name="justification" required
-                            placeholder="Décrivez précisément le motif de votre absence..."
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all min-h-[120px]"></textarea>
-                    </div>
-
-                    <div class="mb-6">
-                        <label for="justification-file-{{ $absence->id }}" class="block text-gray-700 font-semibold mb-2">
-                            <span class="flex items-center">
-                                <i class="far fa-file-pdf text-red-500 mr-2 text-lg"></i>Joindre un justificatif (PDF uniquement)
-                            </span>
-                        </label>
-
-                        <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-5 text-center hover:border-indigo-400 transition-all">
-                            <input type="file" id="justification-file-{{ $absence->id }}" name="justification_file"
-                                accept="application/pdf"
-                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
-
-                            <div class="text-gray-500 z-0 pointer-events-none">
-                                <i class="fas fa-upload text-indigo-500 text-3xl mb-2"></i>
-                                <p class="text-sm">Cliquez ici ou glissez un fichier PDF</p>
+                        <form action="{{ route('justifier-absence') }}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" name="absence_id" value="{{ $absence->id }}">
+                            
+                            <div class="mb-6">
+                                <label for="justification-text-{{ $absence->id }}" class="block text-gray-700 font-medium mb-2 flex items-center">
+                                    <i class="far fa-file-alt text-indigo-500 mr-2"></i>Motif de l'absence
+                                </label>
+                                <textarea id="justification-text-{{ $absence->id }}" name="justification" required
+                                    placeholder="Décrivez précisément le motif de votre absence..."
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all min-h-[120px]"></textarea>
                             </div>
 
-                            <!-- Affichage dynamique du nom du fichier ici -->
-                            <div id="file-name-display-{{ $absence->id }}" class="mt-3 text-sm text-indigo-600 font-medium"></div>
-                        </div>
+                            <div class="mb-6">
+                                <label for="justification-file-{{ $absence->id }}" class="block text-gray-700 font-semibold mb-2">
+                                    <span class="flex items-center">
+                                        <i class="far fa-file-pdf text-red-500 mr-2 text-lg"></i>Joindre un justificatif (PDF uniquement)
+                                    </span>
+                                </label>
+
+                                <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-5 text-center hover:border-indigo-400 transition-all">
+                                    <input type="file" id="justification-file-{{ $absence->id }}" name="justification_file"
+                                        accept="application/pdf"
+                                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+
+                                    <div class="text-gray-500 z-0 pointer-events-none">
+                                        <i class="fas fa-upload text-indigo-500 text-3xl mb-2"></i>
+                                        <p class="text-sm">Cliquez ici ou glissez un fichier PDF</p>
+                                    </div>
+
+                                    <!-- Affichage dynamique du nom du fichier ici -->
+                                    <div id="file-name-display-{{ $absence->id }}" class="mt-3 text-sm text-indigo-600 font-medium"></div>
+                                </div>
+                            </div>
+                            <div class="flex justify-end space-x-3">
+                                <button type="button" onclick="toggleJustificationForm('{{ $absence->id }}', this.closest('.absence-container').querySelector('button'))"
+                                    class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg font-medium transition-all">
+                                    Annuler
+                                </button>
+                                <button type="submit" 
+                                        class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-all flex items-center">
+                                    <i class="far fa-paper-plane mr-2"></i>Soumettre
+                                </button>
+                            </div>
+                        </form>
                     </div>
-
-
-
-
-                    <div class="flex justify-end space-x-3">
-                        <button type="button" onclick="toggleJustificationForm('{{ $absence->id }}', this.closest('.absence-container').querySelector('button'))"
-                            class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg font-medium transition-all">
-                            Annuler
-                        </button>
-                        <button type="submit" 
-                                class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-all flex items-center">
-                            <i class="far fa-paper-plane mr-2"></i>Soumettre
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    @endforeach
-</section>
+                </div>
+            @endforeach
+        </section>
         <!-- Message si aucune absence -->
         <div id="no-results" class="hidden text-center py-10 bg-white rounded-xl shadow">
             <i class="fas fa-inbox text-4xl text-gray-400 mb-4"></i>
@@ -248,18 +244,20 @@
 
 
 
-    document.addEventListener("DOMContentLoaded", function () {
-        const input = document.getElementById("justification-file-{{ $absence->id }}");
-        const display = document.getElementById("file-name-display-{{ $absence->id }}");
+        document.addEventListener('DOMContentLoaded', function() {
+            const absenceList = document.getElementById('absence-list');
+            const noResults = document.getElementById('no-results');
+            const containers = document.querySelectorAll('.absence-container');
 
-        input.addEventListener("change", function () {
-            if (input.files.length > 0) {
-                const file = input.files[0];
-                display.textContent = `Fichier sélectionné : ${file.name}`;
+            // Check if there are any absences
+            if (containers.length === 0) {
+                // If no absences, show the "no absences" message
+                noResults.classList.remove('hidden');
+                absenceList.classList.add('hidden'); // Hide the absence list section
             } else {
-                display.textContent = "";
+                // If absences exist, initialize the filter to show all absences
+                filterAbsences('all');
             }
         });
-    });
-    </script>
+</script>
 </x-home>
