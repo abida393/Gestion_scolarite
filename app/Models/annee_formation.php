@@ -14,7 +14,6 @@ class annee_formation extends Model
         return $this->belongsTo(Annee::class, 'annee_id', 'id');
     }
 
-    // Define the relationship to Formation
     public function formation()
     {
         return $this->belongsTo(Formation::class, 'formation_id', 'id');

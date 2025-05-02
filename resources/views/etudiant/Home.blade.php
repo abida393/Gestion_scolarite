@@ -1,11 +1,10 @@
 <x-home titre="Page d'accueil" page_titre="Page d'accueil" :nom_complete="Auth::guard('etudiant')->user()->etudiant_nom.','.Auth::guard('etudiant')->user()->etudiant_prenom">
-      
 <div id="accueil-page">
         <section class="welcome-section">
             <h1>Bienvenue, <span class="student-name">{{ Auth::guard("etudiant")->user()->etudiant_nom.' , '.Auth::guard("etudiant")->user()->etudiant_prenom }}</span> !</h1>
             <p id="current-date-time"></p> <!-- Conteneur pour la date et l'heure -->
         </section>
-         <!-- dashboard -->
+             <!-- dashboard -->
      <div class="bg-gray-100 font-sans">
     <div class="max-w-7xl mx-auto py-10 px-6">
         <h1 class="text-3xl font-bold text-center text-blue-800 mb-10 uppercase tracking-wide">
@@ -72,9 +71,7 @@
                 </div>
             </div>
         </div>
-   
     </div>
-
     <script>
         // Fonction pour mettre à jour la date et l'heure
         function updateDateTime() {

@@ -17,25 +17,27 @@ use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 
+use Illuminate\Support\Facades\DB;
 
 class EmploiTempsController extends Controller
 {
-    
-    
-    
+
+
+
     public function showEmplois(Request $request)
-{
-    $classes = Classe::all(); // Charger toutes les classes
-    $classeId = $request->input('classe_id'); // Récupérer la classe sélectionnée
+    {
+        $classes = Classe::all(); // Charger toutes les classes
+        $classeId = $request->input('classe_id'); // Récupérer la classe sélectionnée
 
-    // Récupérer tous les emplois du temps
-    $emploisTemps = emplois_temps::with(['matiere', 'enseignant', 'classe'])->get();
+        // Filtrer les emplois du temps par classe si une classe est sélectionnée
+        $emploisTemps = emplois_temps::with(['matiere', 'enseignant', 'classe'])
+            ->when($classeId, function ($query, $classeId) {
+                return $query->where('classe_id', $classeId);
+            })
+            ->get();
 
-    // Filtrer les emplois du temps par classe si une classe est sélectionnée
-    $emploisClasse = collect(); // Initialiser une collection vide
-    if ($classeId) {
-        $emploisClasse = $emploisTemps->where('classe_id', $classeId);
-    }
+        // return view('Emploi.emploi', compact('emploisTemps', 'classes'));
+    
 
     return view('Emploi.emploi', compact('emploisTemps', 'emploisClasse', 'classes'));
 }
@@ -51,12 +53,12 @@ class EmploiTempsController extends Controller
         $formations = Formation::all();
         $filieres = Filiere::all();
         $classes = Classe::all();
-    
+
         return view('Emploi.create_emploi_complet', compact('formations', 'filieres', 'classes'));
-        
+
     }
 
-    
+
     public function getFilieresByFormation($formationId)
     {
         $filieres = Filiere::where('formation_id', $formationId)->get();
@@ -105,7 +107,7 @@ public function edit_emploi(emplois_temps $timetable)
     ]);
 }
 
-    
+
     public function update(Request $request, emplois_temps $timetable)
     {
         $validatedData = $request->validate([
@@ -116,7 +118,7 @@ public function edit_emploi(emplois_temps $timetable)
             'enseignant_id' => 'required|exists:enseignants,id',
             'salle' => 'required|string|max:255',
         ]);
-    
+
         $horaire = explode(' - ', $validatedData['horaire']);
         $timetable->update([
             'jour' => $validatedData['jour'],
@@ -127,10 +129,10 @@ public function edit_emploi(emplois_temps $timetable)
             'enseignant_id' => $validatedData['enseignant_id'],
             'salle' => $validatedData['salle'],
         ]);
-    
+
         return redirect()->route('emploi')->with('success', 'Cours mis à jour avec succès.');
     }
-    
+
 public function destroy(emplois_temps $timetable)
 {
     $timetable->delete();
@@ -179,7 +181,7 @@ public function storeMultiple(Request $request)
         'cours.*.salle' => 'required|string|max:255',
     ]);
 
-   
+
 
     try {
         foreach ($data['cours'] as $cours) {
@@ -198,11 +200,11 @@ public function storeMultiple(Request $request)
             ]);
         }
 
-        \DB::commit();
+        DB::commit();
 
         return redirect()->route('emploi')->with('success', 'Emploi du temps complet ajouté avec succès.');
     } catch (\Exception $e) {
-        \DB::rollBack();
+        DB::rollBack();
         return redirect()->back()->with('error', 'Une erreur est survenue lors de la création de l\'emploi du temps.');
     }
 }
@@ -256,7 +258,7 @@ public function emploiEtudiant()
 
     // Vérifier si l'utilisateur a une classe associée
     $classeId = $user->classes_id;
-    
+
     if (!$classeId) {
         return redirect()->back()->with('error', 'Aucune classe associée à cet utilisateur.');
     }

@@ -9,7 +9,7 @@ class Filiere extends Model
 {
     use HasFactory;
 
-    protected $table = 'filieres'; // <-- important si ta table s'appelle "filieres"
+    protected $table = 'filieres';
 
 
     public function formation()

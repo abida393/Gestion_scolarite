@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Matiere extends Model
 {
@@ -37,5 +38,9 @@ class Matiere extends Model
     public function emploisTemps()
     {
         return $this->hasMany(emplois_temps::class);
+    }
+    public function notes()
+    {
+        return $this->hasMany(Note::class);
     }
 }

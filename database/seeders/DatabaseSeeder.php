@@ -20,7 +20,7 @@ use App\Models\formation;
 use App\Models\matiere;
 use App\Models\module;
 use App\Models\news;
-use App\Models\note;
+//use App\Models\note;
 use App\Models\paiement;
 use App\Models\periode;
 use App\Models\profile;
@@ -42,7 +42,12 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        formation::factory(10)->create();
+        formation::factory()->create([
+            'id' => 1,
+            'nom_formation' => 'Informatique',
+            'prix' => 1000,
+        ]);
+
         filiere::factory(10)->create();
         annee::factory(10)->create();
         classe::factory(10)->create();
@@ -64,6 +69,6 @@ class DatabaseSeeder extends Seeder
         news::factory(10)->create();
         evenement::factory(10)->create();
         paiement::factory(10)->create();
-        note::factory(10)->create();
+        //note::factory(10)->create();
     }
 }

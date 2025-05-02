@@ -17,10 +17,10 @@ class NewsFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->sentence, // Random sentence as the title
-            'content' => $this->faker->paragraph, // Random paragraph for the content
-            'image' => $this->faker->imageUrl(640, 480, 'news', true), // Random image URL for the news image
-            'date_news' => $this->faker->date(), // Random date for the news date
+            'title' => $this->faker->sentence,
+            'content' => $this->faker->paragraph,
+            'image' => $this->faker->imageUrl(640, 480, 'news', true),
+            'date_news' => $this->faker->date(),
         ];
     }
 }

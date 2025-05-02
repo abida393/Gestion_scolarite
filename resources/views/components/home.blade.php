@@ -126,105 +126,7 @@
     </style>
     
 
-    <!-- <link rel="stylesheet" href="{{ asset('css/calendar.css') }}"> -->
     
-    <!-- FullCalendar CSS -->
-    <!-- <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/main.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/main.min.js"></script>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-     Ajoutez ceci dans le fichier principal (par exemple, layouts/app.blade.php) -->
-    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">  -->
-    <!-- <style>
-        
-        .fc {
-            background-color: white;
-            border-radius: 1rem;
-            box-shadow: none;
-            padding: 1.5rem;
-        }
-
-        .fc-header-toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        #eventModal {
-            position: absolute;
-            /* Allow dynamic positioning */
-            z-index: 50;
-            /* Ensure it appears above other elements */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .fc .fc-daygrid-day {
-            background-color: white;
-        }
-
-        .fc-scrollgrid {
-            background-color: white;
-        }
-
-        .fc-button {
-            @apply bg-blue-600 text-white rounded px-3 py-1 text-sm font-medium mx-1 hover:bg-blue-700 transition;
-        }
-
-        .fc#calendar {
-            height: 800px;
-            /* Ajustez la hauteur selon vos besoins */
-            width: 85%;
-            /* Ajustez la largeur si nécessaire */
-            margin-left: 8%;
-            border-radius: 40%;
-        }
-
-        .min-h-screen {
-            min-height: 100vh;
-            /* Prend toute la hauteur de l'écran */
-        }
-
-        .flex {
-            display: flex;
-        }
-
-        .fc-other-month {
-            background-color: #f9f9f9;
-            /* Couleur de fond plus claire */
-            color: #ccc;
-            /* Couleur du texte plus claire */
-        }
-
-        .items-center {
-            align-items: center;
-            /* Centre verticalement */
-        }
-
-        .justify-center {
-            justify-content: center;
-            /* Centre horizontalement */
-        }
-
-        .fc-event {
-            background-color: rgb(55, 122, 230) !important;
-            color: white !important;
-            padding: 0.25rem 0.5rem !important;
-            border-radius: 0.375rem !important;
-            border: none !important;
-            transition: transform 0.2s ease-in-out;
-            font-size: 0.875rem;
-        }
-
-        .fc-event:hover {
-            transform: scale(1.05);
-            cursor: pointer;
-        }
-        
-    </style> -->
 </head>
 
 <body style="">
@@ -232,7 +134,7 @@
     <div class="sidebar" style="height: 100vh; overflow-y: auto; overflow-x: hidden;">
 
         <div class="logo">
-            <img src="{{ asset('/images/logo2.png') }}" alt="Logo Établissement" style="align-items:left;width:150px">
+            {{-- <img src="{{ asset('/images/logo2.png') }}" alt="Logo Établissement" style="align-items:left;width:150px"> --}}
             <div class="burger-menu" id="mobile-toggle">
                 <i class="fas fa-bars"></i>
             </div>
@@ -277,16 +179,29 @@
                 <i class="far fa-calendar-alt"></i>
                 <span>Calendrier</span>
             </a>
+            <a href="{{ route('events') }}" class="nav-item {{ Route::is('events') ? 'active' : '' }}"
+                data-page="event">
+                <i class="fas fa-briefcase"></i>
+                <span>Evenements</span>
+            </a>
             <a href="{{ route('stages') }}" class="nav-item {{ Route::is('stages') ? 'active' : '' }}"
                 data-page="stage">
                 <i class="fas fa-briefcase"></i>
                 <span>Stages</span>
             </a>
-            <a href="{{ route('events') }}" class="nav-item {{ Route::is('events') ? 'active' : '' }}"
-                data-page="event">
-                <i class="fas fa-briefcase"></i>
-                <span>Events</span>
-                <a href="{{ route('news') }}" class="nav-item {{ Route::is('news') ? 'active' : '' }}"
+            <a href="{{ route("news") }}" class="nav-item {{ Route::is("news")  ? 'active' : ''  }}" data-page="news">
+                <i class="fas fa-newspaper"></i>
+                <span>News</span>
+            </a>
+            <a href="{{ route("profile") }}" class="nav-item {{ Route::is("profile")  ? 'active' : ''  }}" data-page="profile">
+                <i class="fas fa-newspaper"></i>
+                <span>profile</span>
+            </a>
+            <a href="{{ route("aide") }}" class="nav-item {{ Route::is("aide")  ? 'active' : ''  }}" data-page="aide">
+                <i class="far fa-question-circle"></i>
+                <span>Aide</span>
+            </a>
+                {{-- <a href="{{ route('news') }}" class="nav-item {{ Route::is('news') ? 'active' : '' }}"
                     data-page="news">
                     <i class="fas fa-newspaper"></i>
                     <span>News</span>
@@ -295,7 +210,7 @@
                     data-page="aide">
                     <i class="far fa-question-circle"></i>
                     <span>Aide</span>
-                </a>
+                </a> --}}
         </div>
     </div>
 

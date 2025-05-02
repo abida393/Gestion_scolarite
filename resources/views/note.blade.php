@@ -1,7 +1,4 @@
-<x-home titre="Page notes" page_titre="Page notes" :nom_complete="Auth::guard('etudiant')->user()->etudiant_nom . ',' . Auth::guard('etudiant')->user()->etudiant_prenom">
-        <!-- Page notes -->
-        <div id="notes-page">
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -14,10 +11,10 @@
         <h1>Portail Étudiant - Consultation des Notes</h1>
 
         <div class="student-info">
-            <div><strong>Nom:</strong> {{ $etudiant->etudiant_nom }}</div>
-            <div><strong>Prénom:</strong> {{ $etudiant->etudiant_prenom }}</div>
+            <div><strong>Nom:</strong> {{ $etudiant->nom }}</div>
+            <div><strong>Prénom:</strong> {{ $etudiant->prenom }}</div>
             <div><strong>N° Étudiant:</strong> {{ $etudiant->id }}</div>
-            <div><strong>Filière:</strong> {{ $filiere->nom_filiere }}</div>
+            <div><strong>Filière:</strong> {{ $etudiant->filiere }}</div>
             <div><strong>Année:</strong> {{ $etudiant->annee }}</div>
         </div>
 
@@ -36,7 +33,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($etudiant->notes as $moduleId => $notesModule)
+                    @foreach ($etudiant->notes->groupBy('matiere.module.id') as $moduleId => $notesModule)
                         @php
                             $module = $notesModule->first()->matiere->module;
                             $totalCoefficient = 0;
@@ -102,6 +99,3 @@
     </div>
 </body>
 </html>
-
-        </div>
-</x-home>

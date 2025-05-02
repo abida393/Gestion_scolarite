@@ -19,10 +19,10 @@ class ResponsableFactory extends Factory
     public function definition(): array
     {
         return [
-            'type_profile' => 'responsable', // assumed static or match Profile seeded manually
+            'type_profile' => 'responsable',
             'formation_id' => formation::factory(),
             'email_ecole' => $this->faker->unique()->safeEmail,
-            'password' => Hash::make('password'), // Use bcrypt for password hashing
+            'password' => Hash::make('password'),
             'identifiant' => strtoupper($this->faker->bothify('??######')),
             'respo_nom' => $this->faker->lastName,
             'respo_prenom' => $this->faker->firstName,

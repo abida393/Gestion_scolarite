@@ -18,7 +18,7 @@ class ExamenFactory extends Factory
     public function definition(): array
     {
         return [
-            'matiere_id' => matiere::factory(), // or link to an existing matiere
+            'matiere_id' => matiere::factory(),
         ];
     }
 }

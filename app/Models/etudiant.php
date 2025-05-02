@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 
 class etudiant extends Authenticatable
 {
@@ -27,20 +28,18 @@ class etudiant extends Authenticatable
         'niveau_id',
     ];
 
-    // Add this method to ensure proper email handling
     public function getEmailForPasswordReset()
     {
         return $this->email_ecole;
     }
 
-    // This ensures the model can provide an email attribute
     public function getEmailAttribute()
     {
         return $this->email_ecole;
     }
 
 
-    
+
     public function formation()
     {
         return $this->belongsTo(formation::class, 'formation_id');
@@ -72,5 +71,9 @@ class etudiant extends Authenticatable
     public function paiements()
     {
         return $this->hasMany(paiement::class);
+    }
+    public function notes()
+    {
+        return $this->hasMany(Note::class);
     }
 }

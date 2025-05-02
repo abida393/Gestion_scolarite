@@ -7,9 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class etudiant_absence extends Model
 {
-  // Assurez-vous que la table est bien définie ici
     use HasFactory;
-// Dis à Laravel la table exacte
 protected $table = 'etudiant_absences';
 
 protected $fillable = [
