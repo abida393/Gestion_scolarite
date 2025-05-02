@@ -66,8 +66,8 @@ class Controller extends BaseController
         $classe = $etudiant->classe;
       return view('etudiant.profile', compact('etudiant', 'filiere','classe'));
 
-
     }
+   
 
 
     public function demande_documents(){
