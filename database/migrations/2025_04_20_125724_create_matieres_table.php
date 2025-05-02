@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('coefficient');
             $table->unsignedBigInteger("enseignant_id");
             $table->foreign('enseignant_id')->references('id')->on('enseignants');
+            $table->integer("nbre_examen");
             $table->timestamps();
         });
     }

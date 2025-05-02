@@ -1,4 +1,6 @@
 @import './accueil.css';
+@import './change-password.css';
+@import'./home.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

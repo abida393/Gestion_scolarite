@@ -42,4 +42,17 @@ class AuthController extends Controller
     {
         return view("responsable.home");
     }
+    public function logout(Request $request)
+    {
+        if (Auth::guard('etudiant')->check()) {
+            Auth::guard('etudiant')->logout();
+        } elseif (Auth::guard('responsable')->check()) {
+            Auth::guard('responsable')->logout();
+        }
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/');
+    }
 }

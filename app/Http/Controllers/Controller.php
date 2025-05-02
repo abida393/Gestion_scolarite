@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\classe;
+use App\Models\document;
 use App\Models\emplois_temps;
 use App\Models\etudiant;
 use App\Models\etudiant_absence;
@@ -87,7 +88,7 @@ class Controller extends BaseController
         $etudiant = Auth::guard('etudiant')->user();
         $filiere = $etudiant->filiere;
         $notes = $etudiant->notes;
-        return view("etudiant.Notes", compact('etudiant', 'filiere'));
+        return view("etudiant.Notes", compact('etudiant', 'filiere', 'notes'));
     }
 
     public function absence_justif()
