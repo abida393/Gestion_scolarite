@@ -12,6 +12,15 @@
     @if ($emploisTemps->isEmpty())
         <p class="text-center text-gray-600">Aucun emploi du temps disponible pour votre classe.</p>
     @else
+    <!-- Bouton de téléchargement -->
+@if (!$emploisTemps->isEmpty())
+    <div class="flex justify-end mb-4">
+        <a href="{{ route('emploi_etudiant.download') }}" 
+           class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow font-semibold text-sm sm:text-base">
+            📥 Télécharger mon emploi du temps
+        </a>
+    </div>
+@endif
         <!-- Tableau des emplois du temps -->
         <div class="overflow-x-auto">
             <table class="min-w-full border border-gray-300 bg-white text-sm text-gray-700 rounded shadow">

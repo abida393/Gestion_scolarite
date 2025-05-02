@@ -125,14 +125,7 @@
     @apply bg-blue-600 text-white rounded px-3 py-1 text-sm font-medium mx-1 hover:bg-blue-700 transition;
 }
 
-.fc#calendar {
-    height: 800px;
-    /* Ajustez la hauteur selon vos besoins */
-    width: 85%;
-    /* Ajustez la largeur si nécessaire */
-    margin-left: 8%;
-    border-radius: 40%;
-}
+
 
 .min-h-screen {
     min-height: 100vh;

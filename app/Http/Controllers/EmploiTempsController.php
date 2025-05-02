@@ -13,6 +13,10 @@ use App\Models\Filiere;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+
+use Barryvdh\DomPDF\Facade\Pdf;
+
+
 use Illuminate\Support\Facades\DB;
 
 class EmploiTempsController extends Controller
@@ -32,8 +36,11 @@ class EmploiTempsController extends Controller
             })
             ->get();
 
-        return view('Emploi.emploi', compact('emploisTemps', 'classes'));
-    }
+        // return view('Emploi.emploi', compact('emploisTemps', 'classes'));
+    
+
+    return view('Emploi.emploi', compact('emploisTemps', 'emploisClasse', 'classes'));
+}
     public function emploi()
     {
         $emploisTemps = emplois_temps::all();
@@ -268,7 +275,60 @@ public function emploiEtudiant()
 
     return view('Emploi.emploi_etudiant', compact('emploisTemps', 'classeName'));
 }
+//use Pdf; // Assurez-vous d'avoir installé dompdf ou un package similaire
 
+public function download(Request $request)
+{
+    // Récupérer l'ID de la classe depuis la requête
+    $classeId = $request->query('classe_id');
+
+    // Vérifier si la classe existe
+    $classe = Classe::find($classeId);
+    if (!$classe) {
+        return redirect()->route('emploi')->with('error', 'Classe introuvable.');
+    }
+
+    // Récupérer les emplois du temps pour la classe
+    $emploisTemps = emplois_temps::where('classe_id', $classeId)->with(['matiere', 'enseignant'])->get();
+
+    // Vérifier si des emplois du temps existent pour cette classe
+    if ($emploisTemps->isEmpty()) {
+        return redirect()->route('emploi')->with('error', 'Aucun emploi du temps trouvé pour cette classe.');
+    }
+
+    // Générer le PDF en utilisant la vue 'Emploi.emploi_pdf'
+    $pdf = \PDF::loadView('Emploi.emploi_pdf', compact('classe', 'emploisTemps'));
+
+    // Télécharger le fichier PDF avec un nom de fichier clair
+    $fileName = 'emploi_du_temps_' . str_replace(' ', '_', strtolower($classe->nom_classe)) . '.pdf';
+    return $pdf->download($fileName);
+}
+public function downloadForEtudiant()
+{
+    // Récupérer l'utilisateur connecté
+    $user = Auth::guard('etudiant')->user();
+
+    // Vérifier si l'utilisateur a une classe associée
+    if (!$user || !$user->classes_id) {
+        return redirect()->back()->with('error', 'Aucune classe associée à votre compte.');
+    }
+
+    // Récupérer la classe et les emplois du temps
+    $classe = Classe::find($user->classes_id);
+    $emploisTemps = emplois_temps::where('classe_id', $user->classes_id)->with(['matiere', 'enseignant'])->get();
+
+    // Vérifier si des emplois du temps existent
+    if ($emploisTemps->isEmpty()) {
+        return redirect()->back()->with('error', 'Aucun emploi du temps disponible pour votre classe.');
+    }
+
+    // Générer le PDF en utilisant la vue 'emploi_pdf'
+    $pdf = PDF::loadView('Emploi.emploi_pdf', compact('classe', 'emploisTemps'));
+
+    // Télécharger le fichier PDF avec un nom de fichier clair
+    $fileName = 'emploi_du_temps_' . str_replace(' ', '_', strtolower($classe->nom_classe)) . '.pdf';
+    return $pdf->download($fileName);
+}
 // public function dashboard()
 // {
 //     $today = Carbon::now()->locale('fr')->isoFormat('dddd'); // Récupère le jour actuel en français

@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('annee', function (Blueprint $table) {
+        Schema::create('calender_events', function (Blueprint $table) {
             $table->id();
-            $table->integer('annee_debut')->unsigned();
-            $table->integer('annee_fin')->unsigned();
+            $table->string('title');
+            $table->boolean('is_fixed')->default(false);
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('annee');
+        Schema::dropIfExists('calender_events');
     }
 };

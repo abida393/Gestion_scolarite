@@ -14,8 +14,13 @@
                 </h1>
 
                 @if ($emploisTemps->isEmpty())
-                    <div class="text-gray-500 text-center">
-                        🎉 Pas de cours prévu aujourd'hui !
+                    <div class="text-gray-500 text-center flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-500" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Pas de cours prévu aujourd'hui !
                     </div>
                 @else
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -46,23 +51,25 @@
                 @endif
             </div>
         </div>
-        <div class="dashboard-grid">
-            <div class="dashboard-card">
-                <div class="card-header">
-                    <h2><i class="fas fa-newspaper"></i> Dernières actualités</h2>
-                    <i class="fas fa-ellipsis-h"></i>
-                </div>
-                <div class="news-list">
-                    <div class="news-item">
-                        <h3>Consignes de réouverture du campus</h3>
-                        <p>L'université a publié des consignes mises à jour pour le prochain semestre.</p>
-                        <div class="news-date">
-                            <i class="far fa-clock"></i> Publié il y a 2 jours
-                        </div>
+    </div>
+    <div class="dashboard-grid">
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h2><i class="fas fa-newspaper"></i> Dernières actualités</h2>
+                <i class="fas fa-ellipsis-h"></i>
+            </div>
+
+            <div class="news-list">
+                <div class="news-item">
+                    <h3>Consignes de réouverture du campus</h3>
+                    <p>L'université a publié des consignes mises à jour pour le prochain semestre.</p>
+                    <div class="news-date">
+                        <i class="far fa-clock"></i> Publié il y a 2 jours
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <script>
         // Fonction pour mettre à jour la date et l'heure
