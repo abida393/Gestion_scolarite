@@ -5,6 +5,7 @@
 @props(['titre', 'page_titre', 'nom_complete']);
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,9 +22,12 @@
 
     <!-- FullCalendar CSS -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <!-- FullCalendar JS -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <!-- Vite (CSS et JS) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -47,73 +51,59 @@
                 <i class="fas fa-home"></i>
                 <span>Accueil</span>
             </a>
-            <a href="{{ route('notes') }}" class="nav-item {{ Route::is('notes') ? 'active' : '' }}" data-page="notes">
-                <i class="far fa-sticky-note"></i>
-                <span>Notes</span>
+            <a href="{{ route('absence_justif') }}" class="nav-item {{ Route::is('absence_justif') ? 'active' : '' }}"
+                data-page="absences">
+                <i class="fas fa-user-clock"></i>
+                <span>Absence et justif</span>
+            </a>
+            <a href="{{ route('calendar.calendrier') }}"
+                class="nav-item {{ Route::is('calendar.calendrier') ? 'active' : '' }}" data-page="calendrier">
+                <i class="far fa-calendar-alt"></i>
+                <span>Calendrier</span>
             </a>
             <a href="{{ route('demande_documents') }}"
                 class="nav-item {{ Route::is('demande_documents') ? 'active' : '' }}" data-page="demandes">
                 <i class="fas fa-file-alt"></i>
                 <span>Demande documents</span>
             </a>
-            <a href="{{ route('absence_justif') }}" class="nav-item {{ Route::is('absence_justif') ? 'active' : '' }}"
-                data-page="absences">
-                <i class="fas fa-user-clock"></i>
-                <span>Absence et justif</span>
-            </a>
-            <a href="{{ route('paiement') }}" class="nav-item {{ Route::is('paiement') ? 'active' : '' }}"
-                data-page="paiement">
-                <i class="fas fa-money-bill-wave"></i>
-                <span>Paiement</span>
-            </a>
-            <a href="{{ route('messagerie') }}" class="nav-item {{ Route::is('messagerie') ? 'active' : '' }}"
-                data-page="messagerie">
-                <i class="fa-solid fa-inbox"></i>
-                <span>Messagerie</span>
-            </a>
             <a href="{{ route('emploi.etudiant') }}"
                 class="nav-item {{ Route::is('emploi.etudiant') ? 'active' : '' }}" data-page="emploi">
                 <i class="fas fa-clock"></i>
                 <span>Emploi du temps</span>
-            </a>
-            <a href="{{ route('calendar.calendrier') }}" class="nav-item {{ Route::is('calendar.calendrier') ? 'active' : '' }}"
-                data-page="calendrier">
-                <i class="far fa-calendar-alt"></i>
-                <span>Calendrier</span>
             </a>
             <a href="{{ route('events') }}" class="nav-item {{ Route::is('events') ? 'active' : '' }}"
                 data-page="event">
                 <i class="fas fa-briefcase"></i>
                 <span>Evenements</span>
             </a>
-            <a href="{{ route('stages') }}" class="nav-item {{ Route::is('stages') ? 'active' : '' }}"
-                data-page="stage">
-                <i class="fas fa-briefcase"></i>
-                <span>Stages</span>
+            <a href="{{ route('messagerie') }}" class="nav-item {{ Route::is('messagerie') ? 'active' : '' }}"
+                data-page="messagerie">
+                <i class="fa-solid fa-inbox"></i>
+                <span>Messagerie</span>
+            </a>
+            <a href="{{ route('notes') }}" class="nav-item {{ Route::is('notes') ? 'active' : '' }}"
+                data-page="notes">
+                <i class="far fa-sticky-note"></i>
+                <span>Notes</span>
             </a>
             <a href="{{ route('news') }}" class="nav-item {{ Route::is('news') ? 'active' : '' }}" data-page="news">
                 <i class="fas fa-newspaper"></i>
                 <span>News</span>
             </a>
-            <a href="{{ route('profile') }}" class="nav-item {{ Route::is('profile') ? 'active' : '' }}"
-                data-page="profile">
-                <i class="fas fa-newspaper"></i>
-                <span>profile</span>
+            <a href="{{ route('paiement') }}" class="nav-item {{ Route::is('paiement') ? 'active' : '' }}"
+                data-page="paiement">
+                <i class="fas fa-money-bill-wave"></i>
+                <span>Paiement</span>
             </a>
-            <a href="{{ route('aide') }}" class="nav-item {{ Route::is('aide') ? 'active' : '' }}" data-page="aide">
-                <i class="far fa-question-circle"></i>
-                <span>Aide</span>
+            <a href="{{ route('stages') }}" class="nav-item {{ Route::is('stages') ? 'active' : '' }}"
+                data-page="stage">
+                <i class="fas fa-briefcase"></i>
+                <span>Stages</span>
             </a>
-            {{-- <a href="{{ route('news') }}" class="nav-item {{ Route::is('news') ? 'active' : '' }}"
-                    data-page="news">
-                    <i class="fas fa-newspaper"></i>
-                    <span>News</span>
-                </a>
-                <a href="{{ route('aide') }}" class="nav-item {{ Route::is('aide') ? 'active' : '' }}"
-                    data-page="aide">
-                    <i class="far fa-question-circle"></i>
-                    <span>Aide</span>
-                </a> --}}
+
+
+
+
         </div>
     </div>
 
@@ -132,10 +122,11 @@
             <div class="dropdown">
                 <i class="fa-regular fa-circle-user fa-2x"></i>
                 <div class="dropdown-content">
-                    <a href="#profile" class="px-4 py-2">Profile</a>
-                    <form action="{{ route('logout') }}" method="post" onclick="return confirm('Êtes-vous sûr de vouloir vous déconnecter ?')">
+                    <a href="{{ route('profile') }}" class="px-4 py-2">Profile</a>
+                    <form action="{{ route('logout') }}" method="post"
+                        onclick="return confirm('Êtes-vous sûr de vouloir vous déconnecter ?')">
                         @csrf
-                    <button type="submit" class="w-full hover:bg-gray-100 px-4 py-2">Logout</button>
+                        <button type="submit" class="w-full text-black hover:bg-gray-100 px-4 py-2">Logout</button>
                     </form>
                 </div>
             </div>
@@ -154,7 +145,6 @@
     @vite('resources/js/app.js')
     <!-- Script pour gérer le filtrage -->
     <script>
-
         document.getElementById('all').addEventListener('click', function() {
             filterPayments('all');
         });

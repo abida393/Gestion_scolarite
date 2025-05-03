@@ -14,6 +14,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use App\Models\news;
+use App\Models\responsable;
 use App\Models\stage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -68,7 +69,7 @@ class Controller extends BaseController
       return view('etudiant.profile', compact('etudiant', 'filiere','classe'));
 
     }
-   
+
 
 
     public function demande_documents(){
@@ -117,6 +118,10 @@ class Controller extends BaseController
         $etudiant = Auth::guard('etudiant')->user();
         $paiements = $etudiant->paiements;
         $montant_paye = 0;
+        if ($paiements->isEmpty()) {
+            $montant_restant = 0;
+            return view("etudiant.paiement", compact('paiements', "montant_paye", "montant_restant"));
+        }
         foreach ($paiements as $paiement) {
             $montant_paye += $paiement->montant_paye;
         }
@@ -129,7 +134,8 @@ class Controller extends BaseController
     }
     public function messagerie()
     {
-        return view("etudiant.messagerie");
+        $responsables = responsable::all();
+        return view("etudiant.messagerie", compact('responsables'));
     }
     /*public function news()
     {
