@@ -135,7 +135,7 @@
             <!-- Événement 1 -->
             @foreach($evenements as $evenement)
             <div class="event-card">
-                <span class="event-badge">Nouveau</span>
+               <!-- <span class="event-badge">Nouveau</span> -->
                 <h2 class="event-title">{{ $evenement->titre }}<</h2>
 
                 <div class="event-details">
@@ -178,4 +178,5 @@
         @endif
         </div>
     </div>
+    <x-chat-button></x-chat-button>
 </x-home>

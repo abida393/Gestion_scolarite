@@ -77,4 +77,5 @@
         // Initialiser la date et l'heure au chargement de la page
         updateDateTime();
     </script>
+    <x-chat-button></x-chat-button>
 </x-home>

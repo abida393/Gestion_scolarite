@@ -292,16 +292,8 @@
                 data-page="event">
                 <i class="fas fa-briefcase"></i>
                 <span>Events</span>
-                <a href="{{ route('news') }}" class="nav-item {{ Route::is('news') ? 'active' : '' }}"
-                    data-page="news">
-                    <i class="fas fa-newspaper"></i>
-                    <span>News</span>
                 </a>
-                <a href="{{ route('aide') }}" class="nav-item {{ Route::is('aide') ? 'active' : '' }}"
-                    data-page="aide">
-                    <i class="far fa-question-circle"></i>
-                    <span>Aide</span>
-                </a>
+               
         </div>
     </div>
 

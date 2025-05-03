@@ -154,3 +154,20 @@ Route::get('/password/reset/{token}', [PasswordController::class, 'showResetForm
 Route::post('/password/reset', [PasswordController::class, 'reset'])
     ->name('password.update');
 Route::post('/justifier-absence', [AbsenceController::class, 'justifier'])->name('justifier-absence');
+
+
+
+
+
+
+
+use App\Http\Controllers\ChatbotController;
+
+Route::post('/chatbot/repondre', [ChatbotController::class, 'repondre'])->name('chatbot.repondre');
+Route::get('/api/chatbot/messages', [ChatbotController::class, 'messages']);
+Route::get('/chatbot', function () {
+    return view('chatbot');
+});
+
+
+

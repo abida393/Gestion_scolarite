@@ -39,4 +39,5 @@ class Matiere extends Model
     {
         return $this->hasMany(emplois_temps::class);
     }
+
 }

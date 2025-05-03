@@ -390,4 +390,5 @@ function filterAbsences(filter) {
             document.getElementById('justification-text').focus();
         }
     </script>
+    <x-chat-button></x-chat-button>
 </x-home>

@@ -13,4 +13,10 @@ class examen extends Model
     {
         return $this->belongsTo(Matiere::class);
     }
+
+public function notes()
+{
+    return $this->hasMany(Note::class);
+}
+
 }

@@ -18,4 +18,10 @@ class Note extends Model
     {
         return $this->belongsTo(Etudiant::class);
     }
+
+    public function examen()
+    {
+    return $this->belongsTo(Examen::class);
+    }
+
 }
