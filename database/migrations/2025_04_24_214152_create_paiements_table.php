@@ -19,6 +19,7 @@ return new class extends Migration
             $table->Double("montant_paye");
             $table->Double("montant_restant");
             $table->string("mode_paiement");
+            $table->string("status");
             $table->date("date_paiement");
             $table->timestamps();
         });

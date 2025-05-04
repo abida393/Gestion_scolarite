@@ -30,7 +30,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // ==================== PASSWORD RESET ====================
 
 Route::get('/change-password', [PasswordResetController::class, 'edit'])->name('password.edit');
-Route::put('/update-password', [PasswordResetController::class, 'update'])->name('password.update');
+Route::put('/update-password', [PasswordResetController::class, 'update'])->name('password.change');
 
 Route::get('/password/forgot', [PasswordController::class, 'showForgotForm'])->name('password.request');
 Route::post('/password/forgot', [PasswordController::class, 'sendResetLink'])->name('password.email');

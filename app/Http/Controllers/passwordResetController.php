@@ -17,25 +17,19 @@ class PasswordResetController extends Controller
     {
         $request->validate([
             'current_password' => 'required',
-            'new_password' => 'required|min:8|confirmed',
+            'new_password' => 'required|string|min:8|confirmed',
         ]);
 
-        // Utiliser correctement le guard 'etudiant'
+        if (!Hash::check($request->current_password, Auth::guard('etudiant')->user()->password)) {
+            return back()->withErrors(['current_password' => 'Le mot de passe actuel est incorrect.']);
+        }
+
         $user = Auth::guard('etudiant')->user();
-
-        if (!$user) {
-            return redirect()->route('login')->withErrors('Utilisateur non connecté.');
-        }
-
-        if (!Hash::check($request->current_password, $user->password)) {
-            return back()->withErrors(['current_password' => 'Mot de passe actuel incorrect']);
-        }
-
-        // Mise à jour du mot de passe
         $user->password = Hash::make($request->new_password);
         $user->save();
 
-        return redirect()->route('password.edit')->with('success', 'Mot de passe mis à jour avec succès');
+        return back()->with('success', 'Mot de passe changé avec succès.');
     }
 }
+
 ?>

@@ -59,21 +59,32 @@
                         $paiement->mode_paiement == 'cash' ? $payment = 'payment-cash' : $payment = 'payment-cheque';
                     @endphp
                     <div
-                        class="payment-row group {{$payment}} animate-fade-in flex justify-between items-center border-b pb-4 p-3 rounded-xl transition duration-300 ease-in-out hover:-translate-y-[2px] hover:shadow-lg hover:bg-indigo-50 hover:border-indigo-300">
-                        <div class="flex items-center gap-4">
-                            @if ($paiement->mode_paiement == 'cash')
-                                <i class="ph ph-money text-indigo-600 text-2xl group-hover:animate-bounce-slow"></i>
-                            @endif
-                            @if ($paiement->mode_paiement == 'credit card')
-                                <i class="ph ph-bank text-purple-500 text-2xl group-hover:animate-bounce-slow"></i>
-                            @endif
-                            <div>
-                                <p class="font-semibold text-gray-700">{{ $paiement->montant_paye }}DHS</p>
-                                <p class="text-sm text-gray-400">{{ $paiement->mode_paiement }}</p>
-                            </div>
-                        </div>
-                        <p class="text-sm text-gray-500">{{ $paiement->date_paiement }}</p>
-                    </div>
+    class="payment-row group {{$payment}} animate-fade-in flex justify-between items-center border-b pb-4 p-3 rounded-xl transition duration-300 ease-in-out hover:-translate-y-[2px] hover:shadow-lg hover:bg-indigo-50 hover:border-indigo-300">
+    <div class="flex items-center gap-4">
+        @if ($paiement->mode_paiement == 'cash')
+            <i class="ph ph-money text-indigo-600 text-2xl group-hover:animate-bounce-slow"></i>
+        @elseif ($paiement->mode_paiement == 'credit card')
+            <i class="ph ph-bank text-purple-500 text-2xl group-hover:animate-bounce-slow"></i>
+        @elseif ($paiement->mode_paiement == 'cheque')
+            <i class="ph ph-bank text-rose-500 text-2xl group-hover:animate-bounce-slow"></i>
+        @endif
+        <div>
+            <p class="font-semibold text-gray-700">{{ $paiement->montant_paye }} DHS</p>
+            <p class="text-sm text-gray-400 capitalize">{{ $paiement->mode_paiement }}</p>
+        </div>
+    </div>
+    <div class="flex flex-col items-end gap-1">
+        <p class="text-sm text-gray-500">{{ $paiement->date_paiement }}</p>
+        @if ($paiement->status == 'validé')
+            <span class="text-xs font-medium px-2 py-1 bg-green-100 text-green-700 rounded-full">Validé</span>
+        @elseif ($paiement->status == 'en attente')
+            <span class="text-xs font-medium px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full">En attente</span>
+            @elseif ($paiement->status == 'refusé')
+            <span class="text-xs font-medium px-2 py-1 bg-red-100 text-red-700 rounded-full">Refusé</span>
+        @endif
+    </div>
+</div>
+
                 @endforeach
 
 

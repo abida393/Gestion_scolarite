@@ -119,21 +119,64 @@
 
 
             {{-- <img src="{{ asset('/images/banner.png') }}" alt="Profile" class="profile-image"  style="height: 40px; width: 40px; border-radius: 50%; object-fit: cover;"> --}}
-            <div class="dropdown">
-                <i class="fa-regular fa-circle-user fa-2x"></i>
-                <div class="dropdown-content">
-                    <a href="{{ route('profile') }}" class="px-4 py-2">Profile</a>
-                    <form action="{{ route('logout') }}" method="post"
-                        onclick="return confirm('Êtes-vous sûr de vouloir vous déconnecter ?')">
-                        @csrf
-                        <button type="submit" class="w-full text-black hover:bg-gray-100 px-4 py-2">Logout</button>
-                    </form>
+<div class="relative group">
+    {{-- Trigger: Profile Picture or Initials --}}
+    @if (Auth::guard('etudiant')->user()->profile_picture)
+        <img src="{{ asset('storage/' . Auth::guard('etudiant')->user()->profile_picture) }}"
+            alt="Profile Picture"
+            class="w-10 h-10 rounded-full object-cover cursor-pointer border-2 border-indigo-500 hover:border-indigo-600 transition-all duration-200">
+    @else
+        @php
+            $initial = strtoupper(substr(Auth::guard('etudiant')->user()->etudiant_nom, 0, 1)) .
+                strtoupper(substr(Auth::guard('etudiant')->user()->etudiant_prenom, 0, 1));
+        @endphp
+        <div
+            class="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-indigo-400 text-white font-bold text-sm cursor-pointer border-2 border-indigo-500 hover:border-indigo-600 transition-all duration-200 shadow-sm">
+            {{ $initial }}
+        </div>
+    @endif
+
+    {{-- Dropdown Menu --}}
+    <div
+        class="absolute right-0 mt-2 w-56 origin-top-right bg-white rounded-xl shadow-xl opacity-0 invisible scale-95 group-hover:opacity-100 group-hover:visible group-hover:scale-100 transition-all duration-200 z-50 border border-gray-100 overflow-hidden transform-gpu">
+        <div class="px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-indigo-50 to-indigo-100">
+            <p class="text-sm font-medium text-indigo-900 truncate">{{ Auth::guard('etudiant')->user()->etudiant_prenom }} {{ Auth::guard('etudiant')->user()->etudiant_nom }}</p>
+            <p class="text-xs text-indigo-600 truncate">{{ Auth::guard('etudiant')->user()->email ?? '' }}</p>
+        </div>
+
+        <div class="py-1">
+            <a href="{{ route('profile') }}"
+                class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
+                <svg class="w-4 h-4 mr-3 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+                Mon Profil
+            </a>
+
+            <form action="{{ route('logout') }}" method="POST"
+                onsubmit="return confirm('Êtes-vous sûr de vouloir vous déconnecter ?')">
+                @csrf
+                <button type="submit"
+                    class="w-full flex items-center text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-indigo-50 hover:text-red-600 transition-all duration-200">
+                    <svg class="w-4 h-4 mr-3 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    Déconnexion
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+            <div class="profile-info flex flex-col items-start text-white">
+                <div class="profile-name font-semibold text-lg">
+                    {{ $nom_complete }}
+                </div>
+                <div class="profile-class text-sm">
+                    {{ $filiere->nom_filiere }}
                 </div>
             </div>
-            <div class="profile-info">
-                <div class="profile-name" style="color:rgba(8, 0, 58, 0.868)"><b>{!! $nom_complete !!}</b></div>
-                <div class="profile-class" style="color: rgba(8, 0, 58, 0.874);">{{ $filiere->nom_filiere }}</div>
-            </div>
+
+
         </div>
     </header>
 

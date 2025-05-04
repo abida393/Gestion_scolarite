@@ -1,4 +1,12 @@
 /* ==================== VARIABLES ET RESET ==================== */
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #a0aec0;
+    border-radius: 20px;
+}
 :root {
     --primary-color: #4270f4;
     --primary-light: #edf0fb;
@@ -32,7 +40,6 @@ body {
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed;
-
             color: var(--text-primary);
             display: flex;
             min-height: 100vh;
@@ -621,7 +628,7 @@ body {
 }
 
 
-/* ==================== Partie absence avec justif ==================== */ 
+/* ==================== Partie absence avec justif ==================== */
 :root {
     --primary: #4361ee;
     --success: #4cc9f0;
@@ -837,7 +844,7 @@ textarea {
 }
 
 .btn-justify:hover {
-    background-color: #3a56d4; 
+    background-color: #3a56d4;
 }
 
 .duration-info {
@@ -867,7 +874,7 @@ textarea {
     .card-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .container {
         padding: 1rem;
     }

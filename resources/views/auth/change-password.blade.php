@@ -20,12 +20,10 @@
                 </ul>
             </div>
         @endif
-        <form action="{{ route('password.update') }}" method="POST">
             <!-- Formulaire -->
-            <form action="{{ route('password.update') }}" method="POST" class="change-password-form">
+            <form action="{{ route('password.change') }}" method="POST" class="change-password-form">
                 @csrf
                 @method('PUT')
-
                 <div class="form-group">
                     <label for="current_password">Mot de passe actuel</label>
                     <input type="password" name="current_password" id="current_password" required>
