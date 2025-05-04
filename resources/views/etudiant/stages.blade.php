@@ -510,58 +510,5 @@ h1::after {
         </div>
     </div>
 
-    <script>
-
-        // Animation des filtres
-        const buttons = document.querySelectorAll('.filter-btn');
-        const cards = document.querySelectorAll('.offre-card');
-
-        buttons.forEach(button => {
-            button.addEventListener('click', () => {
-                buttons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-
-                const filter = button.getAttribute('data-filter').toLowerCase();
-
-                cards.forEach(card => {
-                    const domaine = card.getAttribute('data-domaine').toLowerCase();
-
-                    if (filter === 'tous' || domaine.includes(filter)) {
-                        card.style.display = 'flex';
-                        setTimeout(() => {
-                            card.style.opacity = '1';
-                            card.style.transform = 'translateY(0)';
-                        }, 50);
-                    } else {
-                        card.style.opacity = '0';
-                        card.style.transform = 'translateY(20px)';
-                        setTimeout(() => {
-                            card.style.display = 'none';
-                        }, 300);
-                    }
-                });
-            });
-        });
-
-        // Animation au scroll
-        const observerOptions = {
-            threshold: 0.1
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.offre-card').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(30px)';
-            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(card);
-        });
-    </script>
+        <x-chat-button></x-chat-button>
 </x-home>
