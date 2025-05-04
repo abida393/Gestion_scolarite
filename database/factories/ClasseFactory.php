@@ -19,8 +19,8 @@ class ClasseFactory extends Factory
     public function definition(): array
     {
         return [
-            'filieres_id' => filiere::factory(), // creates & links a filière
-            'nom_classe' => $this->faker->bothify('Classe ###'), // e.g., "Classe 101"
+            'filieres_id' => filiere::factory(),
+            'nom_classe' => $this->faker->bothify('Classe ###'), 
         ];
     }
 }

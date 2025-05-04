@@ -98,7 +98,7 @@
     function addWelcomeMessage() {
         const welcomeMessage = document.querySelector('#chatbox .welcome-message');
         if (!welcomeMessage) {
-            addMessage('Assistant', 'Bonjour nouha Comment puis-je vous aider aujourd’hui ?', 'left', true);
+            addMessage('Assistant', 'Bonjour Comment puis-je vous aider aujourd’hui ?', 'left', true);
         }
     }
 

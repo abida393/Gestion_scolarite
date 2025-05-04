@@ -19,9 +19,9 @@ class NoteFactory extends Factory
     public function definition(): array
     {
         return [
-            'etudiant_id' => etudiant::factory(), // Random etudiant ID linked to an Etudiant
-            'matiere_id' => matiere::factory(), // Random matiere ID linked to a Matiere
-            'note' => $this->faker->randomFloat(2, 0, 20), // Random grade between 0 and 20 with 2 decimal places
+            'etudiant_id' => etudiant::factory(),
+            'matiere_id' => matiere::factory(),
+            'note' => $this->faker->randomFloat(2, 0, 20),
         ];
     }
 }

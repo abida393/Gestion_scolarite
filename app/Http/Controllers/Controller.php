@@ -6,6 +6,7 @@ use App\Models\classe;
 use App\Models\emplois_temps;
 use App\Models\etudiant;
 use App\Models\etudiant_absence;
+use App\Models\filiere;
 use App\Models\module;
 use App\Models\paiement;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -54,47 +55,48 @@ class Controller extends BaseController
         return view("authentification.newmdp");
     }
 
-    public function calendar()
+    public function calendrier()
     {
-        return view("calender.calendar");
+        return view("etudiant.Calendrier");
     }
     public function profile()
     {
-        //$etudiant = Etudiant::findOrFail(1);
-        $etudiant = etudiant::where('id', 1)->first();
-      return view('etudiant.profile', compact('etudiant'));
+        $etudiant = Auth::guard('etudiant')->user();
+        $filiere =$etudiant->filiere;
+        $classe = $etudiant->classe;
+      return view('etudiant.profile', compact('etudiant', 'filiere','classe'));
 
-       
     }
+   
 
 
     public function demande_documents(){
-        return view("pages.Demande_documents");
+        return view("etudiant.Demande_documents");
     }
 
 
     public function home()
     {
-  
-        $today = now()->locale('fr')->isoFormat('dddd'); // Obtenir le jour actuel en français
-       
-        $emploisTemps = emplois_temps::whereDate('jour', $today)->where("classe_id",auth::guard("etudiant")->user()->classes_id)->with(['matiere', 'enseignant', 'classe'])->get();
+        $today = now()->locale('fr')->isoFormat('dddd');
+        $emploisTemps = emplois_temps::where('jour',$today)->where("classe_id",auth::guard("etudiant")->user()->classes_id)->with(['matiere', 'enseignant', 'classe'])->get();
         return view("etudiant.Home", compact('today', 'emploisTemps'));
-
     }
-   
+
     public function notes()
     {
         $etudiant = Auth::guard('etudiant')->user();
-        return view("etudiant.Notes", compact('etudiant'));
+        $filiere = $etudiant->filiere;
+        $notes = $etudiant->notes;
+        return view("etudiant.Notes", compact('etudiant', 'filiere'));
     }
-   
+
     public function absence_justif()
     {
         $etudiant = Auth::guard('etudiant')->user();
         $absences = $etudiant->etudiant_absences;
         return view("etudiant.Absence_justif", compact('absences'));
     }
+
     // public function stages(){
     //     return view("etudiant.Stages");
     //     $absences = \App\Models\etudiant_absence::all();

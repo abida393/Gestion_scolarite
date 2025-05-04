@@ -21,12 +21,12 @@ class EtudiantFactory extends Factory
     public function definition(): array
     {
         return [
-            'type_profile' => 'etudiant', // Make sure this exists in the profiles table
+            'type_profile' => 'etudiant',
             'formation_id' => formation::factory(),
             'classes_id' => classe::factory(),
             'filiere_id' => filiere::factory(),
             'email_ecole' => $this->faker->unique()->safeEmail,
-            'password' => Hash::make('password'), // Use bcrypt for password hashing
+            'password' => Hash::make('password'),
             'identifiant' => strtoupper($this->faker->bothify('??######')),
             'etudiant_cin' => strtoupper($this->faker->bothify('??######')),
             'etudiant_serie_bac' => $this->faker->randomElement(['S', 'ES', 'L', 'ST']),

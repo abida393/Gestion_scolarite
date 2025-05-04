@@ -26,8 +26,10 @@ class AbsenceController extends Controller
 
         $absence->update([
             'justification' => $request->justification,
-            'date_justif' => now(),  // date aujourd'hui
+            'justification_file' => $request->file('justification_file')->getClientOriginalName(),
+            'date_justif' => now(),
         ]);
+        
 
         return back()->with('success', 'Justification envoyée avec succès.');
     }

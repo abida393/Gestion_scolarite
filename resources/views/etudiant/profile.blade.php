@@ -24,11 +24,11 @@
             </div>
             <div class="info-item">
                 <span>Classe :</span>
-                <span>{{ $etudiant->classes_id }}</span>
+                <span>{{ $classe->nom_classe}}</span>
             </div>
             <div class="info-item">
                 <span>Filière :</span>
-                <span>{{ $etudiant->filiere_id }}</span>
+                <span>{{ $filiere->nom_filiere }}</span>
             </div>
             <div class="info-item">
                 <span>Date de naissance :</span>
@@ -38,7 +38,7 @@
                 <span>Email :</span>
                 <span>{{ $etudiant->etudiant_email }}</span>
             </div>
-           
+
             <div class="info-item">
                 <span>Téléphone :</span>
                 <span>{{ $etudiant->etudiant_tel }}</span>
@@ -53,7 +53,7 @@
             </div>
         </div>
 
-        
+
 
     </div>
 </div>

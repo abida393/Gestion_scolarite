@@ -36,13 +36,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+   
+    $this->call(ReponsesTableSeeder::class);
+
+
         // \App\Models\User::factory(10)->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        formation::factory(10)->create();
+        formation::factory()->create([
+            'id' => 1,
+            'nom_formation' => 'Informatique',
+            'prix' => 1000,
+        ]);
+
         filiere::factory(10)->create();
         annee::factory(10)->create();
         classe::factory(10)->create();

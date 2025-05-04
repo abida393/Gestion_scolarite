@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('annee', function (Blueprint $table) {
+        Schema::create('chat_messages', function (Blueprint $table) {
             $table->id();
-            $table->integer('annee_debut')->unsigned();
-            $table->integer('annee_fin')->unsigned();
+            $table->enum('sender', ['etudiant', 'assistant']);
+            $table->text('content');
             $table->timestamps();
         });
+        
     }
 
     /**
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('annee');
+        Schema::dropIfExists('chat_messages');
     }
 };

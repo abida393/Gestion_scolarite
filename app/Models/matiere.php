@@ -40,4 +40,8 @@ class Matiere extends Model
         return $this->hasMany(emplois_temps::class);
     }
 
+    public function notes()
+    {
+        return $this->hasMany(Note::class);
+    }
 }

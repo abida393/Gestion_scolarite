@@ -17,10 +17,10 @@ class EvenementFactory extends Factory
     public function definition(): array
     {
         return [
-            'titre' => $this->faker->sentence, // Random title for the event
-            'date' => $this->faker->date(), // Random date for the event
-            'heure_debut' => $this->faker->time('H:i:s'), // Random start time
-            'heure_fin' => $this->faker->time('H:i:s'), // Random end time
+            'titre' => $this->faker->sentence,
+            'date' => $this->faker->date(),
+            'heure_debut' => $this->faker->time('H:i:s'),
+            'heure_fin' => $this->faker->time('H:i:s'),
         ];
     }
 }

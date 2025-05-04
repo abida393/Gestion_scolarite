@@ -9,9 +9,9 @@ class Formation extends Model
 {
     use HasFactory;
 
-    protected $table = 'formations'; // Assurez-vous que le nom de la table est correct
+    protected $table = 'formations';
 
-    
+
     protected $fillable = [
         'nom_formation',
         'description',

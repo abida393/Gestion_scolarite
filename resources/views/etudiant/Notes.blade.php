@@ -42,6 +42,12 @@
                     </div>
                 </div>
             </div>
+        <div class="student-info">
+            <div><strong>Nom:</strong> {{ $etudiant->etudiant_nom }}</div>
+            <div><strong>Prénom:</strong> {{ $etudiant->etudiant_prenom }}</div>
+            <div><strong>N° Étudiant:</strong> {{ $etudiant->id }}</div>
+            <div><strong>Filière:</strong> {{ $filiere->nom_filiere }}</div>
+            <div><strong>Année:</strong> {{ $etudiant->annee }}</div>
         </div>
 
         <!-- Modules - grille adaptative -->

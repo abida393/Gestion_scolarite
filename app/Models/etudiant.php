@@ -28,20 +28,18 @@ class etudiant extends Authenticatable
         'niveau_id',
     ];
 
-    // Add this method to ensure proper email handling
     public function getEmailForPasswordReset()
     {
         return $this->email_ecole;
     }
 
-    // This ensures the model can provide an email attribute
     public function getEmailAttribute()
     {
         return $this->email_ecole;
     }
 
 
-    
+
     public function formation()
     {
         return $this->belongsTo(formation::class, 'formation_id');
@@ -76,7 +74,7 @@ class etudiant extends Authenticatable
     }
     public function notes()
     {
-        return $this->hasMany(note::class);
+        return $this->hasMany(Note::class);
     }
     
 }

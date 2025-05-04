@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Reponse;
+use Illuminate\Support\Str;
 
 class ChatbotController extends Controller
 {
@@ -11,12 +12,19 @@ class ChatbotController extends Controller
     {
         $question = strtolower($request->input('question'));
 
-        // Récupération de la réponse depuis la table "reponses"
         $reponseTrouvee = null;
         $reponses = Reponse::all();
 
         foreach ($reponses as $rep) {
-            if (str_contains($question, strtolower($rep->mot_cle))) {
+            $motCle = strtolower($rep->mot_cle);
+            $motCleSingulier = Str::singular($motCle);
+            $motClePluriel = Str::plural($motCle);
+
+            if (
+                str_contains($question, $motCle) ||
+                str_contains($question, $motCleSingulier) ||
+                str_contains($question, $motClePluriel)
+            ) {
                 $reponseTrouvee = $rep->reponse;
                 break;
             }
@@ -28,13 +36,11 @@ class ChatbotController extends Controller
             $reponse = "Je suis désolé, je n'ai pas compris votre question.";
         }
 
-        // NE PAS enregistrer les messages dans la base
         return response()->json(['reponse' => $reponse]);
     }
 
-    // Optionnel : si tu veux toujours voir l'historique (désactivé ici)
     public function messages()
     {
-        return response()->json([]); // Renvoie une liste vide
+        return response()->json([]);
     }
 }

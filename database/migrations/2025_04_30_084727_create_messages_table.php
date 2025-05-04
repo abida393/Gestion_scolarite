@@ -9,21 +9,25 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('annee', function (Blueprint $table) {
+        Schema::create('messages', function (Blueprint $table) {
             $table->id();
-            $table->integer('annee_debut')->unsigned();
-            $table->integer('annee_fin')->unsigned();
+            $table->unsignedBigInteger('etudiant_id');
+            $table->enum('sender', ['etudiant', 'bot']);
+            $table->text('content');
             $table->timestamps();
+    
+            $table->foreign('etudiant_id')->references('id')->on('etudiants')->onDelete('cascade');
         });
     }
+    
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('annee');
+        Schema::dropIfExists('messages');
     }
 };

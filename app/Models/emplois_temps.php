@@ -5,15 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-// dd($matieres, $enseignants, $classes);
 class emplois_temps extends Model
 {
     use HasFactory;
 
-    // Nom de la table (optionnel si le nom suit les conventions Laravel)
     protected $table = 'emplois_temps';
 
-    // Colonnes autorisées pour les opérations de création et de mise à jour
     protected $fillable = [
         'jour',
         'date',
@@ -25,7 +22,6 @@ class emplois_temps extends Model
         'classe_id',
     ];
 
-    // Relations avec les autres modèles
     public function matiere()
 {
     return $this->belongsTo(Matiere::class);
