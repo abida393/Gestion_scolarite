@@ -274,23 +274,23 @@
     </div>
 </div>
 
-        <script>
-        // Votre code JavaScript modifié
-        if (status === 'termine') {
-            downloadBtn.classList.remove('hidden');
-            unavailableMsg.classList.add('hidden');
-            downloadBtn.href = `/storage/documents/${fileName}`;
-            downloadBtn.setAttribute('download', fileName);
-            document.getElementById('file-name').textContent = fileName;
-        // Générer le QR code ici si nécessaire
-            // ...
-        } else {
-            downloadBtn.classList.add('hidden');
-            unavailableMsg.classList.remove('hidden');   
-            // Effacer le QR code si nécessaire
-            document.getElementById('qr-code-container').innerHTML = '';
-        }
-        </script>
+    <script>
+    // Votre code JavaScript modifié
+    if (status === 'termine') {
+        downloadBtn.classList.remove('hidden');
+        unavailableMsg.classList.add('hidden');
+        downloadBtn.href = `/storage/documents/${fileName}`;
+        downloadBtn.setAttribute('download', fileName);
+        document.getElementById('file-name').textContent = fileName;
+    // Générer le QR code ici si nécessaire
+        // ...
+    } else {
+        downloadBtn.classList.add('hidden');
+        unavailableMsg.classList.remove('hidden');   
+        // Effacer le QR code si nécessaire
+        document.getElementById('qr-code-container').innerHTML = '';
+    }
+    </script>
                     
                     <!-- Bouton retour -->
                     <button onclick="showForm()" class="mt-6 bg-white border border-gray-300 text-gray-700 font-medium py-2 px-6 rounded-lg shadow-sm hover:bg-gray-50 transition-all duration-300 flex items-center justify-center">

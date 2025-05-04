@@ -1,7 +1,16 @@
 <x-home titre="absences-page" page_titre="absences-page" :nom_complete="Auth::guard('etudiant')->user()->etudiant_nom . ',' . Auth::guard('etudiant')->user()->etudiant_prenom">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+    <style>
+             /* Scrollbar fine et discrète */
+             ::-webkit-scrollbar {
+                 width: 4px;
+            }
+            ::-webkit-scrollbar-thumb {
+                    background-color: #a0aec0;
+                    border-radius: 20px;
+            }
+    </style>
     <div class="container mx-auto px-4 py-8 max-w-4xl">
         <!-- En-tête -->
         <div class="text-center mb-10">
@@ -271,4 +280,5 @@
         });
     });
     </script>
+    <x-chat-button></x-chat-button>
 </x-home>

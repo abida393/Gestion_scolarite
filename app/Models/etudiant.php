@@ -76,4 +76,5 @@ class etudiant extends Authenticatable
     {
         return $this->hasMany(Note::class);
     }
+    
 }

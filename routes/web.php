@@ -176,6 +176,17 @@ Route::get('/documents/{filename}/download', [DocumentController::class, 'downlo
 
 
 
+
+
+
+
+use App\Http\Controllers\ChatbotController;
+
+Route::post('/chatbot/repondre', [ChatbotController::class, 'repondre'])->name('chatbot.repondre');
+Route::get('/api/chatbot/messages', [ChatbotController::class, 'messages']);
+Route::get('/chatbot', function () {
+    return view('chatbot');
+});
 // use App\Http\Controllers\auth\CalendarController;
 
 // Routes pour la gestion du calendrier

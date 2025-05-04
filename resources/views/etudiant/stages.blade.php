@@ -370,37 +370,6 @@ h1::after {
     margin-top: auto;
 }
 
-/* Modal QR */
-.qr-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.8);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-}
-
-.qr-container {
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    text-align: center;
-    max-width: 300px;
-    animation: fadeIn 0.3s;
-}
-
-.qr-close {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    color: white;
-    font-size: 30px;
-    cursor: pointer;
-}
 
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.9); }
@@ -576,43 +545,13 @@ h1::after {
                         </button>
                     @endif
                         
-                        <button onclick="showQRCode('{{ $stage->email_entreprise }}', '{{ $stage->nom_stage }}')" style="width:40px;height:40px;border-radius:50%;background:#4895ef;color:white;border:none;cursor:pointer;margin-left:10px;" title="Générer QR Code"><i class="fas fa-qrcode"></i></button>
-                    </div>
+                  </div>
                 </div>
             </div>
             @endforeach
         </div>
     </div>
-
-    <!-- Modal QR Code -->
-    <div id="qrModal" class="qr-modal">
-        <span class="qr-close" onclick="hideQRCode()">&times;</span>
-        <div class="qr-container">
-            <h3>Scanner pour postuler</h3>
-            <h3><div id="qrCodeDisplay"></div></h3>
-            <p class="mt-3">Ouvre directement dans Gmail</p>   
-            </a>
-        </div>
-    </div>
-
-    <script>
-        // Fonction pour afficher le QR Code
-        function showQRCode(email, subject) {
-        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`mailto:${email}?subject=${subject}`)}`;
-        
-        document.getElementById('qrModal').innerHTML = `
-            <div style="background:white;padding:30px;border-radius:10px;text-align:center;">
-            <span onclick="document.getElementById('qrModal').style.display='none'" 
-                  style="position:absolute;top:20px;right:20px;color:white;font-size:30px;cursor:pointer;">&times;</span>
-            <h3>Scanner pour postuler</h3>
-            <img src="${qrUrl}" alt="QR Code">
-            <p style="margin-top:15px;">Ouvre directement dans Gmail</p>
-            </div>
-        `;
-        
-        document.getElementById('qrModal').style.display = 'flex';
-    }
-
+  <script>
         // Animation des filtres
         const buttons = document.querySelectorAll('.filter-btn');
         const cards = document.querySelectorAll('.offre-card');
