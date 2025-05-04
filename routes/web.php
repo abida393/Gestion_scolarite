@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -154,3 +153,20 @@ Route::get('/password/reset/{token}', [PasswordController::class, 'showResetForm
 Route::post('/password/reset', [PasswordController::class, 'reset'])
     ->name('password.update');
 Route::post('/justifier-absence', [AbsenceController::class, 'justifier'])->name('justifier-absence');
+
+
+
+//Document routes 
+use App\Http\Controllers\DocumentController;
+Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store');
+Route::get('/documents', [DocumentController::class, 'documents'])->name('documents.index');
+
+Route::get('/documents/download/{id}', [DocumentController::class, 'download'])->name('documents.download');
+
+// routes/web.php
+Route::get('/documents/download/{id}', [DocumentController::class, 'download'])->name('documents.download');
+
+Route::get('/demandes/{id}/download', [DocumentController::class, 'download'])->name('documents.download');
+
+
+Route::get('/documents/{filename}', function ($filename) { return Storage::disk('documents')->download($filename);})->name('documents.download');

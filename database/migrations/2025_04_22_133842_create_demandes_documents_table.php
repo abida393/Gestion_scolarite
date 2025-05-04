@@ -17,7 +17,9 @@ return new class extends Migration
             $table->foreign("id_etudiant")->references('id')->on('etudiants');
             $table->unsignedBigInteger("id_document");
             $table->foreign("id_document")->references('id')->on('documents');
-            $table->string("etat_demande")->default("en attente");
+            $table->string("annee_academique")->nullable();
+            $table->string("fichier")->nullable();
+            $table->string("etat_demande")->default("demande-recue");
             $table->timestamps();
         });
     }

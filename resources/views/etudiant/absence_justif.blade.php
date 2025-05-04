@@ -261,7 +261,7 @@
     </div>
 <div class="welcome-section">
         <h1><i class="fa-solid fa-filter"></i> Filtre</h1>
-        <button onclick="filterAbsences('all')" class="filter-btn bg-indigo-300 text-indigo-700 font-medium px-4 py-1 rounded-full hover:bg-indigo-200 transition">Toutes</button>
+    <button onclick="filterAbsences('all')" class="filter-btn bg-indigo-300 text-indigo-700 font-medium px-4 py-1 rounded-full hover:bg-indigo-200 transition">Toutes</button>
     <button onclick="filterAbsences('justified')" class="filter-btn bg-green-400 text-indigo-700 font-medium px-4 py-1 rounded-full hover:bg-indigo-200 transition">Justifiées</button>
     <button onclick="filterAbsences('pending')" class="filter-btn bg-yellow-400 text-indigo-700 font-medium px-4 py-1 rounded-full hover:bg-indigo-200 transition">En cours de validation</button>
     <button onclick="filterAbsences('unjustified')" class="filter-btn bg-red-400 text-indigo-700 font-medium px-4 py-1 rounded-full hover:bg-indigo-200 transition">Non justifiées</button>
@@ -342,7 +342,7 @@ function filterAbsences(filter) {
 
         <section id="justification-form" class="justification-form">
         <header>
-        <h1><i class="far fa-edit"></i> Justifier une absence</h1>
+        <h1><i class="far fa-edit"></i>Justifier une absence</h1>
         <p class="subtitle">Historique de vos absences enregistrées</p>
     </header>
 

@@ -16,7 +16,7 @@ use App\Models\news;
 use App\Models\stage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\document;
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
@@ -70,8 +70,11 @@ class Controller extends BaseController
     }
 
 
-    public function demande_documents(){
-        return view("etudiant.Demande_documents");
+    public function documents(){
+        $etudiant = Auth::guard('etudiant')->user();
+        $documents = Document::all();
+        return view("etudiant.documents", compact('documents'));
+        
     }
 
 
@@ -106,6 +109,7 @@ class Controller extends BaseController
         $stages = Stage::all();
         return view("etudiant.stages", compact('stages'));
     }
+    
     public function aide()
     {
         return view("etudiant.Aide");

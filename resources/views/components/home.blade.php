@@ -5,7 +5,6 @@
 @props(['titre', 'page_titre', 'nom_complete']);
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -226,7 +225,7 @@
     <div class="sidebar" style="height: 100vh; overflow-y: auto; overflow-x: hidden;">
 
         <div class="logo">
-            {{-- <img src="{{ asset('/images/logo2.png') }}" alt="Logo Établissement" style="align-items:left;width:150px"> --}}
+            <img src="{{ asset('/images/logo.jpeg') }}" alt="Logo Établissement" style="align-items:left;width:150px">
             <div class="burger-menu" id="mobile-toggle">
                 <i class="fas fa-bars"></i>
             </div>
@@ -319,7 +318,7 @@
 
             {{-- <img src="{{ asset('/images/banner.png') }}" alt="Profile" class="profile-image"  style="height: 40px; width: 40px; border-radius: 50%; object-fit: cover;"> --}}
             <div class="dropdown">
-                <i class="fa-regular fa-circle-user fa-2x"></i>
+                <i class="fa-regular fa-circle-user fa-2x" style="font-size: 25px;"></i>
                 <div class="dropdown-content">
                     <a href="#profile">Profile</a>
                     <a href="#logout">Logout</a>
