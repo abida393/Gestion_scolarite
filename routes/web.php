@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\auth\passwordController;
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\passwordResetController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Controller;
@@ -59,6 +60,11 @@ Route::post('/emploi/store', [EmploiTempsController::class, 'store'])->name('emp
 Route::get('/emploi', [EmploiTempsController::class, 'showEmplois'])->name('emploi');
 
 
+Route::get('/emploi/download', [EmploiTempsController::class, 'download'])->name('emploi.download');
+
+
+Route::get('/emploi-etudiant/download', [EmploiTempsController::class, 'downloadForEtudiant'])->name('emploi_etudiant.download');
+
 // use Illuminate\Support\Facades\Route;
 
 // Route::get('/emploi', [EmploiTempsController::class, 'emploi'])->name('emploi');
@@ -111,7 +117,7 @@ Route::get('/notes/{etudiantId}', [NoteController::class, 'afficherNotes']);
 
 Route::get('/home', [Controller::class, 'home'])->name('home');
 // Route::get('/emploi', [Controller::class, 'emploi'])->name('emploi');
-Route::get('/calendrier', [Controller::class, 'calendrier'])->name('calendrier');
+// Route::get('/calendrier', [Controller::class, 'calendrier'])->name('calendrier');
 Route::get('/notes', [Controller::class, 'notes'])->name('notes');
 Route::get('/demande_documents', [Controller::class, 'demande_documents'])->name('demande_documents');
 Route::get('/absence_justif', [Controller::class, 'absence_justif'])->name('absence_justif');
@@ -160,13 +166,33 @@ Route::post('/justifier-absence', [AbsenceController::class, 'justifier'])->name
 use App\Http\Controllers\DocumentController;
 Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store');
 Route::get('/documents', [DocumentController::class, 'documents'])->name('documents.index');
-
 Route::get('/documents/download/{id}', [DocumentController::class, 'download'])->name('documents.download');
-
 // routes/web.php
 Route::get('/documents/download/{id}', [DocumentController::class, 'download'])->name('documents.download');
-
 Route::get('/demandes/{id}/download', [DocumentController::class, 'download'])->name('documents.download');
-
-
 Route::get('/documents/{filename}', function ($filename) { return Storage::disk('documents')->download($filename);})->name('documents.download');
+Route::get('/documents/{filename}/download', [DocumentController::class, 'downloadFile']);
+
+
+
+
+// use App\Http\Controllers\auth\CalendarController;
+
+// Routes pour la gestion du calendrier
+Route::prefix('calendar')->name('calendar.')->group(function () {
+    Route::get('/', [CalendarController::class, 'index'])->name('calendrier'); // Afficher la page du calendrier
+    Route::post('/event/store', [CalendarController::class, 'storeEvent'])->name('event.store'); // Créer un événement
+    Route::post('/plan/store', [CalendarController::class, 'storePlan'])->name('plan.store'); // Planifier un événement
+
+});
+
+
+
+
+
+Route::middleware(['auth:etudiant'])->group(function () {
+    Route::get('/etudiant/calendrier', [CalendarController::class, 'studentView'])->name('etudiant.calendrier');
+    Route::get('/calendrier/events', [CalendarController::class, 'getEvents'])->name('calendrier.events');
+});
+
+

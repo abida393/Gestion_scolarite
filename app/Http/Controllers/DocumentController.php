@@ -83,5 +83,15 @@ public function download($id)
     return response()->download($filePath);
 }
 
+public function downloadFile($filename)
+{
+    $filePath = storage_path('app/public/documents/' . $filename);
+    
+    if (file_exists($filePath)) {
+        return Response::download($filePath, $filename);
+    }
+
+    abort(404); // Si le fichier n'existe pas
+}
 }
 

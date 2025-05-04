@@ -66,8 +66,8 @@ class Controller extends BaseController
         $classe = $etudiant->classe;
       return view('etudiant.profile', compact('etudiant', 'filiere','classe'));
 
-
     }
+   
 
 
     public function documents(){
@@ -99,6 +99,7 @@ class Controller extends BaseController
         $absences = $etudiant->etudiant_absences;
         return view("etudiant.Absence_justif", compact('absences'));
     }
+
     // public function stages(){
     //     return view("etudiant.Stages");
     //     $absences = \App\Models\etudiant_absence::all();

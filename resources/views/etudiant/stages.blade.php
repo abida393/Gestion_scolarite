@@ -1,11 +1,13 @@
+<x-home titre="stage-page" page_titre="stage-page" :nom_complete="Auth::guard('etudiant')->user()->etudiant_nom . ',' . Auth::guard('etudiant')->user()->etudiant_prenom">
 <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
 
 <style>
    :root {
     --primary: #4361ee;
-    --secondary: #3a0ca3;
+    --secondary:rgb(68, 47, 116);
     --accent: #4895ef;
     --accent-light: #4cc9f0;
     --light: #f8f9fa;
@@ -31,13 +33,9 @@ body {
 
 /* Header avec animation de fond */
 header {
-    background: var(--gradient-primary);
     color: white;
-    padding: 4rem 0 3rem;
     text-align: center;
-    margin-bottom: 3rem;
     position: relative;
-    overflow: hidden;
 }
 
 header::before {
@@ -57,7 +55,7 @@ header::before {
 }
 
 h1 {
-    font-size: 2.8rem;
+    text-align: center;
     margin-bottom: 0.5rem;
     font-weight: 700;
     position: relative;
@@ -92,7 +90,6 @@ h1::after {
 
 /* Section Filtres améliorée */
 .filters-section {
-    background: white;
     border-radius: 16px;
     padding: 1.5rem;
     margin-bottom: 3rem;
@@ -341,6 +338,75 @@ h1::after {
     transform: translateY(0);
 }
 
+/* Bouton QR Code */
+.qr-circle-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    margin-left: 10px;
+}
+
+.qr-circle-btn:hover {
+    background: var(--primary);
+    transform: scale(1.1);
+}
+
+.qr-circle-btn i {
+    font-size: 18px;
+}
+
+.button-group {
+    display: flex;
+    align-items: center;
+    margin-top: auto;
+}
+
+/* Modal QR */
+.qr-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.qr-container {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 300px;
+    animation: fadeIn 0.3s;
+}
+
+.qr-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
 /* Bouton contact flottant */
 .floating-contact-btn {
     position: fixed;
@@ -427,18 +493,23 @@ h1::after {
         margin-right: 0;
         margin-bottom: 1rem;
     }
+    
+    .button-group {
+        flex-direction: column;
+    }
+    
+    .qr-circle-btn {
+        margin-left: 0;
+        margin-top: 10px;
+    }
 }
-</style>
-
-<x-home titre="stage-page" page_titre="stage-page" :nom_complete="Auth::guard('etudiant')->user()->etudiant_nom . ',' . Auth::guard('etudiant')->user()->etudiant_prenom">
+</style>      
+    <header>
         <div class="container">
-        <section class="filters-section">
-            
-            <h2 class="section-title"><i class="fas fa-briefcase"></i> Offres de Stage Premium</h2>
-            <p class="subtitle" style="font-weight:bold">Trouvez le stage idéal pour booster votre carrière parmi nos opportunités exclusives</p>
-        </section>
+            <h1 class="text-4xl font-bold text-900 text-center mb-14"><i class="fas fa-briefcase"></i> Offres de Stage</h1>
+            <p class="subtitle" style="font-size:20px">Trouvez le stage idéal pour booster votre carrière parmi nos opportunités exclusives</p>
         </div>
-
+    </header>
 
     <div class="container">
         <section class="filters-section">
@@ -456,8 +527,8 @@ h1::after {
                 <button class="filter-btn" data-filter="finance">
                     <i class="fas fa-chart-line"></i> Finance
                 </button>
-                <button class="filter-btn" data-filter="ingénierie">
-                    <i class="fas fa-cogs"></i> Ingénierie
+                <button class="filter-btn" data-filter="electronique">
+                    <i class="fas fa-cogs"></i> Electronique
                 </button>
             </div>
         </section>
@@ -489,28 +560,58 @@ h1::after {
                         <li><strong>Duree :</strong> {{ $stage->duree}}</li>
                     </ul>
 
+                    <div class="button-group">
                     @php
                     $email = $stage->email_entreprise;
                     $subject = $stage->nom_stage;
                     @endphp 
 
-    @if(!empty($email))
-        <a href="https://mail.google.com/mail/?view=cm&to={{ urlencode($email) }}&su={{ urlencode($subject) }}" target="_blank" class="apply-btn">
-           <i class="fab fa-google"></i> Postuler
-        </a>
-    @else
-        <button class="btn-disabled" disabled>
-            <i class="fas fa-exclamation-circle"></i> Email non disponible
-        </button>
-    @endif
-
+                    @if(!empty($email))
+                        <a href="https://mail.google.com/mail/?view=cm&to={{ urlencode($email) }}&su={{ urlencode($subject) }}" target="_blank" class="apply-btn">
+                        <i class="fab fa-google"></i> Postuler
+                        </a>
+                    @else
+                        <button class="btn-disabled" disabled>
+                            <i class="fas fa-exclamation-circle"></i> Email non disponible
+                        </button>
+                    @endif
+                        
+                        <button onclick="showQRCode('{{ $stage->email_entreprise }}', '{{ $stage->nom_stage }}')" style="width:40px;height:40px;border-radius:50%;background:#4895ef;color:white;border:none;cursor:pointer;margin-left:10px;" title="Générer QR Code"><i class="fas fa-qrcode"></i></button>
+                    </div>
                 </div>
             </div>
             @endforeach
         </div>
     </div>
 
+    <!-- Modal QR Code -->
+    <div id="qrModal" class="qr-modal">
+        <span class="qr-close" onclick="hideQRCode()">&times;</span>
+        <div class="qr-container">
+            <h3>Scanner pour postuler</h3>
+            <h3><div id="qrCodeDisplay"></div></h3>
+            <p class="mt-3">Ouvre directement dans Gmail</p>   
+            </a>
+        </div>
+    </div>
+
     <script>
+        // Fonction pour afficher le QR Code
+        function showQRCode(email, subject) {
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`mailto:${email}?subject=${subject}`)}`;
+        
+        document.getElementById('qrModal').innerHTML = `
+            <div style="background:white;padding:30px;border-radius:10px;text-align:center;">
+            <span onclick="document.getElementById('qrModal').style.display='none'" 
+                  style="position:absolute;top:20px;right:20px;color:white;font-size:30px;cursor:pointer;">&times;</span>
+            <h3>Scanner pour postuler</h3>
+            <img src="${qrUrl}" alt="QR Code">
+            <p style="margin-top:15px;">Ouvre directement dans Gmail</p>
+            </div>
+        `;
+        
+        document.getElementById('qrModal').style.display = 'flex';
+    }
 
         // Animation des filtres
         const buttons = document.querySelectorAll('.filter-btn');
