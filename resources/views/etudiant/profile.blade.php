@@ -2,7 +2,7 @@
     <div class="profile-wrapper">
         <div class="profile-card animated-fade">
 
-            <div class="profile-header">
+             <div class="profile-header">
                 <div class="profile-image hover-scale">
                     @if ($etudiant->PHOTOS)
                         <img src="{{ asset('storage/' . $etudiant->PHOTOS) }}" alt="Photo de profil">
@@ -14,36 +14,37 @@
                         <div class="profile-initials">{{ $lastInitial }}{{ $firstInitial }}</div>
                     @endif
                 </div>
-                <h2 class="profile-names">{{ $etudiant->etudiant_prenom }} {{ $etudiant->etudiant_nom }}</h2>
+                <h2 class="profile-name">{{ $etudiant->etudiant_prenom }} {{ $etudiant->etudiant_nom }}</h2>
                 <p class="profile-email">{{ $etudiant->etudiant_email }}</p>
             </div>
 
-            <div class="profile-body">
-                <div class="info-item">
-                    <span class="label">CIN :</span>
-                    <span class="value">{{ $etudiant->etudiant_cin }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="label">Classe :</span>
-                    <span class="value">{{ $classe->nom_classe }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="label">Filière :</span>
-                    <span class="value">{{ $filiere->nom_filiere }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="label">Date de naissance :</span>
-                    <span class="value">{{ $etudiant->etudiant_date_naissance }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="label">Téléphone :</span>
-                    <span class="value">{{ $etudiant->etudiant_tel }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="label">Adresse :</span>
-                    <span class="value">{{ $etudiant->etudiant_adresse }}</span>
-                </div>
-            </div>
+            <div class="profile-body two-columns">
+    <div class="info-item">
+        <span class="label">CIN :</span>
+        <span class="value">{{ $etudiant->etudiant_cin }}</span>
+    </div>
+    <div class="info-item">
+        <span class="label">Classe :</span>
+        <span class="value">{{ $classe->nom_classe }}</span>
+    </div>
+    <div class="info-item">
+        <span class="label">Filière :</span>
+        <span class="value">{{ $filiere->nom_filiere }}</span>
+    </div>
+    <div class="info-item">
+        <span class="label">Date de naissance :</span>
+        <span class="value">{{ $etudiant->etudiant_date_naissance }}</span>
+    </div>
+    <div class="info-item">
+        <span class="label">Téléphone :</span>
+        <span class="value">{{ $etudiant->etudiant_tel }}</span>
+    </div>
+    <div class="info-item">
+        <span class="label">Adresse :</span>
+        <span class="value">{{ $etudiant->etudiant_adresse }}</span>
+    </div>
+</div>
+
 
             <div class="profile-footer">
                 <a href="{{ route('password.edit') }}" class="btn-password">Changer le mot de passe</a>
@@ -201,6 +202,17 @@
             .profile-body {
                 font-size: 14px;
             }
+            .two-columns {
+        grid-template-columns: 1fr;
+    }
         }
+        .two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 40px;
+}
+
     </style>
+</style>
+<x-chat-button></x-chat-button>
 </x-home>

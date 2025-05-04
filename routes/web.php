@@ -105,6 +105,20 @@ Route::middleware('auth.multi:etudiant')->group(function () {
 Route::get('/notes/{etudiantId}', [NoteController::class, 'afficherNotes'])->middleware("auth.multi:etudiant");
 
 
+
+
+
+
+
+use App\Http\Controllers\ChatbotController;
+
+Route::post('/chatbot/repondre', [ChatbotController::class, 'repondre'])->name('chatbot.repondre');
+Route::get('/api/chatbot/messages', [ChatbotController::class, 'messages']);
+Route::get('/chatbot', function () {
+    return view('chatbot');
+});
+// use App\Http\Controllers\auth\CalendarController;
+
 // Routes pour la gestion du calendrier
 Route::prefix('calendrier')->name('calendar.')->group(function () {
     Route::get('/', [CalendarController::class, 'index'])->name('calendrier'); // Afficher la page du calendrier

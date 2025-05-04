@@ -1,4 +1,5 @@
-<x-home titre="Bulletin Scolaire" page_titre="Mon Bulletin" :nom_complete="Auth::guard('etudiant')->user()->etudiant_nom . ' ' . Auth::guard('etudiant')->user()->etudiant_prenom">
+<x-home titre="Bulletin Scolaire" page_titre="Mon Bulletin"
+         :nom_complete="Auth::guard('etudiant')->user()->etudiant_nom . ' ' . Auth::guard('etudiant')->user()->etudiant_prenom">
 
     <!-- Conteneur principal avec padding adaptatif -->
     <div class="container mx-auto px-3 sm:px-4 py-5 sm:py-8">
@@ -217,5 +218,5 @@
             }
         </style>
     @endpush
-
+<x-chat-button></x-chat-button>
 </x-home>

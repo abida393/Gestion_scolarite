@@ -45,7 +45,20 @@ return [
             'driver' => 'session',
             'provider' => 'responsables',
         ]
+        
     ],
+    'guards' => [
+    'web' => [
+        'driver' => 'session',
+        'provider' => 'users',
+    ],
+
+    'etudiant' => [
+        'driver' => 'session',
+        'provider' => 'etudiants',
+    ],
+],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -74,11 +87,24 @@ return [
             'model' => App\Models\responsable::class,
         ],
 
+
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
     ],
+    'providers' => [
+    'users' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\User::class,
+    ],
+
+    'etudiants' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Etudiant::class,
+    ],
+],
+
 
     /*
     |--------------------------------------------------------------------------

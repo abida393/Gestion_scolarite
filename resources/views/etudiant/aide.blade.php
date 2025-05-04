@@ -348,4 +348,5 @@
     </div>
     <!-- AlpineJS for collapsible behavior -->
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <x-chat-button></x-chat-button>
 </x-home>

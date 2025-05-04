@@ -275,5 +275,6 @@
         @endif
         setupFileInputs();
     });
-</script>
+    </script>
+    <x-chat-button></x-chat-button>
 </x-home>

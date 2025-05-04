@@ -148,4 +148,5 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
+<x-chat-button></x-chat-button>
 </x-home>

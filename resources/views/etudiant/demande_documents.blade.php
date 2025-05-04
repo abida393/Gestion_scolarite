@@ -50,4 +50,5 @@
                 </form>
             </div>
         </div>
+        <x-chat-button></x-chat-button>
 </x-home>
