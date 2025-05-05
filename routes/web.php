@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordResetController;
@@ -10,10 +11,11 @@ use App\Http\Controllers\EvenementController;
 use App\Http\Controllers\EmploiTempsController;
 use App\Http\Controllers\StageController;
 use App\Http\Controllers\AbsenceController;
+use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\ChatbotController;
 
 // ==================== AUTHENTICATION ====================
-
 Route::middleware('guest')->group(function () {
     Route::get('/', [AuthController::class, 'index'])->name('home.welcome');
     Route::post('/login', [AuthController::class, 'authenticate'])->name('login');
@@ -28,7 +30,6 @@ Route::middleware('auth.multi:responsable')->group(function () {
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // ==================== PASSWORD RESET ====================
-
 Route::get('/change-password', [PasswordResetController::class, 'edit'])->name('password.edit');
 Route::put('/update-password', [PasswordResetController::class, 'update'])->name('password.change');
 
@@ -37,8 +38,7 @@ Route::post('/password/forgot', [PasswordController::class, 'sendResetLink'])->n
 Route::get('/password/reset/{token}', [PasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/password/reset', [PasswordController::class, 'reset'])->name('password.update');
 
-// ==================== GENERAL PAGES (Etudiant) ====================
-
+// ==================== ETUDIANT PAGES ====================
 Route::middleware('auth.multi:etudiant')->group(function () {
     Route::get('/home', [Controller::class, 'home'])->name('home');
     Route::get('/calendar', [Controller::class, 'calendar'])->name('calendar');
@@ -56,19 +56,15 @@ Route::middleware('auth.multi:etudiant')->group(function () {
 });
 
 // ==================== EMPLOI DU TEMPS ====================
-
 Route::middleware('auth.multi:etudiant')->prefix('emploi')->group(function () {
     Route::get('/create', [EmploiTempsController::class, 'createComplet'])->name('emploi.create');
-    Route::get('/create-complet', [EmploiTempsController::class, 'createComplet'])->name('emploi.create_complet');
-    Route::post('/', [EmploiTempsController::class, 'store'])->name('emploi.store');
     Route::post('/store-multiple', [EmploiTempsController::class, 'storeMultiple'])->name('emploi.storeMultiple');
     Route::get('/etudiant', [EmploiTempsController::class, 'emploiEtudiant'])->name('emploi.etudiant');
     Route::get('/{timetable}/edit', [EmploiTempsController::class, 'edit_emploi'])->name('emploi.edit');
     Route::put('/{timetable}', [EmploiTempsController::class, 'update'])->name('emploi.update');
     Route::delete('/{timetable}', [EmploiTempsController::class, 'destroy'])->name('emploi.destroy');
-    Route::get('/', [EmploiTempsController::class, 'showEmplois'])->name('emploi.show');
-    Route::get('/emploi/download', [EmploiTempsController::class, 'download'])->name('emploi.download');
-    Route::get('/emploi-etudiant/download', [EmploiTempsController::class, 'downloadForEtudiant'])->name('emploi_etudiant.download');
+    Route::get('/download', [EmploiTempsController::class, 'download'])->name('emploi.download');
+    Route::get('/etudiant/download', [EmploiTempsController::class, 'downloadForEtudiant'])->name('emploi_etudiant.download');
 });
 
 Route::middleware('auth.multi:etudiant')->group(function () {
@@ -77,23 +73,19 @@ Route::middleware('auth.multi:etudiant')->group(function () {
     Route::get('/dashboard', [EmploiTempsController::class, 'dashboard'])->name('dashboard');
 });
 
-// ==================== EVENTS ====================
-
+// ==================== EVENEMENTS ====================
 Route::middleware('auth.multi:etudiant')->prefix('events')->group(function () {
     Route::get('/', [EvenementController::class, 'index']);
     Route::post('/', [EvenementController::class, 'store']);
     Route::put('/update/{id}', [EvenementController::class, 'update']);
     Route::delete('/{id}', [EvenementController::class, 'destroy']);
+    Route::get('/list', [EvenementController::class, 'afficherEvenements'])->name('events');
 });
 
-Route::get('/evenements', [EvenementController::class, 'afficherEvenements'])->name('events')->middleware("auth.multi:etudiant");
-
-// ==================== STAGE ====================
-
+// ==================== STAGES ====================
 Route::get('/stage', [StageController::class, 'index'])->name('stages.index')->middleware("auth.multi:etudiant");
 
 // ==================== ABSENCES ====================
-
 Route::middleware('auth.multi:etudiant')->group(function () {
     Route::get('/absences', [AbsenceController::class, 'index'])->name('absences.index');
     Route::post('/absences/justify/{id}', [AbsenceController::class, 'justify'])->name('absences.justify');
@@ -101,39 +93,34 @@ Route::middleware('auth.multi:etudiant')->group(function () {
 });
 
 // ==================== NOTES ====================
-
 Route::get('/notes/{etudiantId}', [NoteController::class, 'afficherNotes'])->middleware("auth.multi:etudiant");
 
-
-
-
-
-
-
-use App\Http\Controllers\ChatbotController;
-
-Route::post('/chatbot/repondre', [ChatbotController::class, 'repondre'])->name('chatbot.repondre');
-Route::get('/api/chatbot/messages', [ChatbotController::class, 'messages']);
-Route::get('/chatbot', function () {
-    return view('chatbot');
+// ==================== DOCUMENTS ====================
+Route::middleware('auth.multi:etudiant')->prefix('documents')->group(function () {
+    Route::post('/', [DocumentController::class, 'store'])->name('documents.store');
+    Route::get('/', [DocumentController::class, 'documents'])->name('documents.index');
+    Route::get('/download/{id}', [DocumentController::class, 'download'])->name('documents.download');
+    Route::get('/{filename}', function ($filename) {
+        return Storage::disk('documents')->download($filename);
+    })->name('documents.file');
+    Route::get('/{filename}/download', [DocumentController::class, 'downloadFile']);
 });
-// use App\Http\Controllers\auth\CalendarController;
 
-// Routes pour la gestion du calendrier
+Route::get('/demandes/{id}/download', [DocumentController::class, 'download'])->name('demandes.download');
+
+// ==================== CALENDRIER ====================
 Route::prefix('calendrier')->name('calendar.')->group(function () {
-    Route::get('/', [CalendarController::class, 'index'])->name('calendrier'); // Afficher la page du calendrier
-    Route::post('/event/store', [CalendarController::class, 'storeEvent'])->name('event.store'); // Créer un événement
-    Route::post('/plan/store', [CalendarController::class, 'storePlan'])->name('plan.store'); // Planifier un événement
-
+    Route::get('/', [CalendarController::class, 'index'])->name('calendrier');
+    Route::post('/event/store', [CalendarController::class, 'storeEvent'])->name('event.store');
+    Route::post('/plan/store', [CalendarController::class, 'storePlan'])->name('plan.store');
 });
 
-
-
-
-
-Route::middleware(['auth:etudiant'])->group(function () {
+Route::middleware(['auth.multi:etudiant'])->group(function () {
     Route::get('/etudiant/calendrier', [CalendarController::class, 'studentView'])->name('etudiant.calendrier');
     Route::get('/calendrier/events', [CalendarController::class, 'getEvents'])->name('calendrier.events');
 });
 
-
+// ==================== CHATBOT ====================
+Route::post('/chatbot/repondre', [ChatbotController::class, 'repondre'])->name('chatbot.repondre');
+Route::get('/api/chatbot/messages', [ChatbotController::class, 'messages']);
+Route::get('/chatbot', fn() => view('chatbot'));

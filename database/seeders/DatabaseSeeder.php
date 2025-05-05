@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-   
+
     $this->call(ReponsesTableSeeder::class);
 
 
@@ -66,7 +66,7 @@ class DatabaseSeeder extends Seeder
         etudiant_absence::factory(10)->create();
         annee_formation::factory(10)->create();
         document::factory(10)->create();
-        demandes_documents::factory(10)->create();
+        // demandes_documents::factory(10)->create();
         periode::factory(10)->create();
         emplois_temps::factory(10)->create();
         stage::factory(10)->create();

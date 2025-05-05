@@ -78,10 +78,6 @@
                         border-radius: 12px;
                     }
                 </style>
-
-                <!-- Titre de la section -->
-                <h2 class="text-3xl font-bold text-gray-900 mb-8">Informations récentes</h2>
-
                 <div class="flex flex-col lg:flex-row gap-8">
                     <!-- Colonne Actualités -->
                     <div class="lg:w-1/2">

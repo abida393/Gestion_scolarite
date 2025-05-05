@@ -18,7 +18,7 @@ class RedirectIfNotAuthenticated
     {
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                Auth::shouldUse($guard); // Optional but helpful
+                Auth::shouldUse($guard);
                 return $next($request);
             }
         }

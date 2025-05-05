@@ -13,5 +13,4 @@ public function index()
     $stages = Stage::all();
     return view('stages.index', compact('stages'));
 }
-
 }

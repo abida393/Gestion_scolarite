@@ -1,6 +1,8 @@
+<x-home titre="stage-page" page_titre="stage-page" :nom_complete="Auth::guard('etudiant')->user()->etudiant_nom . ',' . Auth::guard('etudiant')->user()->etudiant_prenom">
 <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
 
 <style>
    :root {
@@ -29,35 +31,8 @@ body {
     overflow-x: hidden;
 }
 
-/* Header avec animation de fond */
-header {
-    background: var(--gradient-primary);
-    color: white;
-    padding: 4rem 0 3rem;
-    text-align: center;
-    margin-bottom: 3rem;
-    position: relative;
-    overflow: hidden;
-}
-
-header::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-    animation: pulse 15s infinite alternate;
-}
-
-@keyframes pulse {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
 h1 {
-    
+    text-align: center;
     margin-bottom: 0.5rem;
     font-weight: 700;
     position: relative;
@@ -92,7 +67,6 @@ h1::after {
 
 /* Section Filtres améliorée */
 .filters-section {
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
     border-radius: 16px;
     padding: 1.5rem;
     margin-bottom: 3rem;
@@ -341,6 +315,44 @@ h1::after {
     transform: translateY(0);
 }
 
+/* Bouton QR Code */
+.qr-circle-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    margin-left: 10px;
+}
+
+.qr-circle-btn:hover {
+    background: var(--primary);
+    transform: scale(1.1);
+}
+
+.qr-circle-btn i {
+    font-size: 18px;
+}
+
+.button-group {
+    display: flex;
+    align-items: center;
+    margin-top: auto;
+}
+
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
 /* Bouton contact flottant */
 .floating-contact-btn {
     position: fixed;
@@ -384,24 +396,24 @@ h1::after {
     header {
         padding: 3rem 0;
     }
-    
+
     h1 {
         font-size: 2.2rem;
     }
-    
+
     .subtitle {
         font-size: 1.1rem;
         padding: 0 20px;
     }
-    
+
     .container {
         padding: 0 20px;
     }
-    
+
     .filters {
         justify-content: center;
     }
-    
+
     .offre-card {
         max-width: 100%;
     }
@@ -411,34 +423,39 @@ h1::after {
     .offres-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .filter-btn {
         padding: 0.6rem 1.2rem;
         font-size: 0.9rem;
     }
-    
+
     .card-header {
         flex-direction: column;
         text-align: center;
         padding-bottom: 1.5rem;
     }
-    
+
     .entreprise-logo {
         margin-right: 0;
         margin-bottom: 1rem;
     }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .qr-circle-btn {
+        margin-left: 0;
+        margin-top: 10px;
+    }
 }
 </style>
-
-<x-home titre="stage-page" page_titre="stage-page" :nom_complete="Auth::guard('etudiant')->user()->etudiant_nom . ',' . Auth::guard('etudiant')->user()->etudiant_prenom">
+    <header>
         <div class="container">
-        <section class="filters-section">
-            
-            <h2 class="section-title" style="color:white;text-align:center"><i class="fas fa-briefcase"></i> Offres de Stage Premium</h2>
-            <p class="subtitle" style="font-weight:bold">Trouvez le stage idéal pour booster votre carrière parmi nos opportunités exclusives</p>
-        </section>
+            <h1 class="text-4xl font-bold text-900 text-center mb-14"><i class="fas fa-briefcase"></i> Offres de Stage</h1>
+            <p class="subtitle" style="font-size:20px">Trouvez le stage idéal pour booster votre carrière parmi nos opportunités exclusives</p>
         </div>
-
+    </header>
 
     <div class="container">
         <section class="filters-section">
@@ -456,8 +473,8 @@ h1::after {
                 <button class="filter-btn" data-filter="finance">
                     <i class="fas fa-chart-line"></i> Finance
                 </button>
-                <button class="filter-btn" data-filter="ingénierie">
-                    <i class="fas fa-cogs"></i> Ingénierie
+                <button class="filter-btn" data-filter="electronique">
+                    <i class="fas fa-cogs"></i> Electronique
                 </button>
             </div>
         </section>
@@ -489,26 +506,80 @@ h1::after {
                         <li><strong>Duree :</strong> {{ $stage->duree}}</li>
                     </ul>
 
+                    <div class="button-group">
                     @php
                     $email = $stage->email_entreprise;
                     $subject = $stage->nom_stage;
-                    @endphp 
+                    @endphp
 
-    @if(!empty($email))
-        <a href="https://mail.google.com/mail/?view=cm&to={{ urlencode($email) }}&su={{ urlencode($subject) }}" target="_blank" class="apply-btn">
-           <i class="fab fa-google"></i> Postuler
-        </a>
-    @else
-        <button class="btn-disabled" disabled>
-            <i class="fas fa-exclamation-circle"></i> Email non disponible
-        </button>
-    @endif
+                    @if(!empty($email))
+                        <a href="https://mail.google.com/mail/?view=cm&to={{ urlencode($email) }}&su={{ urlencode($subject) }}" target="_blank" class="apply-btn">
+                        <i class="fab fa-google"></i> Postuler
+                        </a>
+                    @else
+                        <button class="btn-disabled" disabled>
+                            <i class="fas fa-exclamation-circle"></i> Email non disponible
+                        </button>
+                    @endif
 
+                  </div>
                 </div>
             </div>
             @endforeach
         </div>
     </div>
+  <script>
+        // Animation des filtres
+        const buttons = document.querySelectorAll('.filter-btn');
+        const cards = document.querySelectorAll('.offre-card');
 
-        <x-chat-button></x-chat-button>
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                buttons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                const filter = button.getAttribute('data-filter').toLowerCase();
+
+                cards.forEach(card => {
+                    const domaine = card.getAttribute('data-domaine').toLowerCase();
+
+                    if (filter === 'tous' || domaine.includes(filter)) {
+                        card.style.display = 'flex';
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, 50);
+                    } else {
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(20px)';
+                        setTimeout(() => {
+                            card.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
+        });
+
+        // Animation au scroll
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.offre-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
+    <x-chat-button></x-chat-button>
 </x-home>
