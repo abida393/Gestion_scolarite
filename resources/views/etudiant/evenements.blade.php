@@ -1,4 +1,3 @@
-
 <style>
         :root {
             --primary: #4361ee;
@@ -127,58 +126,6 @@
             }
         }
     </style>
-     <x-home titre="events-page" page_titre="events-page" :nom_complete="Auth::guard('etudiant')->user()->etudiant_nom . ',' . Auth::guard('etudiant')->user()->etudiant_prenom">
-     <div class="agenda-container">
-        <h1 class="page-title">Agenda des Événements</h1>
-
-        <div class="events-grid">
-            <!-- Événement 1 -->
-            @foreach($evenements as $evenement)
-            <div class="event-card">
-               <!-- <span class="event-badge">Nouveau</span> -->
-                <h2 class="event-title">{{ $evenement->titre }}<</h2>
-
-                <div class="event-details">
-                    <div class="detail-item">
-                        <div class="detail-icon">
-                            <i class="far fa-calendar-alt"></i>
-                        </div>
-                        <div>
-                            <div class="detail-label">Date</div>
-                            <div class="detail-value">{{ $evenement->date }}</div>
-                        </div>
-                    </div>
-
-                    <div class="detail-item">
-                        <div class="detail-icon">
-                            <i class="far fa-clock"></i>
-                        </div>
-                        <div>
-                            <div class="detail-label">Heure de début</div>
-                            <div class="detail-value">{{ $evenement->heure_debut }}</div>
-                        </div>
-                    </div>
-
-                    <div class="detail-item">
-                        <div class="detail-icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <div>
-                            <div class="detail-label">Heure de fin</div>
-                            <div class="detail-value">{{ $evenement->heure_fin }}</div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            @endforeach
-
-        @if($evenements->isEmpty())
-            <p>Aucun événement trouvé.</p>
-        @endif
-        </div>
-    </div>
-    <x-chat-button></x-chat-button>
 <x-home titre="events-page" page_titre="events-page" :nom_complete="Auth::guard('etudiant')->user()->etudiant_nom . ',' . Auth::guard('etudiant')->user()->etudiant_prenom">
   <div class="max-w-7xl mx-auto px-4 py-12">
     <!-- En-tête -->

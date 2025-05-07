@@ -134,7 +134,7 @@
     <div class="sidebar" style="height: 100vh; overflow-y: auto; overflow-x: hidden;">
 
         <div class="logo">
-            <img src="{{ asset('/images/logo.jpeg') }}" alt="Logo Établissement" style="align-items:left;width:150px">
+            <img src="{{ asset('/images/logo1.png') }}" alt="Logo Établissement" style="align-items:left;width:150px">
             <div class="burger-menu" id="mobile-toggle">
                 <i class="fas fa-bars"></i>
             </div>

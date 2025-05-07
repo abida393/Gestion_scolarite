@@ -206,4 +206,3 @@ Route::middleware(['auth:etudiant'])->group(function () {
     Route::get('/calendrier/events', [CalendarController::class, 'getEvents'])->name('calendrier.events');
 });
 
-

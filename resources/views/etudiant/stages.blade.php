@@ -370,6 +370,37 @@ h1::after {
     margin-top: auto;
 }
 
+/* Modal QR */
+.qr-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.qr-container {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 300px;
+    animation: fadeIn 0.3s;
+}
+
+.qr-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+}
 
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.9); }
