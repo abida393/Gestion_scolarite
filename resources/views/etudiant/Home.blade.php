@@ -1,5 +1,4 @@
 <x-home titre="Page d'accueil" page_titre="Page d'accueil" :nom_complete="Auth::guard('etudiant')->user()->etudiant_nom.','.Auth::guard('etudiant')->user()->etudiant_prenom">
-
 <div id="accueil-page">
     <section class="welcome-section">
         <h1>Bienvenue, <span class="student-name">{{ Auth::guard("etudiant")->user()->etudiant_nom.' , '.Auth::guard("etudiant")->user()->etudiant_prenom }}</span> !</h1>
@@ -11,7 +10,6 @@
             <h1 class="text-3xl font-bold text-blue-800 uppercase tracking-wide mb-6">
                 Cours de {{ ucfirst($today) }}
             </h1>
-
             @if($emploisTemps->isEmpty())
                 <div class="text-gray-500 text-center flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">

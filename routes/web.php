@@ -14,6 +14,7 @@ use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\MessageController;
 
 // ==================== AUTHENTICATION ====================
 Route::middleware('guest')->group(function () {
@@ -51,8 +52,19 @@ Route::middleware('auth.multi:etudiant')->group(function () {
     Route::get('/aide', [Controller::class, 'aide'])->name('aide');
     Route::get('/profile', [Controller::class, 'profile'])->name('profile');
     Route::get('/paiement', [Controller::class, 'paiement'])->name('paiement');
-    Route::get('/messagerie', [Controller::class, 'messagerie'])->name('messagerie');
+    // Route::get('/messagerie', [MessageController::class, 'index'])->name('messagerie');
     Route::get('/news', [Controller::class, 'news'])->name('news');
+});
+// ==================== messagrie ===========================
+Route::middleware(['auth:etudiant'])->group(function () {
+    Route::get('/messagerie-etudiant', [MessageController::class, 'index'])->name('messagerie-etudiant');
+    Route::get('/messages/{responsable}', [MessageController::class, 'getMessages']);
+    Route::post('/messages', [MessageController::class, 'sendMessage']);
+});
+Route::middleware('auth:responsable')->group(function () {
+    Route::get('/messagerie', [MessageController::class, 'indexResponsable'])->name('messagerie');
+    Route::get('/responsable/messages/{etudiant}', [MessageController::class, 'getEtudiantMessages']);
+    Route::post('/responsable/messages', [MessageController::class, 'sendResponsableMessage']);
 });
 
 // ==================== EMPLOI DU TEMPS ====================
