@@ -124,3 +124,5 @@ Route::middleware(['auth.multi:etudiant'])->group(function () {
 Route::post('/chatbot/repondre', [ChatbotController::class, 'repondre'])->name('chatbot.repondre');
 Route::get('/api/chatbot/messages', [ChatbotController::class, 'messages']);
 Route::get('/chatbot', fn() => view('chatbot'));
+
+
