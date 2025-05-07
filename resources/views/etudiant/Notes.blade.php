@@ -1,6 +1,4 @@
-<x-home titre="Bulletin Scolaire" page_titre="Mon Bulletin"
-         :nom_complete="Auth::guard('etudiant')->user()->etudiant_nom . ' ' . Auth::guard('etudiant')->user()->etudiant_prenom">
-
+<x-home titre="Bulletin Scolaire" page_titre="Mon Bulletin" :nom_complete="Auth::guard('etudiant')->user()->etudiant_nom . ' ' . Auth::guard('etudiant')->user()->etudiant_prenom">
     <!-- Conteneur principal avec padding adaptatif -->
     <div class="container mx-auto px-3 sm:px-4 py-5 sm:py-8">
         <!-- En-tête adaptatif -->
@@ -8,7 +6,6 @@
             <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-1 sm:mb-2">Mon Bulletin Scolaire</h1>
             <p class="text-dark/80 text-sm sm:text-base">Année académique {{ now()->format('Y') }}</p>
         </header>
-
         <!-- Profile Card - Redesigned -->
         <div class="bg-white shadow-lg rounded-2xl p-5 sm:p-8 mb-8 mx-3 sm:mx-auto max-w-4xl">
             <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
@@ -91,8 +88,8 @@
                                         <h4 class="font-medium text-dark text-sm sm:text-base">
                                             {{ $note->matiere->nom_matiere }}</h4>
                                         <span
-                                            class="px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs font-medium {{ number_format($note->note_finale,2) >= 10 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                            {{ number_format($note->note_finale,2) >= 10 ? 'Validé' : 'Non validé' }}
+                                            class="px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs font-medium {{ number_format($note->note_finale, 2) >= 10 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                            {{ number_format($note->note_finale, 2) >= 10 ? 'Validé' : 'Non validé' }}
                                         </span>
                                     </div>
 
@@ -101,19 +98,19 @@
                                         class="grid grid-cols-{{ $note->matiere->nbre_examen == 2 ? '3' : '2' }} gap-1 sm:gap-2 text-xs sm:text-sm">
                                         <div>
                                             <p class="text-dark/60 text-xs">Exam 1</p>
-                                            <p>{{ number_format($note->note1,2) ?? '-' }}</p>
+                                            <p>{{ number_format($note->note1, 2) ?? '-' }}</p>
                                         </div>
 
                                         @if ($note->matiere->nbre_examen == 2)
                                             <div>
                                                 <p class="text-dark/60 text-xs">Exam 2</p>
-                                                <p>{{ number_format($note->note2,2) ?? '-' }}</p>
+                                                <p>{{ number_format($note->note2, 2) ?? '-' }}</p>
                                             </div>
                                         @endif
 
                                         <div>
                                             <p class="text-dark/60 text-xs">Finale</p>
-                                            <p class="font-bold">{{ number_format($note->note_finale,2) }}</p>
+                                            <p class="font-bold">{{ number_format($note->note_finale, 2) }}</p>
                                         </div>
                                     </div>
 
@@ -218,5 +215,5 @@
             }
         </style>
     @endpush
-<x-chat-button></x-chat-button>
+    <x-chat-button></x-chat-button>
 </x-home>

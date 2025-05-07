@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\amine;
 use App\Models\classe;
 use App\Models\document;
 use App\Models\emplois_temps;
@@ -42,8 +43,7 @@ class Controller extends BaseController
         // // Puis on envoie les données à la vue
         // $absences = etudiant_absence::with('seance')->where('etudiant_id', $etudiantId)->get();
         // return view('absence', compact('absences'));
-
-        return view("authentification.welcome");
+        return view("authentification.welcome",compact("values"));
     }
 
     public function mdpwrong()

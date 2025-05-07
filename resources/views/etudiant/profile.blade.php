@@ -15,7 +15,7 @@
                     @endif
                 </div>
                 <h2 class="profile-name">{{ $etudiant->etudiant_prenom }} {{ $etudiant->etudiant_nom }}</h2>
-                <p class="profile-email">{{ $etudiant->etudiant_email }}</p>
+                <p class="profile-email">{{ $etudiant->email_ecole }}</p>
             </div>
 
             <div class="profile-body two-columns">

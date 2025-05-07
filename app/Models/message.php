@@ -2,14 +2,24 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Message extends Model
 {
-    protected $fillable = ['etudiant_id', 'sender', 'content'];
+    use HasFactory;
 
-    public function etudiant()
+    protected $fillable = [
+        'content', 'sender_id', 'sender_type', 'receiver_id', 'receiver_type',
+    ];
+
+    public function sender()
     {
-        return $this->belongsTo(Etudiant::class);
+        return $this->morphTo();
+    }
+
+    public function receiver()
+    {
+        return $this->morphTo();
     }
 }

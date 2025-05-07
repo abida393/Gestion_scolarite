@@ -45,19 +45,23 @@ return [
             'driver' => 'session',
             'provider' => 'responsables',
         ]
-        
-    ],
-    'guards' => [
-    'web' => [
-        'driver' => 'session',
-        'provider' => 'users',
-    ],
 
-    'etudiant' => [
-        'driver' => 'session',
-        'provider' => 'etudiants',
     ],
-],
+//     'guards' => [
+//     // 'web' => [
+//     //     'driver' => 'session',
+//     //     'provider' => 'users',
+//     // ],
+
+//     'etudiant' => [
+//         'driver' => 'session',
+//         'provider' => 'etudiants',
+//     ],
+//     'responsable' => [
+//         'driver' => 'session',
+//         'provider' => 'responsables',
+//     ],
+// ],
 
 
     /*
@@ -93,17 +97,17 @@ return [
         //     'table' => 'users',
         // ],
     ],
-    'providers' => [
-    'users' => [
-        'driver' => 'eloquent',
-        'model' => App\Models\User::class,
-    ],
+    // 'providers' => [
+    // 'users' => [
+    //     'driver' => 'eloquent',
+    //     'model' => App\Models\User::class,
+    // ],
 
-    'etudiants' => [
-        'driver' => 'eloquent',
-        'model' => App\Models\Etudiant::class,
-    ],
-],
+    // 'etudiants' => [
+    //     'driver' => 'eloquent',
+    //     'model' => App\Models\Etudiant::class,
+    // ],
+// ],
 
 
     /*

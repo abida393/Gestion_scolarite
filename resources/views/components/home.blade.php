@@ -37,7 +37,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <style>
-        /* Header with background animation */
+        /* Header with background animation
         header {
             color: white;
             text-align: center;
@@ -63,7 +63,7 @@
             100% {
                 transform: rotate(360deg);
             }
-        }
+        } */
 
         .logo {
             display: flex;
@@ -119,7 +119,7 @@
                 <i class="fas fa-briefcase"></i>
                 <span>Evenements</span>
             </a>
-            <a href="{{ route('messagerie') }}" class="nav-item {{ Route::is('messagerie') ? 'active' : '' }}"
+            <a href="{{ route('messagerie-etudiant') }}" class="nav-item {{ Route::is('messagerie-etudiant') ? 'active' : '' }}"
                 data-page="messagerie">
                 <i class="fa-solid fa-inbox"></i>
                 <span>Messagerie</span>
