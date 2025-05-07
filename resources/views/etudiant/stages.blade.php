@@ -31,29 +31,6 @@ body {
     overflow-x: hidden;
 }
 
-/* Header avec animation de fond */
-header {
-    color: white;
-    text-align: center;
-    position: relative;
-}
-
-header::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-    animation: pulse 15s infinite alternate;
-}
-
-@keyframes pulse {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
 h1 {
     text-align: center;
     margin-bottom: 0.5rem;
@@ -450,24 +427,24 @@ h1::after {
     header {
         padding: 3rem 0;
     }
-    
+
     h1 {
         font-size: 2.2rem;
     }
-    
+
     .subtitle {
         font-size: 1.1rem;
         padding: 0 20px;
     }
-    
+
     .container {
         padding: 0 20px;
     }
-    
+
     .filters {
         justify-content: center;
     }
-    
+
     .offre-card {
         max-width: 100%;
     }
@@ -477,33 +454,33 @@ h1::after {
     .offres-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .filter-btn {
         padding: 0.6rem 1.2rem;
         font-size: 0.9rem;
     }
-    
+
     .card-header {
         flex-direction: column;
         text-align: center;
         padding-bottom: 1.5rem;
     }
-    
+
     .entreprise-logo {
         margin-right: 0;
         margin-bottom: 1rem;
     }
-    
+
     .button-group {
         flex-direction: column;
     }
-    
+
     .qr-circle-btn {
         margin-left: 0;
         margin-top: 10px;
     }
 }
-</style>      
+</style>
     <header>
         <div class="container">
             <h1 class="text-4xl font-bold text-900 text-center mb-14"><i class="fas fa-briefcase"></i> Offres de Stage</h1>
@@ -537,7 +514,7 @@ h1::after {
             @foreach ($stages as $stage)
             <div class="offre-card" data-domaine="{{ strtolower($stage->domaine) }}">
                 <div class="card-header">
-                    <img src="{{ asset('storage/' . $stage->photo) }}" alt="Logo {{ $stage->entreprise }}" class="entreprise-logo">
+                    <img src="{{ asset('/' . $stage->photo) }}" alt="Logo {{ $stage->entreprise }}" class="entreprise-logo">
                     <div class="entreprise-info">
                         <h3 class="entreprise-nom">{{ $stage->entreprise }}</h3>
                         <span class="entreprise-secteur">{{ $stage->domaine }}</span>
@@ -564,7 +541,7 @@ h1::after {
                     @php
                     $email = $stage->email_entreprise;
                     $subject = $stage->nom_stage;
-                    @endphp 
+                    @endphp
 
                     @if(!empty($email))
                         <a href="https://mail.google.com/mail/?view=cm&to={{ urlencode($email) }}&su={{ urlencode($subject) }}" target="_blank" class="apply-btn">
@@ -575,7 +552,7 @@ h1::after {
                             <i class="fas fa-exclamation-circle"></i> Email non disponible
                         </button>
                     @endif
-                        
+
                   </div>
                 </div>
             </div>
@@ -635,4 +612,5 @@ h1::after {
             observer.observe(card);
         });
     </script>
+    <x-chat-button></x-chat-button>
 </x-home>

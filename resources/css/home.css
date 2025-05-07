@@ -1,0 +1,169 @@
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounce-slow {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-4px);
+    }
+}
+
+.animate-fade-in {
+    animation: fade-in 0.5s ease-out both;
+}
+
+.animate-bounce-slow {
+    animation: bounce-slow 0.4s ease-in-out infinite;
+}
+
+/* Simple JS-less filtering (à améliorer avec JS si tu veux) */
+.filter-btn.active {
+    font-weight: bold;
+    outline: 2px solid currentColor;
+}
+
+/* Cache les paiements filtrés */
+.hidden {
+    display: none;
+}
+
+.sidebar {
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* Internet Explorer 10+ */
+}
+
+.sidebar::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Edge */
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    border-radius: 5px;
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    width: 100px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    border-radius: 5px;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    border-radius: 5px;
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown i {
+    cursor: pointer;
+}
+
+.fc {
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: none;
+    padding: 1.5rem;
+}
+
+.fc-header-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+#eventModal {
+    position: absolute;
+    /* Allow dynamic positioning */
+    z-index: 50;
+    /* Ensure it appears above other elements */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fc .fc-daygrid-day {
+    background-color: white;
+}
+
+.fc-scrollgrid {
+    background-color: white;
+}
+
+.fc-button {
+    @apply bg-blue-600 text-white rounded px-3 py-1 text-sm font-medium mx-1 hover:bg-blue-700 transition;
+}
+
+
+
+.min-h-screen {
+    min-height: 100vh;
+    /* Prend toute la hauteur de l'écran */
+}
+
+.flex {
+    display: flex;
+}
+
+.fc-other-month {
+    background-color: #f9f9f9;
+    /* Couleur de fond plus claire */
+    color: #ccc;
+    /* Couleur du texte plus claire */
+}
+
+.items-center {
+    align-items: center;
+    /* Centre verticalement */
+}
+
+.justify-center {
+    justify-content: center;
+    /* Centre horizontalement */
+}
+
+.fc-event {
+    background-color: rgb(55, 122, 230) !important;
+    color: white !important;
+    padding: 0.25rem 0.5rem !important;
+    border-radius: 0.375rem !important;
+    border: none !important;
+    transition: transform 0.2s ease-in-out;
+    font-size: 0.875rem;
+}
+
+.fc-event:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}

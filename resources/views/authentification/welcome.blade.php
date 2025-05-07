@@ -81,7 +81,6 @@
                 <h1 class="text-4xl font-bold text-gradient-primary mt-4">Gestion Scolaire</h1>
                 <p class="text-gray-500 mt-2 text-sm font-medium">Connectez-vous à votre espace</p>
             </div>
-
             <!-- Login form with 3D inputs -->
             <form method="POST" action="{{ route("login") }}" class="space-y-6">
                 @csrf

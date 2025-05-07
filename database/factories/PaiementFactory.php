@@ -23,6 +23,7 @@ class PaiementFactory extends Factory
             'montant_paye' => $this->faker->randomFloat(2, 0, 5000),
             'montant_restant' => $this->faker->randomFloat(2, 0, 5000),
             'mode_paiement' => $this->faker->randomElement(['cash', 'credit card', 'bank transfer']),
+            'status' => $this->faker->randomElement(['validé', 'en_attente', 'refusé']),
             'date_paiement' => $this->faker->date(),
         ];
     }

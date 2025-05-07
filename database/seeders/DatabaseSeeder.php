@@ -20,7 +20,7 @@ use App\Models\formation;
 use App\Models\matiere;
 use App\Models\module;
 use App\Models\news;
-//use App\Models\note;
+use App\Models\note;
 use App\Models\paiement;
 use App\Models\periode;
 use App\Models\profile;
@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-   
+
     $this->call(ReponsesTableSeeder::class);
 
 
@@ -66,13 +66,13 @@ class DatabaseSeeder extends Seeder
         etudiant_absence::factory(10)->create();
         annee_formation::factory(10)->create();
         document::factory(10)->create();
-        demandes_documents::factory(10)->create();
+        // demandes_documents::factory(10)->create();
         periode::factory(10)->create();
         emplois_temps::factory(10)->create();
         stage::factory(10)->create();
         news::factory(10)->create();
         evenement::factory(10)->create();
         paiement::factory(10)->create();
-        //note::factory(10)->create();
+        note::factory(10)->create();
     }
 }

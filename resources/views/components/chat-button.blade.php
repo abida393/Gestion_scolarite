@@ -98,8 +98,12 @@
     function addWelcomeMessage() {
         const welcomeMessage = document.querySelector('#chatbox .welcome-message');
         if (!welcomeMessage) {
-            addMessage('Assistant', 'Bonjour Comment puis-je vous aider aujourd’hui ?', 'left', true);
-        }
+addMessage(
+  'Assistant',
+  'Bonjour <?= Auth::guard("etudiant")->user()->etudiant_prenom ?> <?= Auth::guard("etudiant")->user()->etudiant_nom ?> ! Comment puis-je vous aider aujourd\'hui ?',
+  'left',
+  true
+);}
     }
 
     // Ajouter un message

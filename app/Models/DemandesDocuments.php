@@ -20,7 +20,7 @@ class DemandesDocuments extends Model
     ];
 
     public function document()
-    { 
+    {
         return $this->belongsTo(Document::class, 'id_document');
     }
 
@@ -29,12 +29,10 @@ class DemandesDocuments extends Model
         return $this->belongsTo(Etudiant::class, 'id_etudiant');
     }
 
-    public function demande()
-    {
-        return $this->belongsTo(Demande::class, 'id_demande');
-    }
-
-    
+    // public function demande()
+    // {
+    //     return $this->belongsTo(Demande::class, 'id_demande');
+    // }
 }
 
 

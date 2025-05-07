@@ -76,5 +76,10 @@ class etudiant extends Authenticatable
     {
         return $this->hasMany(Note::class);
     }
-    
+    // app/Models/Etudiant.php
+
+    public function messages()
+    {
+        return $this->belongsToMany(Message::class, 'message_etudiant');
+    }
 }

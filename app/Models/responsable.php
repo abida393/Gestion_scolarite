@@ -33,4 +33,10 @@ class responsable extends Authenticatable
     {
         return $this->belongsTo(Formation::class, 'formation_id', 'id');
     }
+    // app/Models/Responsable.php
+
+    public function messages()
+    {
+        return $this->belongsToMany(Message::class, 'message_responsable');
+    }
 }

@@ -36,7 +36,7 @@
 
             {{-- Image --}}
             @if($item->image)
-                <img src="{{ asset('storage/' . $item->image) }}" alt="Image News" class="w-full h-48 object-cover rounded-lg mb-4">
+                <img src="{{ asset('/' . $item->image) }}" alt="Image News" class="w-full h-48 object-cover rounded-lg mb-4">
             @endif
 
             <div class="space-y-4">

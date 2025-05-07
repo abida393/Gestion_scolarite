@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\amine;
 use App\Models\classe;
+use App\Models\document;
 use App\Models\emplois_temps;
 use App\Models\etudiant;
 use App\Models\etudiant_absence;
@@ -13,10 +15,10 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use App\Models\news;
+use App\Models\responsable;
 use App\Models\stage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Models\document;
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
@@ -41,8 +43,7 @@ class Controller extends BaseController
         // // Puis on envoie les données à la vue
         // $absences = etudiant_absence::with('seance')->where('etudiant_id', $etudiantId)->get();
         // return view('absence', compact('absences'));
-
-        return view("authentification.welcome");
+        return view("authentification.welcome",compact("values"));
     }
 
     public function mdpwrong()
@@ -67,14 +68,14 @@ class Controller extends BaseController
       return view('etudiant.profile', compact('etudiant', 'filiere','classe'));
 
     }
-   
+
 
 
     public function documents(){
         $etudiant = Auth::guard('etudiant')->user();
         $documents = Document::all();
         return view("etudiant.documents", compact('documents'));
-        
+
     }
 
 
@@ -90,7 +91,7 @@ class Controller extends BaseController
         $etudiant = Auth::guard('etudiant')->user();
         $filiere = $etudiant->filiere;
         $notes = $etudiant->notes;
-        return view("etudiant.Notes", compact('etudiant', 'filiere'));
+        return view("etudiant.Notes", compact('etudiant', 'filiere', 'notes'));
     }
 
     public function absence_justif()
@@ -110,7 +111,7 @@ class Controller extends BaseController
         $stages = Stage::all();
         return view("etudiant.stages", compact('stages'));
     }
-    
+
     public function aide()
     {
         return view("etudiant.Aide");
@@ -120,6 +121,10 @@ class Controller extends BaseController
         $etudiant = Auth::guard('etudiant')->user();
         $paiements = $etudiant->paiements;
         $montant_paye = 0;
+        if ($paiements->isEmpty()) {
+            $montant_restant = 0;
+            return view("etudiant.paiement", compact('paiements', "montant_paye", "montant_restant"));
+        }
         foreach ($paiements as $paiement) {
             $montant_paye += $paiement->montant_paye;
         }
@@ -132,7 +137,8 @@ class Controller extends BaseController
     }
     public function messagerie()
     {
-        return view("etudiant.messagerie");
+        $responsables = responsable::all();
+        return view("etudiant.messagerie", compact('responsables'));
     }
     /*public function news()
     {

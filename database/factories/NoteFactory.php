@@ -21,7 +21,8 @@ class NoteFactory extends Factory
         return [
             'etudiant_id' => etudiant::factory(),
             'matiere_id' => matiere::factory(),
-            'note' => $this->faker->randomFloat(2, 0, 20),
+            'note1' => $this->faker->randomFloat(2, 0, 20),
+            'note2' => $this->faker->randomFloat(2, 0, 20),
         ];
     }
 }

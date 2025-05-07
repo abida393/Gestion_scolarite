@@ -23,6 +23,7 @@ class MatiereFactory extends Factory
             'module_id' => module::factory(),
             'coefficient' => $this->faker->numberBetween(1, 5),
             'enseignant_id' => enseignant::factory(),
+            "nbre_examen" => $this->faker->numberBetween(1, 2),
         ];
     }
 }

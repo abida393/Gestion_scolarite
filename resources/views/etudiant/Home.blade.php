@@ -1,5 +1,4 @@
 <x-home titre="Page d'accueil" page_titre="Page d'accueil" :nom_complete="Auth::guard('etudiant')->user()->etudiant_nom.','.Auth::guard('etudiant')->user()->etudiant_prenom">
-
 <div id="accueil-page">
     <section class="welcome-section">
         <h1>Bienvenue, <span class="student-name">{{ Auth::guard("etudiant")->user()->etudiant_nom.' , '.Auth::guard("etudiant")->user()->etudiant_prenom }}</span> !</h1>
@@ -11,7 +10,6 @@
             <h1 class="text-3xl font-bold text-blue-800 uppercase tracking-wide mb-6">
                 Cours de {{ ucfirst($today) }}
             </h1>
-
             @if($emploisTemps->isEmpty())
                 <div class="text-gray-500 text-center flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -78,10 +76,6 @@
                         border-radius: 12px;
                     }
                 </style>
-
-                <!-- Titre de la section -->
-                <h2 class="text-3xl font-bold text-gray-900 mb-8">Informations récentes</h2>
-
                 <div class="flex flex-col lg:flex-row gap-8">
                     <!-- Colonne Actualités -->
                     <div class="lg:w-1/2">
@@ -91,11 +85,11 @@
                             </svg>
                             Dernières Actualités
                         </h3>
-                        
+
                         @php
                             $latestNews = \App\Models\News::orderBy('date_news', 'desc')->take(2)->get();
                         @endphp
-                        
+
                         @if($latestNews->isEmpty())
                             <div class="bg-white rounded-lg shadow p-6 text-center">
                                 <p class="text-gray-500">Aucune actualité récente</p>
@@ -147,13 +141,13 @@
                             </svg>
                             Derniers Événements
                         </h3>
-                        
+
                         @php
                             $latestEvents = \App\Models\Evenement::orderBy('date', 'desc')
                                 ->take(3)
                                 ->get();
                         @endphp
-                        
+
                         @if($latestEvents->isEmpty())
                             <div class="bg-white rounded-xl border border-blue-100 shadow-md p-6 text-center">
                                 <p class="text-gray-500">Aucun événement disponible</p>
@@ -203,9 +197,22 @@
             </div>
         </div>
     </div>
-</div>
-
-<script>
+    </div>
+    <x-chat-button></x-chat-button>
+    <script>
+        // Fonction pour mettre à jour la date et l'heure
+        function updateDateTime() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            const date = now.toLocaleDateString('fr-FR', options); // Format de la date en français
+            const time = now.toLocaleTimeString('fr-FR'); // Format de l'heure en français
+            document.getElementById('current-date-time').textContent = `Nous sommes le ${date}, il est ${time}.`;
+        }
     function updateDateTime() {
         const now = new Date();
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -217,4 +224,5 @@
     setInterval(updateDateTime, 1000);
     updateDateTime();
 </script>
+
 </x-home>
