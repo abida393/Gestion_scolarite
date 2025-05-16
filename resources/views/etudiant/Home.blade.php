@@ -5,51 +5,55 @@
         <p id="current-date-time"></p>
     </section>
 
-    <div class="bg-gray-100 font-sans">
-        <div class="max-w-7xl mx-auto py-10 px-6">
-            <h1 class="text-3xl font-bold text-blue-800 uppercase tracking-wide mb-6">
-                Cours de {{ ucfirst($today) }}
-            </h1>
-            @if($emploisTemps->isEmpty())
-                <div class="text-gray-500 text-center flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Pas de cours prévu aujourd'hui !
-                </div>
-            @else
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    @foreach($emploisTemps as $cours)
-                        <div class="bg-gradient-to-r from-blue-100 to-blue-200 p-4 rounded-lg shadow">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="bg-blue-600 text-white text-xs px-3 py-1 rounded-full shadow">{{ $cours->matiere->name }}</span>
-                                <span class="text-sm font-semibold text-gray-600">{{ $cours->salle }}</span>
-                            </div>
+   <div class="bg-gray-50 font-sans py-4 px-4">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-extrabold text-center text-blue-700 uppercase tracking-tight mb-10">
+            Cours de {{ ucfirst($today) }}
+        </h1>
 
-                            <div class="text-sm text-gray-700 mb-1 flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                {{ \Carbon\Carbon::parse($cours->date)->format('d/m/Y') }}
-                            </div>
-
-                            <div class="text-sm text-gray-700 mb-1 flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                {{ \Carbon\Carbon::parse($cours->heure_debut)->format('H:i') }} - {{ \Carbon\Carbon::parse($cours->heure_fin)->format('H:i') }}
-                            </div>
-
-                            <div class="text-sm text-gray-700 font-bold flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
-                                Enseignant : {{ $cours->enseignant->name }}
-                            </div>
+        @if($emploisTemps->isEmpty())
+            <div class="flex flex-col items-center justify-center text-center text-gray-500 mt-20">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-blue-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p class="text-lg font-medium">Pas de cours prévu aujourd'hui !</p>
+            </div>
+        @else
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                @foreach($emploisTemps as $cours)
+                    <div class="bg-white border border-blue-100 rounded-xl shadow hover:shadow-lg transition duration-300 p-5">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-blue-600 text-white text-sm font-medium px-4 py-1 rounded-full">
+                                {{ $cours->matiere->name }}
+                            </span>
+                            <span class="text-sm text-gray-500">{{ $cours->salle }}</span>
                         </div>
-                    @endforeach
-                </div>
-            @endif
+
+                        <div class="flex items-center text-sm text-gray-600 mb-2">
+                            <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" viewBox="0 0 24 24"
+                                 stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            {{ \Carbon\Carbon::parse($cours->heure_debut)->format('H:i') }} - {{ \Carbon\Carbon::parse($cours->heure_fin)->format('H:i') }}
+                        </div>
+
+                        <div class="flex items-center text-sm text-gray-600 font-semibold">
+                            <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" viewBox="0 0 24 24"
+                                 stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            {{ $cours->enseignant->name }}
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+    </div>
+</div>
+
 
             <!-- Section Actualités et Événements -->
             <div class="mt-12">
