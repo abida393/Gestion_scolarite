@@ -16,8 +16,14 @@ class calender extends Model
         'end_date',
     ];
 
+    // Dans app/Models/Calender.php
+
+    protected $table = 'calenders';
+
     public function event()
     {
         return $this->belongsTo(calender_events::class, 'calendar_event_id');
     }
+
 }
+

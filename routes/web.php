@@ -16,7 +16,14 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\MessageController;
+use Illuminate\Http\Request;
 
+//==================================testemploi=========================================
+// use App\Http\Controllers\EmploiDuTempsController;
+// use App\Http\Controllers\ClasseController;
+// use App\Http\Controllers\FiliereController;
+// use App\Http\Controllers\MatiereController;
+// use App\Http\Controllers\EnseignantController;
 // ==================== AUTHENTICATION ====================
 Route::middleware('guest')->group(function () {
     Route::get('/', [AuthController::class, 'index'])->name('home.welcome');
@@ -71,21 +78,34 @@ Route::middleware('auth:responsable')->group(function () {
 
 // ==================== EMPLOI DU TEMPS ====================
 Route::middleware('auth.multi:etudiant')->prefix('emploi')->group(function () {
-    Route::get('/create', [EmploiTempsController::class, 'createComplet'])->name('emploi.create');
-    Route::post('/store-multiple', [EmploiTempsController::class, 'storeMultiple'])->name('emploi.storeMultiple');
     Route::get('/etudiant', [EmploiTempsController::class, 'emploiEtudiant'])->name('emploi.etudiant');
-    Route::get('/{timetable}/edit', [EmploiTempsController::class, 'edit_emploi'])->name('emploi.edit');
-    Route::put('/{timetable}', [EmploiTempsController::class, 'update'])->name('emploi.update');
-    Route::delete('/{timetable}', [EmploiTempsController::class, 'destroy'])->name('emploi.destroy');
     Route::get('/download', [EmploiTempsController::class, 'download'])->name('emploi.download');
     Route::get('/etudiant/download', [EmploiTempsController::class, 'downloadForEtudiant'])->name('emploi_etudiant.download');
-});
+    Route::get('/emploi', [EmploiTempsController::class, 'emploiEtudiant'])->name('etudiant.emploi');
 
-Route::middleware('auth.multi:etudiant')->group(function () {
-    Route::get('/filieres-par-formation/{formationId}', [EmploiTempsController::class, 'getFilieresByFormation']);
-    Route::get('/classes-par-filiere/{filiereId}', [EmploiTempsController::class, 'getClassesByFiliere']);
-    Route::get('/dashboard', [EmploiTempsController::class, 'dashboard'])->name('dashboard');
 });
+// ==================== EMPLOI DU TEMPS RESPONSABLE ====================
+// Route::middleware('auth:responsable')->group(function () {
+//     Route::get('/responsable/create_emploi_complet', [EmploiTempsController::class, 'createComplet'])->name('responsable.create_emploi_complet');
+//     Route::post('/responsable/create_emploi_complet/store', [EmploiTempsController::class, 'storeMultiple'])->name('responsable.storeMultiple');
+//     Route::get('/responsable/{timetable}/edit', [EmploiTempsController::class, 'edit_emploi'])->name('responsable.edit');
+//     Route::put('/responsable/{timetable}', [EmploiTempsController::class, 'update'])->name('responsable.update');
+//     Route::delete('/responsable/{timetable}', [EmploiTempsController::class, 'destroy'])->name('responsable.destroy');
+//     Route::get('/responsable/emploi', action: [EmploiTempsController::class, 'afficherEmploi'])->name('responsable.emploi');
+//     Route::get('/classe-details/{id}', [EmploiTempsController::class, 'getClasseDetails'])->name('classe.details');
+//     Route::get('/responsable/download', [EmploiTempsController::class, 'download'])->name('responsable.download');
+//     Route::get('/responsable/create', [EmploiTempsController::class, 'create'])->name('responsable.create');
+//     Route::post('/responsable/store', [EmploiTempsController::class, 'store'])->name('responsable.store');
+
+// });
+// ==================== EMPLOI DU TEMPS ETUDIANT ====================
+// Route::middleware('auth.multi:etudiant')->group(function () {
+//     Route::get('/filieres-par-formation/{formationId}', [EmploiTempsController::class, 'getFilieresByFormation']);
+//     Route::get('/classes-par-filiere/{filiereId}', [EmploiTempsController::class, 'getClassesByFiliere']);
+//     Route::get('/dashboard', [EmploiTempsController::class, 'dashboard'])->name('dashboard');
+//         Route::get('/emploi', [EmploiTempsController::class, 'emploiEtudiant'])->name('emploi');
+
+// });
 
 // ==================== EVENEMENTS ====================
 Route::middleware('auth.multi:etudiant')->prefix('events')->group(function () {
@@ -127,11 +147,22 @@ Route::prefix('calendrier')->name('calendar.')->group(function () {
     Route::get('/', [CalendarController::class, 'index'])->name('calendrier');
     Route::post('/event/store', [CalendarController::class, 'storeEvent'])->name('event.store');
     Route::post('/plan/store', [CalendarController::class, 'storePlan'])->name('plan.store');
-});
 
+});
+Route::middleware('auth:responsable')->group(function () {
+     Route::get('/calendrier', [CalendarController::class, 'index'])->name('responsable.calendrier');
+    Route::post('/responsable/event/store', [CalendarController::class, 'storeEvent'])->name('responsable.calendar.event.store');
+    Route::post('/responsable/plan/store', [CalendarController::class, 'storePlan'])->name('responsable.calendar.plan.store');
+    Route::get('/responsable/calendar/events', [CalendarController::class, 'getEvents'])->name('responsable.calendar.events');
+    Route::put('/responsable/event/update/{id}', [CalendarController::class, 'update'])->name('responsable.calendar.event.update');
+Route::get('/responsable/calendar/{id}/json', [CalendarController::class, 'getEventJson']);Route::delete('/responsable/calendar/{id}', [CalendarController::class, 'delete'])->name('responsable.calendar.delete');
+// Route::get('/responsable/calendar/{id}', [CalendarController::class, 'show'])->name('responsable.calendar.show');
+//  Route::delete('/calendar/{id}', [CalendarController::class, 'delete'])->name('responsable.calendar.delete');
+ Route::delete('/calendar/{id}', [CalendarController::class, 'delete']);
+  });
 Route::middleware(['auth.multi:etudiant'])->group(function () {
     Route::get('/etudiant/calendrier', [CalendarController::class, 'studentView'])->name('etudiant.calendrier');
-    Route::get('/calendrier/events', [CalendarController::class, 'getEvents'])->name('calendrier.events');
+    Route::get('/etudiant/events', [CalendarController::class, 'studentEvents'])->name('etudiant.events');
 });
 
 // ==================== CHATBOT ====================
@@ -147,3 +178,32 @@ Route::middleware('auth.multi:responsable')->group(function(){
     Route::post('/ajouter-enseignant/store', [ajouterEnseignantController::class, 'store'])->name('admin.enseignants.store');
 });
 
+// ==================== TEST EMPLOI ====================
+Route::prefix('responsable')->middleware(['auth:responsable'])->group(function() {
+    // Emplois du temps
+    Route::get('/emplois', [EmploiTempsController::class, 'affich'])->name('responsable.emploi');
+    Route::get('/emplois/create', [EmploiTempsController::class, 'create'])->name('responsable.create');
+    Route::post('/emplois', [EmploiTempsController::class, 'store'])->name('responsable.store');
+    Route::get('/emploi/{id}/edit', [EmploiTempsController::class, 'edit'])->name('responsable.edit');
+Route::put('/responsable/emploi/{id}', [EmploiTempsController::class, 'update'])->name('responsable.update');
+    Route::delete('/emplois/{timetable}', [EmploiTempsController::class, 'destroy'])->name('responsable.destroy');
+    Route::get('/emplois/pdf/{classeId}', [EmploiTempsController::class, 'emploiPdf'])->name('responsable.emploi_pdf');
+    Route::post('/emplois', [EmploiTempsController::class, 'store'])->name('responsable.emploi.store');
+    Route::post('/check-conflits', [EmploiTempsController::class, 'checkConflits'])->name('responsable.checkConflits');
+    // Emploi complet
+    Route::get('/emplois/complet', [EmploiTempsController::class, 'createComplet'])->name('responsable.create_emploi_complet');
+    Route::post('/emplois/complet', [EmploiTempsController::class, 'storeMultiple'])->name('responsable.storeMultiple');
+    // API pour les dépendances
+    Route::get('/api/filieres', function(Request $request) {
+        return \App\Models\Filiere::where('formation_id', $request->formation_id)
+            ->orderBy('nom_filiere')
+            ->get();
+
+
+    });
+    Route::get('/api/classes', function(Request $request) {
+        return \App\Models\Classe::where('filiere_id', $request->filiere_id)
+            ->orderBy('nom_classe')
+            ->get();
+    });
+});
