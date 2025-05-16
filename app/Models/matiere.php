@@ -31,10 +31,7 @@ class Matiere extends Model
     {
         return $this->hasMany(Examen::class);
     }
-    public function seances()
-    {
-        return $this->hasMany(Seance::class, 'matiere_id', 'id');
-    }
+    
     public function emploisTemps()
     {
         return $this->hasMany(emplois_temps::class);
@@ -43,5 +40,19 @@ class Matiere extends Model
     public function notes()
     {
         return $this->hasMany(Note::class);
+    }
+
+    public function matieres()
+{
+    return $this->hasMany(Matiere::class);
+}
+/*public function seances() //Version qdima 
+    {
+        return $this->hasMany(Seance::class, 'matiere_id');
+    }*/
+
+     public function seances()
+    {
+        return $this->hasMany(Seance::class);
     }
 }

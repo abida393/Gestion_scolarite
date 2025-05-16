@@ -93,26 +93,31 @@
                 <i class="fas fa-home"></i>
                 <span>Accueil</span>
             </a>
-            <a href="{{ route('absence_justif') }}" class="nav-item {{ Route::is('absence_justif') ? 'active' : '' }}"
-                data-page="absences">
-                <i class="fas fa-user-clock"></i>
-                <span>Absence et justif</span>
+            <a href="{{ route('responsable.absences.index') }}" 
+            class="nav-item {{ Route::is('responsable.absences.index') ? 'active' : '' }}"
+            data-page="absences">
+            <i class="fas fa-user-clock"></i>
+            <span>Absence et justif</span>
             </a>
+
             <a href="{{ route('calendar.calendrier') }}"
                 class="nav-item {{ Route::is('calendar.calendrier') ? 'active' : '' }}" data-page="calendrier">
                 <i class="far fa-calendar-alt"></i>
                 <span>Calendrier</span>
             </a>
-            <a href="{{ route('documents.index') }}"
-                class="nav-item {{ Route::is('documents.index') ? 'active' : '' }}" data-page="demandes">
+
+            <!-- Ajouter par imad -->
+            <a href="{{ route('responsable.documents.index') }}"
+            class="nav-item {{ Route::is('responsable.documents.index') ? 'active' : '' }}" data-page="demandes">
                 <i class="fas fa-file-alt"></i>
-                <span>Demande documents</span>
+                <span>Suivi documents</span>
             </a>
-            <a href="{{ route('events') }}" class="nav-item {{ Route::is('events') ? 'active' : '' }}"
-                data-page="event">
-                <i class="fas fa-briefcase"></i>
-                <span>Evenements</span>
+            <a href="{{ route('responsable.events') }}" class="nav-item {{ Route::is('responsable.events') ? 'active' : '' }}" data-page="evenements">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Événements</span>
             </a>
+            <!---------------------->
+
             <a href="{{ route('messagerie') }}" class="nav-item {{ Route::is('messagerie') ? 'active' : '' }}"
                 data-page="messagerie">
                 <i class="fa-solid fa-inbox"></i>
@@ -123,20 +128,27 @@
                 <i class="far fa-sticky-note"></i>
                 <span>Notes</span>
             </a>
-            <a href="{{ route('news') }}" class="nav-item {{ Route::is('news') ? 'active' : '' }}" data-page="news">
+
+            <!-- Ajouter par imad -->
+            <a href="{{ route('news.index') }}" class="nav-item {{ Route::is('news.index') ? 'active' : '' }}" data-page="news">
                 <i class="fas fa-newspaper"></i>
                 <span>News</span>
             </a>
+            <!---------------------->
+
             <a href="{{ route('paiement') }}" class="nav-item {{ Route::is('paiement') ? 'active' : '' }}"
                 data-page="paiement">
                 <i class="fas fa-money-bill-wave"></i>
                 <span>Paiement</span>
             </a>
-            <a href="{{ route('stages') }}" class="nav-item {{ Route::is('stages') ? 'active' : '' }}"
-                data-page="stage">
+
+            <!-- Ajouter par imad -->
+            <a href="{{ route('stages-responsable') }}" class="nav-item {{ Route::is('stages-responsable') ? 'active' : '' }}" data-page="stage">
                 <i class="fas fa-briefcase"></i>
                 <span>Stages</span>
             </a>
+            <!---------------------->
+
         </div>
     </div>
 

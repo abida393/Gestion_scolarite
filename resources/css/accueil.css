@@ -47,8 +47,9 @@ body {
 
 /* ==================== SIDEBAR ==================== */
 .sidebar {
+    border-right: black;
     width: var(--sidebar-width);
-    background-color: var(--white);
+    background-color: white;
     border-right: 1px solid var(--gray-medium);
     padding: 35px 0;
     display: flex;

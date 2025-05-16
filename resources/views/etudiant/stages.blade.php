@@ -514,7 +514,7 @@ h1::after {
             @foreach ($stages as $stage)
             <div class="offre-card" data-domaine="{{ strtolower($stage->domaine) }}">
                 <div class="card-header">
-                    <img src="{{ asset('/' . $stage->photo) }}" alt="Logo {{ $stage->entreprise }}" class="entreprise-logo">
+                    <img src="{{  asset('storage/' . $stage->photo) }}" alt="Logo {{ $stage->entreprise }}" class="entreprise-logo">
                     <div class="entreprise-info">
                         <h3 class="entreprise-nom">{{ $stage->entreprise }}</h3>
                         <span class="entreprise-secteur">{{ $stage->domaine }}</span>

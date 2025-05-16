@@ -29,4 +29,15 @@ class etudiant_absence extends Model
     {
         return $this->belongsTo(etudiant::class, 'etudiant_id');
     }
+
+    public function classe()
+{
+    return $this->belongsTo(Classe::class, 'classe_id');
+}
+
+public function etudiants()
+{
+    return $this->hasMany(Etudiant::class);
+}
+
 }

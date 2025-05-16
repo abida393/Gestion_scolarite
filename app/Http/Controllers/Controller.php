@@ -148,8 +148,13 @@ class Controller extends BaseController
        // return view("pages.news");
        $news = News::orderBy('date_news', 'desc')->get();
        return view('etudiant.news', compact('news'));
+    }
 
-}
+    //Ajouter par imad
+    public function adminNews(){
+        return view('responsable.news');
+    }
+    /////////////////////////////////////
 
 
 

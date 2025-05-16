@@ -94,11 +94,11 @@
                 <i class="fas fa-home"></i>
                 <span>Accueil</span>
             </a>
-            <a href="{{ route('absence_justif') }}" class="nav-item {{ Route::is('absence_justif') ? 'active' : '' }}"
-                data-page="absences">
+            <a href="{{ route("absence_justif") }}" class="nav-item {{ Route::is("absence_justif")  ? 'active' : ''  }}" data-page="absences">
                 <i class="fas fa-user-clock"></i>
                 <span>Absence et justif</span>
             </a>
+
             <a href="{{ route('calendar.calendrier') }}"
                 class="nav-item {{ Route::is('calendar.calendrier') ? 'active' : '' }}" data-page="calendrier">
                 <i class="far fa-calendar-alt"></i>
@@ -138,8 +138,7 @@
                 <i class="fas fa-money-bill-wave"></i>
                 <span>Paiement</span>
             </a>
-            <a href="{{ route('stages') }}" class="nav-item {{ Route::is('stages') ? 'active' : '' }}"
-                data-page="stage">
+            <a href="{{ route('stages.index') }}" class="nav-item {{ Route::is('stages.index') ? 'active' : '' }}" data-page="stage">
                 <i class="fas fa-briefcase"></i>
                 <span>Stages</span>
             </a>
