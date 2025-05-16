@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
@@ -11,6 +10,8 @@ use App\Http\Controllers\EvenementController;
 use App\Http\Controllers\EmploiTempsController;
 use App\Http\Controllers\StageController;
 use App\Http\Controllers\AbsenceController;
+use App\Http\Controllers\ajouterEnseignantController;
+use App\Http\Controllers\ajouterEtudiantController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ChatbotController;
@@ -65,6 +66,7 @@ Route::middleware('auth:responsable')->group(function () {
     Route::get('/messagerie', [MessageController::class, 'indexResponsable'])->name('messagerie');
     Route::get('/responsable/messages/{etudiant}', [MessageController::class, 'getEtudiantMessages']);
     Route::post('/responsable/messages', [MessageController::class, 'sendResponsableMessage']);
+
 });
 
 // ==================== EMPLOI DU TEMPS ====================
@@ -136,3 +138,12 @@ Route::middleware(['auth.multi:etudiant'])->group(function () {
 Route::post('/chatbot/repondre', [ChatbotController::class, 'repondre'])->name('chatbot.repondre');
 Route::get('/api/chatbot/messages', [ChatbotController::class, 'messages']);
 Route::get('/chatbot', fn() => view('chatbot'));
+
+//  ==================== RESPONSABLE PAGES ====================
+Route::middleware('auth.multi:responsable')->group(function(){
+    Route::get('/ajouter-etudiant', [ajouterEtudiantController::class, 'index'])->name('ajouter-etudiant');
+    Route::post('/ajouter-etudiant/store', [ajouterEtudiantController::class, 'store'])->name('admin.etudiants.store');
+    Route::get('/ajouter-enseignant', [ajouterEnseignantController::class, 'index'])->name('ajouter-enseignant');
+    Route::post('/ajouter-enseignant/store', [ajouterEnseignantController::class, 'store'])->name('admin.enseignants.store');
+});
+

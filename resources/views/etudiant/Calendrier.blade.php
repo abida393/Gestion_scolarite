@@ -11,7 +11,6 @@
     </div>
   </div>
 </div>
-
 <style>
   .fc-day-grid-event {
     border-radius: 0.5rem;
@@ -22,66 +21,66 @@
     transition: all 0.2s ease;
     margin: 1px 0;
   }
-  
+
   .fc-day-grid-event:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
-  
+
   .fc-today {
     background-color: rgba(99, 102, 241, 0.15) !important;
   }
-  
+
   .fc-day-header {
     padding: 8px 4px;
     font-weight: 600;
   }
-  
+
   /* Responsive adjustments */
   @media (max-width: 768px) {
     .fc-toolbar {
       flex-direction: column;
       gap: 0.5rem;
     }
-    
+
     .fc-toolbar .fc-left,
     .fc-toolbar .fc-center,
     .fc-toolbar .fc-right {
       width: 100%;
       justify-content: center;
     }
-    
+
     .fc-header-toolbar h2 {
       font-size: 1.1rem;
       margin: 0.5rem 0;
     }
-    
+
     .fc-day-header {
       font-size: 0.75rem;
       padding: 4px 2px;
     }
-    
+
     .fc-day-grid-event {
       font-size: 0.7rem;
       padding: 0.1rem 0.3rem;
     }
   }
-  
+
   @media (max-width: 576px) {
     .calendar-wrapper {
       padding: 1rem;
     }
-    
+
     #calendar {
       padding: 0.5rem;
     }
-    
+
     .fc-button {
       padding: 0.25rem 0.5rem;
       font-size: 0.8rem;
     }
   }
-  
+
   .calendar-wrapper {
     margin-bottom: 2rem;
   }
@@ -90,7 +89,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const calendar = $('#calendar');
-  
+
   function updateCurrentDate() {
     const current = calendar.fullCalendar('getDate');
     const formatted = moment(current).format('dddd D MMMM YYYY');
@@ -141,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Initial date display
   updateCurrentDate();
-  
+
   // Handle window resize
   $(window).on('resize', function() {
     calendar.fullCalendar('render');

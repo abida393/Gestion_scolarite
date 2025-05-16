@@ -67,7 +67,7 @@
         .logo {
             display: flex;
             margin: auto;
-            padding:0 30px 10px;
+            padding: 0 30px 10px;
 
         }
     </style>
@@ -76,11 +76,12 @@
 <body>
     <!-- Sidebar -->
     <div class="sidebar" style="height: 100vh; overflow-y: auto; overflow-x: hidden;">
-       <div class="flex justify-end p-3">
-    <div class="burger-menu p-2 bg-[#4270f4]/10 hover:bg-[#4270f4]/20 text-[#4270f4] hover:text-[#4270f4]/90 cursor-pointer transition-all duration-200" id="mobile-toggle">
-        <i class="fas fa-bars text-xl"></i>
-    </div>
-</div>
+        <div class="flex justify-end p-3">
+            <div class="burger-menu p-2 bg-[#4270f4]/10 hover:bg-[#4270f4]/20 text-[#4270f4] hover:text-[#4270f4]/90 cursor-pointer transition-all duration-200"
+                id="mobile-toggle">
+                <i class="fas fa-bars text-xl"></i>
+            </div>
+        </div>
         <div class="logo">
             <img src="{{ asset('/images/logo1.jpg') }}" alt="Logo Établissement" style="align-items:left;width:150px">
             {{-- <div class="burger-menu" id="mobile-toggle">
@@ -89,39 +90,20 @@
         </div>
         <br>
         <div class="nav-menu">
-            <a href="{{ route('home') }}" class="nav-item {{ Route::is('home') ? 'active' : '' }}" data-page="accueil">
-                <i class="fas fa-home"></i>
-                <span>Accueil</span>
-            </a>
-            <a href="{{ route('absence_justif') }}" class="nav-item {{ Route::is('absence_justif') ? 'active' : '' }}"
-                data-page="absences">
-                <i class="fas fa-user-clock"></i>
-                <span>Absence et justif</span>
-            </a>
-            <a href="{{ route('calendar.calendrier') }}"
-                class="nav-item {{ Route::is('calendar.calendrier') ? 'active' : '' }}" data-page="calendrier">
-                <i class="far fa-calendar-alt"></i>
-                <span>Calendrier</span>
-            </a>
-            <a href="{{ route('documents.index') }}"
-                class="nav-item {{ Route::is('documents.index') ? 'active' : '' }}" data-page="demandes">
-                <i class="fas fa-file-alt"></i>
-                <span>Demande documents</span>
-            </a>
-            <a href="{{ route('events') }}" class="nav-item {{ Route::is('events') ? 'active' : '' }}"
-                data-page="event">
-                <i class="fas fa-briefcase"></i>
-                <span>Evenements</span>
-            </a>
             <a href="{{ route('messagerie') }}" class="nav-item {{ Route::is('messagerie') ? 'active' : '' }}"
                 data-page="messagerie">
                 <i class="fa-solid fa-inbox"></i>
                 <span>Messagerie</span>
             </a>
-            <a href="{{ route('notes') }}" class="nav-item {{ Route::is('notes') ? 'active' : '' }}"
-                data-page="notes">
+            <a href="{{ route('ajouter-etudiant') }}"
+                class="nav-item {{ Route::is('ajouter-etudiant') ? 'active' : '' }}" data-page="ajouter-etudiant">
                 <i class="far fa-sticky-note"></i>
-                <span>Notes</span>
+                <span>Ajouter etudiant</span>
+            </a>
+            <a href="{{ route('ajouter-enseignant') }}"
+                class="nav-item {{ Route::is('ajouter-enseignant') ? 'active' : '' }}" data-page="ajouter-enseignant">
+                <i class="far fa-sticky-note"></i>
+                <span>Ajouter enseignant</span>
             </a>
             <a href="{{ route('news') }}" class="nav-item {{ Route::is('news') ? 'active' : '' }}" data-page="news">
                 <i class="fas fa-newspaper"></i>
@@ -157,8 +139,8 @@
                 @else
                     @php
                         $initial =
-                            strtoupper(substr(Auth::guard('responsable')->user()->responsable_nom, 0, 1)) .
-                            strtoupper(substr(Auth::guard('responsable')->user()->responsable_prenom, 0, 1));
+                            strtoupper(substr(Auth::guard('responsable')->user()->respo_nom, 0, 1)) .
+                            strtoupper(substr(Auth::guard('responsable')->user()->respo_prenom, 0, 1));
                     @endphp
                     <div
                         class="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-indigo-400 text-white font-bold text-sm cursor-pointer border-2 border-indigo-500 hover:border-indigo-600 transition-all duration-200 shadow-sm">
@@ -171,8 +153,8 @@
                     class="absolute right-0 mt-2 w-56 origin-top-right bg-white rounded-xl shadow-xl opacity-0 invisible scale-95 group-hover:opacity-100 group-hover:visible group-hover:scale-100 transition-all duration-200 z-50 border border-gray-100 overflow-hidden transform-gpu">
                     <div class="px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-indigo-50 to-indigo-100">
                         <p class="text-sm font-medium text-indigo-900 truncate">
-                            {{ Auth::guard('responsable')->user()->responsable_prenom }}
-                            {{ Auth::guard('responsable')->user()->responsable_nom }}
+                            {{ Auth::guard('responsable')->user()->respo_prenom }}
+                            {{ Auth::guard('responsable')->user()->respo_nom }}
                         </p>
                         <p class="text-xs text-indigo-600 truncate">
                             {{ Auth::guard('responsable')->user()->email ?? '' }}
@@ -208,9 +190,9 @@
             </div>
 
             <div class="profile-info flex flex-col items-start text-white">
-                {{-- <div class="profile-name font-semibold text-lg">
+                <div class="profile-name font-semibold text-lg">
                     {{ $nom_complete }}
-                </div> --}}
+                </div>
             </div>
         </div>
     </header>
