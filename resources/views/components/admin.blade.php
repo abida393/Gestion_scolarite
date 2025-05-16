@@ -8,8 +8,15 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $page_titre }}</title>
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- jQuery (requis pour Select2) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <!-- Font Awesome (latest version) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -20,13 +27,12 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;600;800&display=swap" rel="stylesheet">
 
-    <!-- FullCalendar CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+     <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet" />
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> -->
 
     <!-- FullCalendar JS -->
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <!-- Vite (CSS and JS) -->
@@ -34,6 +40,7 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
         /* Header with background animation
@@ -99,16 +106,21 @@
             <i class="fas fa-user-clock"></i>
             <span>Absence et justif</span>
             </a>
-
-            <a href="{{ route('calendar.calendrier') }}"
-                class="nav-item {{ Route::is('calendar.calendrier') ? 'active' : '' }}" data-page="calendrier">
-                <i class="far fa-calendar-alt"></i>
-                <span>Calendrier</span>
-            </a>
-
             <!-- Ajouter par imad -->
             <a href="{{ route('responsable.documents.index') }}"
             class="nav-item {{ Route::is('responsable.documents.index') ? 'active' : '' }}" data-page="demandes">
+            <a href="{{ route('responsable.emploi') }}"
+   class="nav-item {{ Route::is('responsable.emploi') ? 'active' : '' }}" data-page="Emploi">
+   <i class="fas fa-calendar-alt"></i>
+   <span>Emplois Du Temps</span>
+</a>
+            <a href="{{ route('responsable.calendrier') }}" 
+                class="nav-item {{ Route::is('responsable.calendrier') ? 'active' : '' }}" data-page="Emploi">
+                    <i class="far fa-calendar-alt"></i>
+                 <span>Calendrier</span>
+                    </a>
+            <a href="{{ route('documents.index') }}"
+                class="nav-item {{ Route::is('documents.index') ? 'active' : '' }}" data-page="demandes">
                 <i class="fas fa-file-alt"></i>
                 <span>Suivi documents</span>
             </a>

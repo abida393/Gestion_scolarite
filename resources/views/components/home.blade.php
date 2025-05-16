@@ -22,12 +22,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;600;800&display=swap" rel="stylesheet">
 
     <!-- FullCalendar CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet" />
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> -->
 
     <!-- FullCalendar JS -->
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <!-- Vite (CSS and JS) -->
@@ -98,9 +97,8 @@
                 <i class="fas fa-user-clock"></i>
                 <span>Absence et justif</span>
             </a>
-
-            <a href="{{ route('calendar.calendrier') }}"
-                class="nav-item {{ Route::is('calendar.calendrier') ? 'active' : '' }}" data-page="calendrier">
+            <a href="{{ route('etudiant.calendrier') }}"
+                class="nav-item {{ Route::is('etudiant.calendrier') ? 'active' : '' }}" data-page="calendrier">
                 <i class="far fa-calendar-alt"></i>
                 <span>Calendrier</span>
             </a>
@@ -109,8 +107,8 @@
                 <i class="fas fa-file-alt"></i>
                 <span>Demande documents</span>
             </a>
-            <a href="{{ route('emploi.etudiant') }}"
-                class="nav-item {{ Route::is('emploi.etudiant') ? 'active' : '' }}" data-page="emploi">
+            <a href="{{ route('etudiant.emploi') }}"
+                class="nav-item {{ Route::is('etudiant.emploi') ? 'active' : '' }}" data-page="emploi">
                 <i class="fas fa-clock"></i>
                 <span>Emploi du temps</span>
             </a>

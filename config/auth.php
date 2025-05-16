@@ -47,6 +47,7 @@ return [
         ]
 
     ],
+    
 //     'guards' => [
 //     // 'web' => [
 //     //     'driver' => 'session',
