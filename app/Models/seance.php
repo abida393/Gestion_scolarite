@@ -24,4 +24,9 @@ class seance extends Model
     {
         return $this->hasMany(etudiant_absence::class, 'seance_id', 'id');
     }
+    public function etudiantAbsences()
+    {
+        return $this->hasMany(EtudiantAbsence::class, 'seance_id', 'id');
+    }
+
 }

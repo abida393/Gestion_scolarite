@@ -23,4 +23,18 @@ class Module extends Model
     {
         return $this->hasMany(periode::class);
     }
+    /*public function filiere()    //Version qdima
+{
+    return $this->belongsTo(filiere::class, 'filiere_id');
+}
+*/
+
+  public function filiere()
+    {
+        return $this->belongsTo(Filiere::class);
+    }
+    public function classes()
+    {
+        return $this->hasMany(Classe::class);
+    }
 }

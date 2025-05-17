@@ -1,7 +1,6 @@
 <x-home titre="Profil" page_titre="Profil" :nom_complete="Auth::guard('etudiant')->user()->etudiant_nom . ',' . Auth::guard('etudiant')->user()->etudiant_prenom">
     <div class="profile-wrapper">
         <div class="profile-card animated-fade">
-
              <div class="profile-header">
                 <div class="profile-image hover-scale">
                     @if ($etudiant->PHOTOS)

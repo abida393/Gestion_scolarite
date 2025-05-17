@@ -3,339 +3,399 @@
 namespace App\Http\Controllers;
 
 use App\Models\emplois_temps;
-
-use App\Models\Matiere;
- use App\Models\Enseignant;
+use App\Models\EmploiTemps;
 use App\Models\Classe;
-use App\Models\Module;
-use App\Models\Formation;
 use App\Models\Filiere;
+use App\Models\Formation;
+use App\Models\Matiere;
+use App\Models\Enseignant;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-
 use Barryvdh\DomPDF\Facade\Pdf;
-
-
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class EmploiTempsController extends Controller
 {
-
-
-
-    public function showEmplois(Request $request)
+  public function affich(Request $request)
     {
-        $classes = Classe::all(); // Charger toutes les classes
-        $classeId = $request->input('classe_id'); // Récupérer la classe sélectionnée
+        // Récupération des paramètres de filtrage
+        $formationId = $request->input('formation_id');
+        $filiereId = $request->input('filiere_id');
+        $classeId = $request->input('classe_id');
 
-        // Filtrer les emplois du temps par classe si une classe est sélectionnée
-        $emploisTemps = emplois_temps::with(['matiere', 'enseignant', 'classe'])
-            ->when($classeId, function ($query, $classeId) {
-                return $query->where('classe_id', $classeId);
-            })
-            ->get();
+        // Requête pour les classes avec relations
+        $classesQuery = Classe::with(['filiere', 'filiere.formation']);
+        // Filtrage des classes
+        if ($formationId) {
 
-        // return view('Emploi.emploi', compact('emploisTemps', 'classes'));
-    
+            $classesQuery->whereHas('filiere', function($q) use ($formationId) {
+                $q->where('formation_id', $formationId);
+            });
+        }
 
-    return view('Emploi.emploi', compact('emploisTemps', 'emploisClasse', 'classes'));
+        if ($filiereId) {
+    $classesQuery->where('filieres_id', $filiereId);
 }
-    public function emploi()
-    {
-        $emploisTemps = emplois_temps::all();
-        $classeName = 'fayssal'; // Remplacez par la logique pour récupérer le nom de la classe
-        return view('Emploi.emploi', compact('emploisTemps', 'classeName'));
-    }
 
-    public function create()
-    {
+        $classes = $classesQuery->get();
+
+        // Requête pour les emplois du temps
+        $emploisQuery = emplois_temps::with(['matiere', 'enseignant', 'classe']);
+
+        if ($classeId) {
+            $emploisQuery->where('classe_id', $classeId);
+        }
+
+        $emploisTemps = $emploisQuery->orderBy('jour')->orderBy('heure_debut')->get();
+
+        // Autres données nécessaires pour la vue
         $formations = Formation::all();
         $filieres = Filiere::all();
-        $classes = Classe::all();
-
-        return view('Emploi.create_emploi_complet', compact('formations', 'filieres', 'classes'));
-
+        $enseignantsCount = Enseignant::count();
+        $conflitsCount = $this->detectConflicts($emploisTemps);
+        $coursSemaine = $emploisTemps->filter(fn($e) => Carbon::parse($e->date)->isCurrentWeek())->count();
+        return view('responsable.emploi', compact(
+            'emploisTemps',
+            'classes',
+            'formations',
+            'filieres',
+            'enseignantsCount',
+            'conflitsCount',
+            'coursSemaine'
+        ));
     }
 
-
-    public function getFilieresByFormation($formationId)
+    
+    private function detectConflicts($emplois)
     {
-        $filieres = Filiere::where('formation_id', $formationId)->get();
-        return response()->json($filieres);
+        $conflicts = 0;
+        $grouped = $emplois->groupBy(function($item) {
+            return $item->date . '|' . $item->heure_debut . '|' . $item->heure_fin;
+        });
+        
+        foreach ($grouped as $group) {
+            // Conflit de salle
+            $salles = $group->pluck('salle')->unique();
+            if ($salles->count() < $group->count()) {
+                $conflicts += $group->count() - $salles->count();
+            }
+            
+            // Conflit d'enseignant
+            $enseignants = $group->pluck('enseignant_id')->unique();
+            if ($enseignants->count() < $group->count()) {
+                $conflicts += $group->count() - $enseignants->count();
+            }
+        }
+        
+        return $conflicts;
     }
+//     public function classeStats($classeId)
+// {
+//     // Cours cette semaine
+//     $coursSemaine = emplois_temps::where('classe_id', $classeId)
+//         ->whereBetween('date', [now()->startOfWeek(), now()->endOfWeek()])
+//         ->count();
 
-    public function getClassesByFiliere($filiereId)
+//     // Nombre d'enseignants distincts
+//     $enseignantsCount = emplois_temps::where('classe_id', $classeId)
+//         ->distinct('enseignant_id')
+//         ->count('enseignant_id');
+
+//     // Exemple simple pour les conflits (à adapter selon votre logique)
+//     $conflitsCount = emplois_temps::where('classe_id', $classeId)
+//         ->select('jour', 'heure_debut', 'heure_fin')
+//         ->groupBy('jour', 'heure_debut', 'heure_fin')
+//         ->havingRaw('COUNT(*) > 1')
+//         ->get()
+//         ->count();
+
+//     return response()->json([
+//         'coursSemaine' => $coursSemaine,
+//         'enseignantsCount' => $enseignantsCount,
+//         'conflitsCount' => $conflitsCount,
+//     ]);
+// }
+    
+    public function create()
     {
-        $classes = Classe::where('filieres_id', $filiereId)->get();
-        return response()->json($classes);
+        return view('responsable.create_emploi', [
+            'classes' => Classe::orderBy('nom_classe')->get(),
+            'matieres' => Matiere::orderBy('nom_matiere')->get(),
+            'enseignants' => Enseignant::orderBy('enseignant_nom')->get(),
+        ]);
     }
+    
     public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'classe_id' => 'required|exists:classes,id',
+            'matiere_id' => 'required|exists:matieres,id',
+            'enseignant_id' => 'required|exists:enseignants,id',
+            'jour' => 'required|string',
+            'date' => 'required|date',
+            'heure_debut' => 'required|date_format:H:i',
+            'heure_fin' => 'required|date_format:H:i|after:heure_debut',
+            'salle' => 'required|string|max:50',
+        ]);
+        
+        // Vérification des conflits
+        $conflict = emplois_temps::where('date', $validated['date'])
+            ->where(function($query) use ($validated) {
+                $query->whereBetween('heure_debut', [$validated['heure_debut'], $validated['heure_fin']])
+                      ->orWhereBetween('heure_fin', [$validated['heure_debut'], $validated['heure_fin']])
+                      ->orWhere(function($q) use ($validated) {
+                          $q->where('heure_debut', '<=', $validated['heure_debut'])
+                            ->where('heure_fin', '>=', $validated['heure_fin']);
+                      });
+            })
+            ->where(function($query) use ($validated) {
+                $query->where('salle', $validated['salle'])
+                      ->orWhere('enseignant_id', $validated['enseignant_id']);
+            })
+            ->exists();
+            
+        if ($conflict) {
+            return back()->withInput()->withErrors([
+                'conflict' => 'Conflit détecté: la salle ou l\'enseignant est déjà occupé sur ce créneau'
+            ]);
+        }
+        
+        emplois_temps::create($validated);
+        
+        return redirect()->route('responsable.emploi', ['classe_id' => $validated['classe_id']])
+            ->with('success', 'Cours ajouté avec succès');
+    }
+    
+    public function edit($id)
 {
+    $emploiTemps = emplois_temps::findOrFail($id);
+    $matieres = Matiere::all();
+    $enseignants = Enseignant::all();
+    return view('responsable.edit_emploi', compact('emploiTemps', 'matieres', 'enseignants'));
+}
+   
+public function update(Request $request, $id)
+{
+    // dd($request->all());
+    $timetable = emplois_temps::findOrFail($id);
+
     $validatedData = $request->validate([
+        'classe_id' => 'required|exists:classes,id',
         'jour' => 'required|string|max:255',
         'date' => 'required|date',
-        'heure_debut' => 'required|date_format:H:i',
-        'heure_fin' => 'required|date_format:H:i|after:heure_debut',
+         'heure_debut' => 'required',
+         'heure_fin' => 'required',
         'matiere_id' => 'required|exists:matieres,id',
         'enseignant_id' => 'required|exists:enseignants,id',
         'salle' => 'required|string|max:255',
-        'classe_id' => 'required|exists:classes,id',
-        'formation_id' => 'required|exists:formations,id',
-        'filiere_id' => 'required|exists:filieres,id',
     ]);
-    dd($request->all());
-
-    emplois_temps::create($validatedData);
-
-    return redirect()->route('emploi')->with('success', 'Cours ajouté avec succès.');
+    $timetable->update( $validatedData);
+// dd($timetable->save());
+    return redirect()->route('responsable.emploi', ['classe_id' => $timetable->classe_id])
+        ->with('success', 'Cours mis à jour avec succès.');
 }
 
-public function edit_emploi(emplois_temps $timetable)
-{
-    $matieres = Matiere::all();
-    $enseignants = Enseignant::all();
-    $classes = Classe::all();
-    $timeSlots = $this->generateTimeSlots(); // Générer les plages horaires
-
-    return view('Emploi.edit_emploi', [
-        'emploiTemp' => $timetable,
-        'matieres' => $matieres,
-        'enseignants' => $enseignants,
-        'classes' => $classes,
-        'timeSlots' => $timeSlots, // Transmettre les plages horaires
-    ]);
-}
-
-
-    public function update(Request $request, emplois_temps $timetable)
-    {
-        $validatedData = $request->validate([
-            'jour' => 'required|string|max:255',
-            'date' => 'required|date',
-            'horaire' => 'required|string',
-            'matiere_id' => 'required|exists:matieres,id',
-            'enseignant_id' => 'required|exists:enseignants,id',
-            'salle' => 'required|string|max:255',
-        ]);
-
-        $horaire = explode(' - ', $validatedData['horaire']);
-        $timetable->update([
-            'jour' => $validatedData['jour'],
-            'date' => $validatedData['date'],
-            'heure_debut' => $horaire[0],
-            'heure_fin' => $horaire[1],
-            'matiere_id' => $validatedData['matiere_id'],
-            'enseignant_id' => $validatedData['enseignant_id'],
-            'salle' => $validatedData['salle'],
-        ]);
-
-        return redirect()->route('emploi')->with('success', 'Cours mis à jour avec succès.');
-    }
-
+  
 public function destroy(emplois_temps $timetable)
 {
     $timetable->delete();
-    return redirect()->route('emploi')->with('success', 'Cours supprimé avec succès.');
+    return redirect()->route('responsable.emploi')->with('success', 'Cours supprimé avec succès.');
 }
-
-    // 👉 Ajouter un emploi du temps complet (plusieurs cours)
-    public function createComplet()
-{
-    $formations = Formation::all();
-    $filiere = Filiere::all();
-    $filieres = [];
-    foreach ($filiere as $item) {
-        $filieres[] = $item;
+    public function emploiPdf($classeId)
+    {
+        $classe = Classe::findOrFail($classeId);
+        $emploisTemps = emplois_temps::where('classe_id', $classeId)
+            ->orderByRaw("FIELD(jour, 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi')")
+            ->orderBy('heure_debut')
+            ->get();
+            
+        $pdf = PDF::loadView('responsable.emploi_pdf', compact('classe', 'emploisTemps'));
+        
+        return $pdf->download('emploi-du-temps-' . Str::slug($classe->nom_classe) . '.pdf');
     }
-    $matieres = Matiere::all();
-    $enseignants = Enseignant::all();
-    $classes = Classe::all();
-    return view('Emploi.create_emploi_complet', compact('formations', 'filieres', 'matieres', 'enseignants', 'classes'));
-}
-
-
-public function edit($id)
-{
-    $emploiTemp = emplois_temps::findOrFail($id);
-    $matieres = Matiere::all();
-    $enseignants = Enseignant::all();
-    $classes = Classe::all();
-    $timeSlots = $this->generateTimeSlots(); // Générer les plages horaires
-
-    return view('Emploi.edit_emploi', compact('emploiTemp', 'matieres', 'enseignants', 'classes', 'timeSlots'));
-}
-
+    
+    public function createComplet()
+    {
+       return view('responsable.create_emploi_complet', [
+        'classes' => Classe::with('filiere.formation')->orderBy('nom_classe')->get(),
+        'filieres' => Filiere::orderBy('nom_filiere')->get(),
+        'formations' => Formation::orderBy('nom_formation')->get(),
+        'matieres' => Matiere::orderBy('nom_matiere')->get(),
+        'enseignants' => Enseignant::orderBy('enseignant_nom')->get(),
+    ]);
+    }
+    
+   
 
 public function storeMultiple(Request $request)
 {
-    $data = $request->validate([
-        'formation_id' => 'required|exists:formations,id',
-        'filiere_id' => 'required|exists:filieres,id',
+    $validated = $request->validate([
         'classe_id' => 'required|exists:classes,id',
-        'cours.*.jour' => 'required|string|max:255',
+        'cours' => 'required|array|min:1',
+        'cours.*.jour' => 'required|string',
         'cours.*.date' => 'required|date',
-        'cours.*.horaire' => 'required|string',
+        'cours.*.heure_debut' => 'required|date_format:H:i',
+        'cours.*.heure_fin' => 'required|date_format:H:i|after:cours.*.heure_debut',
         'cours.*.matiere_id' => 'required|exists:matieres,id',
         'cours.*.enseignant_id' => 'required|exists:enseignants,id',
-        'cours.*.salle' => 'required|string|max:255',
+        'cours.*.salle' => 'required|string|max:50',
     ]);
 
-
-
-    try {
-        foreach ($data['cours'] as $cours) {
-            $horaire = explode(' - ', $cours['horaire']);
-            emplois_temps::create([
-                'formation_id' => $data['formation_id'],
-                'filiere_id' => $data['filiere_id'],
-                'classe_id' => $data['classe_id'],
-                'jour' => $cours['jour'],
-                'date' => $cours['date'],
-                'heure_debut' => $horaire[0],
-                'heure_fin' => $horaire[1],
-                'matiere_id' => $cours['matiere_id'],
-                'enseignant_id' => $cours['enseignant_id'],
-                'salle' => $cours['salle'],
-            ]);
+    foreach ($validated['cours'] as $index => $cours) {
+        // Vérification heure_debut < heure_fin (déjà validé mais sécurité)
+        if (strtotime($cours['heure_fin']) <= strtotime($cours['heure_debut'])) {
+            return back()->withErrors([
+                "cours.$index.heure_fin" => "L'heure de fin doit être après l'heure de début pour le cours " . ($index + 1),
+            ])->withInput();
         }
 
-        DB::commit();
+        // Vérification conflit enseignant
+        $conflit = emplois_temps::where('enseignant_id', $cours['enseignant_id'])
+            ->where('jour', $cours['jour'])
+            ->where(function ($query) use ($cours) {
+                $query->where(function ($q) use ($cours) {
+                    $q->where('heure_debut', '<', $cours['heure_fin'])
+                      ->where('heure_fin', '>', $cours['heure_debut']);
+                });
+            })
+            ->exists();
 
-        return redirect()->route('emploi')->with('success', 'Emploi du temps complet ajouté avec succès.');
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return redirect()->back()->with('error', 'Une erreur est survenue lors de la création de l\'emploi du temps.');
-    }
-}
-
-private function generateTimeSlots()
-{
-    $startTime = new \DateTime('08:45'); // Début des cours à 8h45
-    $endTime = new \DateTime('17:30'); // Fin des cours à 17h30
-    $timeSlots = [];
-
-    while ($startTime < $endTime) {
-        $nextTime = clone $startTime;
-        $nextTime->modify('+1 hour 30 minutes'); // Ajouter 1h30
-
-        if ($nextTime > $endTime) {
-            break;
+        if ($conflit) {
+            return back()->withErrors([
+                "cours.$index.enseignant_id" => "Conflit détecté : l'enseignant a déjà un cours à ce créneau pour le cours " . ($index + 1),
+            ])->withInput();
         }
 
-        $timeSlots[] = $startTime->format('H:i') . ' - ' . $nextTime->format('H:i');
-        $startTime = clone $nextTime;
-
-        // Ajouter une pause
-        if ($startTime->format('H:i') === '12:15') {
-            $startTime->modify('+30 minutes'); // Pause de 30 minutes après le matin
-        } else {
-            $startTime->modify('+15 minutes'); // Pause de 15 minutes
-        }
+        // Création du créneau
+        emplois_temps::create([
+            'classe_id' => $validated['classe_id'],
+            'jour' => ucfirst(strtolower(trim($cours['jour']))),
+            'date' => $cours['date'],
+            'heure_debut' => $cours['heure_debut'],
+            'heure_fin' => $cours['heure_fin'],
+            'matiere_id' => $cours['matiere_id'],
+            'enseignant_id' => $cours['enseignant_id'],
+            'salle' => $cours['salle'],
+        ]);
     }
 
-    return $timeSlots;
+    return redirect()->route('responsable.emploi', ['classe_id' => $validated['classe_id']])
+        ->with('success', 'Emploi du temps généré avec succès.');
 }
-public function dashboard()
+    
+    private function generateTimeSlots()
+    {
+        $slots = [];
+        $start = Carbon::createFromTime(8, 45); // Début à 8h45
+        $end = Carbon::createFromTime(17, 30);  // Fin à 17h30
+        
+        while ($start < $end) {
+            $next = $start->copy()->addMinutes(90); // Cours de 1h30
+            
+            if ($next > $end) break;
+            
+            $slots[] = $start->format('H:i') . ' - ' . $next->format('H:i');
+            
+            // Pause de 15 minutes (30 minutes après le matin)
+            $start = $next->copy()->addMinutes($start->hour < 12 ? 15 : 30);
+        }
+        
+        return $slots;
+    }
+    public function checkConflits(Request $request)
 {
-    $today = now()->locale('fr')->isoFormat('dddd');
-     // Obtenir le jour actuel en français
-    $emploisTemps = emplois_temps::whereDate('date', now()->toDateString())->with(['matiere', 'enseignant', 'classe'])->get();
+    $validated = $request->validate([
+        'classe_id' => 'required|exists:classes,id',
+        'matiere_id' => 'required|exists:matieres,id',
+        'enseignant_id' => 'required|exists:enseignants,id',
+        'jour' => 'required|string',
+        'date' => 'required|date',
+        'heure_debut' => 'required|date_format:H:i',
+        'heure_fin' => 'required|date_format:H:i|after:heure_debut',
+        'salle' => 'required|string|max:50',
+        'emploi_id' => 'nullable|exists:emploi_temps,id'
+    ]);
 
-    return view('Emploi.dashboard', compact('today', 'emploisTemps'));
+    $query = emplois_temps::where('date', $validated['date'])
+        ->where(function($q) use ($validated) {
+            $q->whereBetween('heure_debut', [$validated['heure_debut'], $validated['heure_fin']])
+              ->orWhereBetween('heure_fin', [$validated['heure_debut'], $validated['heure_fin']])
+              ->orWhere(function($q2) use ($validated) {
+                  $q2->where('heure_debut', '<=', $validated['heure_debut'])
+                     ->where('heure_fin', '>=', $validated['heure_fin']);
+              });
+        })
+        ->where('id', '!=', $validated['emploi_id']);
+
+    $conflits = [];
+    
+    // Vérification conflit salle
+    $conflitSalle = $query->clone()->where('salle', $validated['salle'])->first();
+    if ($conflitSalle) {
+        $conflits[] = "La salle est déjà occupée par " . $conflitSalle->matiere->nom_matiere . 
+                      " (" . $conflitSalle->classe->nom_classe . ")";
+    }
+    
+    // Vérification conflit enseignant
+    $conflitEnseignant = $query->clone()->where('enseignant_id', $validated['enseignant_id'])->first();
+    if ($conflitEnseignant) {
+        $conflits[] = "L'enseignant a déjà cours pour " . $conflitEnseignant->matiere->nom_matiere . 
+                      " (" . $conflitEnseignant->classe->nom_classe . ")";
+    }
+
+    return response()->json([
+        'conflit' => !empty($conflits),
+        'message' => !empty($conflits) ? 'Ce créneau entre en conflit avec des cours existants:' : '',
+        'details' => $conflits
+    ]);
 }
-
-
-
-
+//etudiant
 public function emploiEtudiant()
 {
-    // Vérifier si l'utilisateur est connecté
-    $user = Auth::guard('etudiant')->user();
+    $user = Auth::guard('etudiant')->user(); // Récupérer l'utilisateur connecté
     if (!$user) {
         return redirect()->route('login')->with('error', 'Vous devez être connecté pour accéder à cette page.');
     }
 
-    // Vérifier si l'utilisateur a une classe associée
-    $classeId = $user->classes_id;
-
+    $classeId = $user->classes_id; // Assurez-vous que la colonne `classes_id` existe dans la table `etudiants`
     if (!$classeId) {
-        return redirect()->back()->with('error', 'Aucune classe associée à cet utilisateur.');
+        return redirect()->back()->with('error', 'Aucune classe associée à votre compte.');
     }
 
-    // Récupérer les cours de la classe
+    // Récupérer les emplois du temps pour la classe de l'étudiant
     $emploisTemps = emplois_temps::with(['matiere', 'enseignant', 'classe'])
         ->where('classe_id', $classeId)
         ->orderBy('jour')
         ->orderBy('heure_debut')
         ->get();
+        
 
-    // Récupérer le nom de la classe
-    $classeName = Classe::find($classeId)->nom_classe ?? 'Classe Non Spécifiée';
-
-    return view('Emploi.emploi_etudiant', compact('emploisTemps', 'classeName'));
-}
-//use Pdf; // Assurez-vous d'avoir installé dompdf ou un package similaire
-
-public function download(Request $request)
-{
-    // Récupérer l'ID de la classe depuis la requête
-    $classeId = $request->query('classe_id');
-
-    // Vérifier si la classe existe
-    $classe = Classe::find($classeId);
-    if (!$classe) {
-        return redirect()->route('emploi')->with('error', 'Classe introuvable.');
-    }
-
-    // Récupérer les emplois du temps pour la classe
-    $emploisTemps = emplois_temps::where('classe_id', $classeId)->with(['matiere', 'enseignant'])->get();
-
-    // Vérifier si des emplois du temps existent pour cette classe
-    if ($emploisTemps->isEmpty()) {
-        return redirect()->route('emploi')->with('error', 'Aucun emploi du temps trouvé pour cette classe.');
-    }
-
-    // Générer le PDF en utilisant la vue 'Emploi.emploi_pdf'
-    $pdf = \PDF::loadView('Emploi.emploi_pdf', compact('classe', 'emploisTemps'));
-
-    // Télécharger le fichier PDF avec un nom de fichier clair
-    $fileName = 'emploi_du_temps_' . str_replace(' ', '_', strtolower($classe->nom_classe)) . '.pdf';
-    return $pdf->download($fileName);
+    return view('etudiant.emploi', [
+        'emploisTemps' => $emploisTemps,
+        'classeName' => $user->classe->nom_classe ?? 'Classe Non Spécifiée',
+        
+    ]);
 }
 public function downloadForEtudiant()
 {
-    // Récupérer l'utilisateur connecté
     $user = Auth::guard('etudiant')->user();
 
-    // Vérifier si l'utilisateur a une classe associée
     if (!$user || !$user->classes_id) {
         return redirect()->back()->with('error', 'Aucune classe associée à votre compte.');
     }
 
-    // Récupérer la classe et les emplois du temps
     $classe = Classe::find($user->classes_id);
     $emploisTemps = emplois_temps::where('classe_id', $user->classes_id)->with(['matiere', 'enseignant'])->get();
 
-    // Vérifier si des emplois du temps existent
     if ($emploisTemps->isEmpty()) {
         return redirect()->back()->with('error', 'Aucun emploi du temps disponible pour votre classe.');
     }
 
-    // Générer le PDF en utilisant la vue 'emploi_pdf'
-    $pdf = PDF::loadView('Emploi.emploi_pdf', compact('classe', 'emploisTemps'));
+    // Utiliser le chemin correct pour la vue
+    $pdf = \PDF::loadView('responsable.emploi_pdf', compact('classe', 'emploisTemps'));
 
-    // Télécharger le fichier PDF avec un nom de fichier clair
     $fileName = 'emploi_du_temps_' . str_replace(' ', '_', strtolower($classe->nom_classe)) . '.pdf';
     return $pdf->download($fileName);
 }
-// public function dashboard()
-// {
-//     $today = Carbon::now()->locale('fr')->isoFormat('dddd'); // Récupère le jour actuel en français
-//     $emploisTemps = emplois_temps::with(['matiere', 'enseignant', 'classe'])
-//         ->whereDate('date', Carbon::today()) // Filtre les cours du jour
-//         ->get();
-
-//     return view('pages.Home', compact('emploisTemps', 'today'));
-// }
 }

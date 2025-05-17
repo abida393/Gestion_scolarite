@@ -13,4 +13,10 @@ class calender_events extends Model
         'is_fixed',
     ];
     protected $table = 'calender_events';
+   
+
+    public function calenders()
+    {
+        return $this->hasMany(Calender::class, 'calendar_event_id');
+    }
 }
