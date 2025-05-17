@@ -89,24 +89,24 @@
         </div>
         <br>
         <div class="nav-menu">
-            <a href="{{ route('home') }}" class="nav-item {{ Route::is('home') ? 'active' : '' }}" data-page="accueil">
+            <a href="{{ route('chatbot') }}" class="nav-item {{ Route::is('chatbot') ? 'active' : '' }}" data-page="chatbot">
                 <i class="fas fa-home"></i>
-                <span>Accueil</span>
+                <span>chatbot</span>
             </a>
             <a href="{{ route('absence_justif') }}" class="nav-item {{ Route::is('absence_justif') ? 'active' : '' }}"
                 data-page="absences">
                 <i class="fas fa-user-clock"></i>
                 <span>Absence et justif</span>
             </a>
-            <a href="{{ route('calendar.calendrier') }}"
-                class="nav-item {{ Route::is('calendar.calendrier') ? 'active' : '' }}" data-page="calendrier">
+            <a href="{{ route('paiements.index') }}"
+                class="nav-item {{ Route::is('paiements.index') ? 'active' : '' }}" data-page="paiements.index">
                 <i class="far fa-calendar-alt"></i>
-                <span>Calendrier</span>
+                <span>paiement</span>
             </a>
-            <a href="{{ route('documents.index') }}"
-                class="nav-item {{ Route::is('documents.index') ? 'active' : '' }}" data-page="demandes">
+            <a href="{{ route('notes-admin') }}"
+                class="nav-item {{ Route::is('notes-admin') ? 'active' : '' }}" data-page="notes-admin">
                 <i class="fas fa-file-alt"></i>
-                <span>Demande documents</span>
+                <span>notes</span>
             </a>
             <a href="{{ route('events') }}" class="nav-item {{ Route::is('events') ? 'active' : '' }}"
                 data-page="event">
@@ -117,11 +117,6 @@
                 data-page="messagerie">
                 <i class="fa-solid fa-inbox"></i>
                 <span>Messagerie</span>
-            </a>
-            <a href="{{ route('notes') }}" class="nav-item {{ Route::is('notes') ? 'active' : '' }}"
-                data-page="notes">
-                <i class="far fa-sticky-note"></i>
-                <span>Notes</span>
             </a>
             <a href="{{ route('news') }}" class="nav-item {{ Route::is('news') ? 'active' : '' }}" data-page="news">
                 <i class="fas fa-newspaper"></i>

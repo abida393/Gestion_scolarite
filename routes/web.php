@@ -55,7 +55,7 @@ Route::middleware('auth.multi:etudiant')->group(function () {
     // Route::get('/messagerie', [MessageController::class, 'index'])->name('messagerie');
     Route::get('/news', [Controller::class, 'news'])->name('news');
 });
-// ==================== messagrie ===========================
+// ==================== messagerie ===========================
 Route::middleware(['auth:etudiant'])->group(function () {
     Route::get('/messagerie-etudiant', [MessageController::class, 'index'])->name('messagerie-etudiant');
     Route::get('/messages/{responsable}', [MessageController::class, 'getMessages']);
@@ -136,3 +136,38 @@ Route::middleware(['auth.multi:etudiant'])->group(function () {
 Route::post('/chatbot/repondre', [ChatbotController::class, 'repondre'])->name('chatbot.repondre');
 Route::get('/api/chatbot/messages', [ChatbotController::class, 'messages']);
 Route::get('/chatbot', fn() => view('chatbot'));
+
+
+use App\Http\Controllers\AdminChatbotController;
+
+Route::get('/chatbot-responsable', [AdminChatbotController::class, 'index'])->name('chatbot');
+Route::post('/chatbot-responsable', [AdminChatbotController::class, 'store'])->name('chatbot.store');
+Route::delete('/chatbot-responsable/{id}', [AdminChatbotController::class, 'destroy'])->name('chatbot.destroy');
+Route::put('/chatbot-responsable/{id}', [AdminChatbotController::class, 'update'])->name('chatbot.update');
+
+//paiement administrateur
+use App\Http\Controllers\PaiementController;
+
+
+Route::get('/paiements', [PaiementController::class, 'index'])->name('paiements.index');
+Route::post('/paiements', [PaiementController::class, 'store'])->name('paiements.store');
+Route::get('/admin/paiements', [PaiementController::class, 'search'])->name('paiements.index');
+Route::post('/admin/paiements/{paiement}/changer-statut', [PaiementController::class, 'changerStatut'])->name('paiements.changer-statut');
+
+//paiement administrateur
+use App\Http\Controllers\NoteSaisieController;
+
+
+
+Route::get('/notes-admin', [NoteSaisieController::class, 'notesAdmin'])->name('notes-admin');
+Route::post('/note', [NoteSaisieController::class, 'store'])->name('notes.store');
+Route::get('/affiche-notes/{classe_id}/{matiere_id}', [NoteSaisieController::class, 'afficheNotes']);
+
+
+Route::get('/get-classes/{filiere_id}', [NoteSaisieController::class, 'getClasses']);
+Route::get('/get-modules/{classe_id}', [NoteSaisieController::class, 'getModules']);
+Route::get('/get-matieres-from-module/{module_id}', [NoteSaisieController::class, 'getMatieres']);
+Route::get('/get-etudiants/{classe_id}', [NoteSaisieController::class, 'getEtudiants']);
+
+Route::get('/absences/create', [AbsenceController::class, 'create'])->name('absences.create');
+Route::post('/absences/store', [AbsenceController::class, 'store'])->name('absences.store');
