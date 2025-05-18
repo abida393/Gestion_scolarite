@@ -93,15 +93,13 @@
                 <i class="fas fa-home"></i>
                 <span>Accueil</span>
             </a>
-            <a href="{{ route('absence_justif') }}" class="nav-item {{ Route::is('absence_justif') ? 'active' : '' }}"
-                data-page="absences">
+            <a href="{{ route('responsable.absences.index') }}" class="nav-item {{ Route::is('responsable.absences.index') ? 'active' : '' }}"data-page="absences">
                 <i class="fas fa-user-clock"></i>
-                <span>Absence et justif</span>
+                <span>Saisie des absences</span>
             </a>
-            <a href="{{ route('calendar.calendrier') }}"
-                class="nav-item {{ Route::is('calendar.calendrier') ? 'active' : '' }}" data-page="calendrier">
-                <i class="far fa-calendar-alt"></i>
-                <span>Calendrier</span>
+            <a href="{{ route('responsable.absences.index') }}" class="nav-item {{ Route::is('responsable.absences.index') ? 'active' : '' }}"data-page="absences">
+                <i class="fas fa-user-clock"></i>
+                <span>Suivie des absences</span>
             </a>
             <a href="{{ route('documents.index') }}"
                 class="nav-item {{ Route::is('documents.index') ? 'active' : '' }}" data-page="demandes">

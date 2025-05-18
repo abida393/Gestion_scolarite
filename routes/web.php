@@ -15,6 +15,7 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\responsableController;
 
 // ==================== AUTHENTICATION ====================
 Route::middleware('guest')->group(function () {
@@ -137,4 +138,13 @@ Route::post('/chatbot/repondre', [ChatbotController::class, 'repondre'])->name('
 Route::get('/api/chatbot/messages', [ChatbotController::class, 'messages']);
 Route::get('/chatbot', fn() => view('chatbot'));
 
+
+// ============================= RESPONSABLE ABSENCES ====================
+//--------------------
+Route::middleware('auth.multi:responsable')->group(function () {
+    Route::get('/responsable/absences', [AbsenceController::class, 'indexResponsable'])->name('responsable.absences.index');
+    Route::post('/responsable/absences', [AbsenceController::class, 'createAbsence'])->name('responsable.absences.create');
+    Route::post('/responsable/absences/{id}/update-etat', [AbsenceController::class, 'updateEtat'])->name('responsable.absences.updateEtat');
+    Route::get('/responsable/etudiants/{classe_id}', [AbsenceController::class, 'getEtudiantsByClasse'])->name('responsable.etudiants.byClasse');
+});
 

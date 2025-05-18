@@ -86,7 +86,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 p-5">
                                 <div>
                                     <p class="text-sm text-gray-500 flex items-center">
-                                        <i class="far fa-bookmark text-indigo-400 mr-2"></i>Séance
+                                        <i class="far fa-bookmark text-indigo-400 mr-2"></i>Matiére
                                     </p>
                                     <p class="font-medium">
                                         {{ $absence->seance->matiere->nom_matiere ?? 'Séance inconnue' }}</p>
