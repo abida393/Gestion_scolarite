@@ -1,5 +1,5 @@
 <!-- resources/views/responsable/create.blade.php -->
-<x-admin titre="Ajouter un Cours" page_titre="Ajouter un Cours">
+<x-admin titre="Ajouter un Cours" page_titre="Ajouter un Cours" :nom_complete="Auth::guard('responsable')->user()->respo_nom . ' ' . Auth::guard('responsable')->user()->respo_prenom" >
 
 <div class="max-w-4xl mx-auto py-8 px-4">
     <div class="bg-white rounded-lg shadow-md p-6 border border-gray-200">

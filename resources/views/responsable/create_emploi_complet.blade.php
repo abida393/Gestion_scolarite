@@ -1,5 +1,5 @@
 
-<x-admin titre="Créer un Emploi du Temps Complet" page_titre="Créer un EDT Complet">
+<x-admin titre="Créer un Emploi du Temps Complet" page_titre="Créer un EDT Complet" :nom_complete="Auth::guard('responsable')->user()->respo_nom . ' ' . Auth::guard('responsable')->user()->respo_prenom">
 
 <div class="max-w-7xl mx-auto py-8 px-4">
     <div class="bg-white rounded-lg shadow-md p-6 border border-gray-200">

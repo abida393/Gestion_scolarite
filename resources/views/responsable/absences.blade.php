@@ -1,4 +1,4 @@
-<x-admin titre="Gestion des Absences" page_titre="Gestion des Absences">
+<x-admin titre="Gestion des Absences" page_titre="Gestion des Absences" :nom_complete="Auth::guard('responsable')->user()->respo_nom . ' ' . Auth::guard('responsable')->user()->respo_prenom">
 <div class="container mx-auto px-4 py-6">
     <!-- Header -->
     <div class="flex items-center mb-8">

@@ -96,16 +96,26 @@
         </div>
         <br>
         <div class="nav-menu">
-            <a href="{{ route('home') }}" class="nav-item {{ Route::is('home') ? 'active' : '' }}" data-page="accueil">
+            <a href="{{ route('chatbot') }}" class="nav-item {{ Route::is('chatbot') ? 'active' : '' }}" data-page="chatbot">
                 <i class="fas fa-home"></i>
-                <span>Accueil</span>
+                <span>chatbot</span>
             </a>
             <a href="{{ route('responsable.absences') }}" 
             class="nav-item {{ Route::is('responsable.absences') ? 'active' : '' }}"
-            data-page="absences">
-            <i class="fas fa-user-clock"></i>
-            <span>Absence et justif</span>
+                data-page="absences">
+                <i class="fas fa-user-clock"></i>
+                <span>Absence et justif</span>
             </a>
+            <a href="{{ route('paiements.index') }}"
+                class="nav-item {{ Route::is('paiements.index') ? 'active' : '' }}" data-page="paiements.index">
+                <i class="far fa-calendar-alt"></i>
+                <span>paiement</span>
+            </a>
+            <a href="{{ route('notes-admin') }}"
+                class="nav-item {{ Route::is('notes-admin') ? 'active' : '' }}" data-page="notes-admin">
+                <i class="fas fa-file-alt"></i>
+                <span>notes</span>
+            
             <!-- Ajouter par imad -->
             <a href="{{ route('responsable.documents.index') }}"
             class="nav-item {{ Route::is('responsable.documents.index') ? 'active' : '' }}" data-page="demandes">
@@ -135,14 +145,7 @@
                 <i class="fa-solid fa-inbox"></i>
                 <span>Messagerie</span>
             </a>
-            <a href="{{ route('notes') }}" class="nav-item {{ Route::is('notes') ? 'active' : '' }}"
-                data-page="notes">
-                <i class="far fa-sticky-note"></i>
-                <span>Notes</span>
-            </a>
-
-            <!-- Ajouter par imad -->
-            <a href="{{ route('news.index') }}" class="nav-item {{ Route::is('news.index') ? 'active' : '' }}" data-page="news">
+            <a href="{{ route('news') }}" class="nav-item {{ Route::is('news') ? 'active' : '' }}" data-page="news">
                 <i class="fas fa-newspaper"></i>
                 <span>News</span>
             </a>
