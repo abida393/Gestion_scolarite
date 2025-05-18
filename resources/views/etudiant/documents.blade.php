@@ -34,18 +34,28 @@
                     <h2 class="text-2xl font-semibold text-gray-800">Sélection du Document</h2>
                 </div>
                 
-                <!-- Combobox historique -->
-                <div class="relative w-full sm:w-64">
-                    <div class="combobox-selected bg-white border-2 border-gray-200 rounded-lg p-3 cursor-pointer flex items-center justify-between hover:border-blue-400 transition-all shadow-sm"
-                         onclick="toggleCombobox('history')">
-                        <span class="text-gray-700"><i class="fas fa-history mr-2 text-blue-500"></i> Mes demandes</span>
-                        <i class="fas fa-chevron-down text-gray-400 transition-transform duration-200" id="history-chevron"></i>
-                    </div>
+                <!-- Nouveau Combobox historique amélioré -->
+                <div class="relative w-full sm:w-72">
+                    <button type="button" 
+                            class="w-full flex items-center justify-between gap-3 px-4 py-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:border-blue-400 transition-all duration-200 text-left"
+                            onclick="toggleCombobox('history')"
+                            aria-haspopup="listbox"
+                            aria-expanded="false"
+                            id="history-combobox">
+                        <div class="flex items-center">
+                            <i class="fas fa-history text-blue-500 mr-3"></i>
+                            <span class="truncate">Mes demandes</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-gray-400 text-xs transition-transform duration-200" id="history-chevron"></i>
+                    </button>
 
-                    <div class="combobox-options absolute top-full right-0 mt-1 bg-white border border-gray-200 rounded-lg max-h-60 overflow-y-auto shadow-xl z-50 w-full hidden"
-                         id="history-options">
+                    <!-- Liste des options -->
+                    <div class="absolute z-10 mt-2 w-full bg-white shadow-lg rounded-xl py-1 ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
+                         id="history-options"
+                         role="listbox"
+                         aria-labelledby="history-combobox">
                         @if($demandes->isEmpty())
-                            <div class="p-3 text-center text-gray-500">
+                            <div class="px-4 py-3 text-center text-gray-500 text-sm">
                                 Aucune demande trouvée
                             </div>
                         @else
@@ -55,20 +65,22 @@
                                         'demande-recue' => 'bg-yellow-100 text-yellow-800',
                                         'en-preparation' => 'bg-blue-100 text-blue-800',
                                         'document-pret' => 'bg-purple-100 text-purple-800',
-                                        'termine' => 'bg-green-100 text-green-800'
+                                        'termine' => 'bg-green-100 text-green-800',
+                                        'refus' => 'bg-red-100 text-red-800'
                                     ][strtolower(str_replace(' ', '-', $demande->etat_demande))] ?? 'bg-gray-100 text-gray-800';
                                 @endphp
-                                <div class="combobox-option p-3 flex items-center justify-between cursor-pointer hover:bg-blue-50 transition-all border-b border-gray-100 last:border-b-0"
-                                onclick="showRequestDetails('{{ $demande->id }}', '{{ $demande->document->nom_document }}', '{{ $demande->annee_academique }}', '{{ strtolower(str_replace(' ', '-', $demande->etat_demande)) }}', '{{ $demande->created_at }}', '{{ $demande->updated_at }}', '{{ $demande->fichier }}')"
-                                >
-                                    <div class="truncate">
+                                <button type="button"
+                                        class="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors duration-150 flex items-center justify-between border-b border-gray-100 last:border-b-0"
+                                        role="option"
+                                        onclick="showRequestDetails('{{ $demande->id }}', '{{ $demande->document->nom_document }}', '{{ $demande->annee_academique }}', '{{ strtolower(str_replace(' ', '-', $demande->etat_demande)) }}', '{{ $demande->created_at }}', '{{ $demande->updated_at }}', '{{ $demande->fichier }}', '{{ $demande->justif_refus }}')">
+                                    <div class="truncate pr-2">
                                         <div class="font-medium text-gray-800 truncate">{{ $demande->document->nom_document }}</div>
-                                        <div class="text-sm text-gray-500">{{ $demande->annee_academique }}</div>
+                                        <div class="text-sm text-gray-500 truncate">{{ $demande->annee_academique }}</div>
                                     </div>
-                                    <span class="status-badge text-xs px-2 py-1 rounded-full {{ $statusClass }}">
+                                    <span class="status-badge text-xs px-2.5 py-1 rounded-full {{ $statusClass }} whitespace-nowrap">
                                         {{ $demande->etat_demande }}
                                     </span>
-                                </div>
+                                </button>
                             @endforeach
                         @endif
                     </div>
@@ -76,14 +88,8 @@
             </div>
 
             <!-- Carte de formulaire -->
-            <div class="bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl mb-8 animate-fade-in-up" id="form-container">
-                <!-- Effets décoratifs -->
-                <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden z-0">
-                    <div class="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-blue-100 opacity-20"></div>
-                    <div class="absolute -bottom-20 -left-20 w-60 h-60 rounded-full bg-indigo-100 opacity-20"></div>
-                </div>
-                
-                <div class="relative z-10 p-8">
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-300 mb-8 animate-fade-in-up" id="form-container">
+                <div class="relative p-8">
                     <div id="alertContainer"></div>
                     
                     <form action="{{ route('documents.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
@@ -140,13 +146,7 @@
 
             <!-- Section détails de la demande (cachée par défaut) -->
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden hidden animate-fade-in-up" id="request-details-container">
-                <!-- Effets décoratifs -->
-                <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden z-0">
-                    <div class="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-blue-100 opacity-20"></div>
-                    <div class="absolute -bottom-20 -left-20 w-60 h-60 rounded-full bg-indigo-100 opacity-20"></div>
-                </div>
-                
-                <div class="relative z-10 p-8">
+                <div class="relative p-8">
                     <!-- Timeline -->
                     <div class="mb-10">
                         <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
@@ -223,74 +223,61 @@
                                 <span class="block text-sm font-medium text-gray-700">Dernière mise à jour:</span>
                                 <span class="block text-gray-900" id="detail-date-update"></span>
                             </div>
+                        </div>
 
+                        <!-- Section Motif de refus (visible seulement si la demande est refusée) -->
+                        <div class="mt-4 hidden" id="refus-section">
+                            <div class="space-y-1">
+                                <span class="block text-sm font-medium text-gray-700">Motif de refus:</span>
+                                <span class="block text-gray-900" id="detail-motif-refus"></span>
+                            </div>
                         </div>
                     </div>
                     
-                   <!-- Section Téléchargement -->
-<!-- Section Téléchargement -->
-<div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hidden" id="download-section">
-    <!-- Icône PDF -->
-    <div class="inline-flex items-center justify-center bg-blue-50 p-4 rounded-full mb-4 shadow-inner">
-        <i class="fas fa-file-pdf text-4xl text-red-500"></i>
-    </div>
-    
-    <!-- Métadonnées -->
-    <div class="space-y-3 mb-6">
-        <div>
-            <p class="font-medium text-gray-800">
-                <span class="font-semibold text-gray-900">État :</span> 
-                <span id="detail-status-text" class="text-blue-600"></span>
-            </p>
-            <p class="text-sm text-gray-500 mt-1" id="detail-date-text"></p>
-        </div>
-    </div>
+                    <!-- Section Téléchargement -->
+                    <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hidden" id="download-section">
+                        <!-- Icône PDF -->
+                        <div class="inline-flex items-center justify-center bg-blue-50 p-4 rounded-full mb-4 shadow-inner">
+                            <i class="fas fa-file-pdf text-4xl text-red-500"></i>
+                        </div>
+                        
+                        <!-- Métadonnées -->
+                        <div class="space-y-3 mb-6">
+                            <div>
+                                <p class="font-medium text-gray-800">
+                                    <span class="font-semibold text-gray-900">État :</span> 
+                                    <span id="detail-status-text" class="text-blue-600"></span>
+                                </p>
+                                <p class="text-sm text-gray-500 mt-1" id="detail-date-text"></p>
+                            </div>
+                        </div>
 
-    <!-- Bouton (toujours caché par défaut) -->
-    <a href="#" 
-       id="download-btn"
-       class="hidden inline-flex items-center justify-center bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white font-medium py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 mb-6"
-       target="_blank"
-       download>
-        <i class="fas fa-download mr-3"></i>
-        <span>Télécharger</span>
-        <span id="file-name" class="ml-2 font-semibold underline decoration-white/30"></span>
-    </a>
+                        <!-- Bouton de téléchargement -->
+                        <a href="#" 
+                           id="download-btn"
+                           class="inline-flex items-center justify-center bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white font-medium py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 mb-6"
+                           target="_blank"
+                           download>
+                            <i class="fas fa-download mr-3"></i>
+                            <span>Télécharger</span>
+                            <span id="file-name" class="ml-2 font-semibold underline decoration-white/30"></span>
+                        </a>
 
-    <!-- QR Code (toujours caché par défaut) -->
-    <div id="qr-code-wrapper" class="hidden bg-gray-50 p-4 rounded-lg border border-gray-200 mb-6">
-        <span class="block text-sm font-medium text-gray-700 mb-3">QR Code du document</span>
-        <div id="qr-code-container" class="hidden flex justify-center"></div>
-        <p class="text-xs text-gray-500 mt-3">Scannez pour accéder au document</p>
-    </div>
+                        <!-- QR Code -->
+                        <div id="qr-code-wrapper">
+                            <span class="block text-sm font-medium text-gray-700 mb-3">Telecharger votre fichier !!!</span>
+                            <div id="qr-code-container" class="flex justify-center"></div>
+                        </div>
 
-    <!-- Message d'indisponibilité (visible par défaut) -->
-    <div id="unavailable-message" class="p-4 bg-amber-50 border border-amber-100 text-amber-700 rounded-lg">
-        <div class="flex items-center justify-center space-x-2">
-            <i class="fas fa-clock text-amber-500"></i>
-            <span class="font-medium">Document non disponible</span>
-        </div>
-        <p class="text-sm mt-1 text-amber-600" id="status-message">Statut: En traitement</p>
-    </div>
-</div>
-
-    <script>
-    // Votre code JavaScript modifié
-    if (status === 'termine') {
-        downloadBtn.classList.remove('hidden');
-        unavailableMsg.classList.add('hidden');
-        downloadBtn.href = `/storage/documents/${fileName}`;
-        downloadBtn.setAttribute('download', fileName);
-        document.getElementById('file-name').textContent = fileName;
-    // Générer le QR code ici si nécessaire
-        // ...
-    } else {
-        downloadBtn.classList.add('hidden');
-        unavailableMsg.classList.remove('hidden');   
-        // Effacer le QR code si nécessaire
-        document.getElementById('qr-code-container').innerHTML = '';
-    }
-    </script>
+                        <!-- Message d'indisponibilité -->
+                        <div id="unavailable-message" class="p-4 bg-amber-50 border border-amber-100 text-amber-700 rounded-lg">
+                            <div class="flex items-center justify-center space-x-2">
+                                <i class="fas fa-clock text-amber-500"></i>
+                                <span class="font-medium">Document non disponible</span>
+                            </div>
+                            <p class="text-sm mt-1 text-amber-600" id="status-message">Statut: En traitement</p>
+                        </div>
+                    </div>
                     
                     <!-- Bouton retour -->
                     <button onclick="showForm()" class="mt-6 bg-white border border-gray-300 text-gray-700 font-medium py-2 px-6 rounded-lg shadow-sm hover:bg-gray-50 transition-all duration-300 flex items-center justify-center">
@@ -301,7 +288,7 @@
         </div>
     </div>
 
-    <!-- Scripts (conservés tels quels) -->
+    <!-- Styles personnalisés -->
     <style>
         /* Animation personnalisée */
         @keyframes fade-in {
@@ -329,30 +316,46 @@
         }
         
         /* Styles pour le combobox */
-        .combobox-options {
+        #history-options {
+            max-height: 300px;
+            overflow-y: auto;
             scrollbar-width: thin;
             scrollbar-color: #cbd5e0 #f7fafc;
         }
         
-        .combobox-options::-webkit-scrollbar {
+        #history-options::-webkit-scrollbar {
             width: 8px;
         }
         
-        .combobox-options::-webkit-scrollbar-track {
+        #history-options::-webkit-scrollbar-track {
             background: #f7fafc;
             border-radius: 0 0 8px 8px;
         }
         
-        .combobox-options::-webkit-scrollbar-thumb {
+        #history-options::-webkit-scrollbar-thumb {
             background-color: #cbd5e0;
             border-radius: 4px;
         }
+        
+        /* Rotation de la flèche */
+        .rotate-180 {
+            transform: rotate(180deg);
+        }
+        
+        /* Styles pour la timeline */
+        .completed .fa {
+            color: white !important;
+        }
+        
+        .active .fa {
+            color: #3b82f6 !important;
+        }
     </style>
 
+    <!-- Scripts (conservés tels quels) -->
     <script>
-        
-        // Vos fonctions JavaScript existantes conservées telles quelles
-        function showRequestDetails(id, documentName, anneeAcademique, status, dateDemande, dateUpdate, fileName) {
+        // Vos fonctions JavaScript existantes
+        function showRequestDetails(id, documentName, anneeAcademique, status, dateDemande, dateUpdate, fileName, justifRefus) {
             document.getElementById('form-container').classList.add('hidden');
             document.getElementById('request-details-container').classList.remove('hidden');
             
@@ -369,40 +372,54 @@
             const unavailableMsg = document.getElementById('unavailable-message');
             const statusText = document.getElementById('detail-status-text');
             const dateText = document.getElementById('detail-date-text');
+            const qrWrapper = document.getElementById('qr-code-wrapper');
             
             statusText.textContent = formatStatus(status);
             dateText.textContent = `Dernière mise à jour: ${formatDate(dateUpdate)}`;
             
-            // Dans votre script JavaScript
-        if (status === 'termine') {
-            downloadBtn.classList.remove('hidden');
-            unavailableMsg.classList.add('hidden');
-            downloadBtn.href = `/storage/documents/${fileName}`;
-            downloadBtn.setAttribute('download', fileName);
-            document.getElementById('file-name').textContent = fileName;
+            // Gestion du motif de refus
+            const refusSection = document.getElementById('refus-section');
+            const motifRefus = document.getElementById('detail-motif-refus');
             
-        } else {
-            downloadBtn.classList.add('hidden');
-            unavailableMsg.classList.remove('hidden');
-            // Si vous générez le QR code uniquement quand c'est terminé
-            // document.getElementById('qr-code-container').innerHTML = ''; 
-        }
-                    updateTimeline(status);
-            document.getElementById('file-name').textContent = fileName;
-
-           // Générer le QR code avec lien de téléchargement
-            const qrContainer = document.getElementById('qr-code-container');
-            qrContainer.innerHTML = ''; // Vider l'ancien QR
-
-            const fileUrl = `${window.location.origin}/documents/${fileName}/download`; // lien vers la route de téléchargement
-
-            QRCode.toCanvas(fileUrl, { width: 150 }, function (err, canvas) {
-                if (!err) {
-                    qrContainer.appendChild(canvas);
-                } else {
-                    console.error("Erreur de génération QR Code :", err);
-                }
-            });
+            if (status === 'refus') {
+                refusSection.classList.remove('hidden');
+                motifRefus.textContent = justifRefus || 'Aucun motif spécifié';
+                downloadBtn.classList.add('hidden');
+                unavailableMsg.classList.remove('hidden');
+                qrWrapper.classList.add('hidden');
+                document.getElementById('status-message').textContent = `Statut: ${formatStatus(status)}`;
+                unavailableMsg.classList.remove('bg-amber-50', 'border-amber-100', 'text-amber-700');
+                unavailableMsg.classList.add('bg-red-50', 'border-red-100', 'text-red-700');
+            } 
+            else if (status === 'termine' && fileName) {
+                refusSection.classList.add('hidden');
+                downloadBtn.classList.remove('hidden');
+                unavailableMsg.classList.add('hidden');
+                qrWrapper.classList.remove('hidden');
+                
+                downloadBtn.href = `/storage/documents/${fileName}`;
+                downloadBtn.setAttribute('download', fileName);
+                document.getElementById('file-name').textContent = fileName;
+                
+                // Générer le QR code
+                const qrContainer = document.getElementById('qr-code-container');
+                qrContainer.innerHTML = '';
+                const fileUrl = `${window.location.origin}/storage/documents/${fileName}`;
+                
+                // QRCode.toCanvas(qrContainer, fileUrl, { width: 150 }, function (error) {
+                //     if (error) console.error(error);
+                // });
+            } else {
+                refusSection.classList.add('hidden');
+                downloadBtn.classList.add('hidden');
+                unavailableMsg.classList.remove('hidden');
+                qrWrapper.classList.add('hidden');
+                document.getElementById('status-message').textContent = `Statut: ${formatStatus(status)}`;
+                unavailableMsg.classList.remove('bg-red-50', 'border-red-100', 'text-red-700');
+                unavailableMsg.classList.add('bg-amber-50', 'border-amber-100', 'text-amber-700');
+            }
+            
+            updateTimeline(status);
         }
 
         function toggleCombobox(id) {
@@ -411,6 +428,15 @@
             
             options.classList.toggle('hidden');
             chevron.classList.toggle('rotate-180');
+            
+            // Fermer les autres combobox ouverts
+            document.querySelectorAll('.combobox-options').forEach(box => {
+                if (box.id !== `${id}-options` && !box.classList.contains('hidden')) {
+                    box.classList.add('hidden');
+                    const otherChevron = document.getElementById(box.id.replace('-options', '-chevron'));
+                    if (otherChevron) otherChevron.classList.remove('rotate-180');
+                }
+            });
         }
         
         function formatStatus(status) {
@@ -418,7 +444,8 @@
                 'demande-recue': 'Demande reçue',
                 'en-preparation': 'En préparation',
                 'document-pret': 'Document prêt',
-                'termine': 'Terminé'
+                'termine': 'Terminé',
+                'refus': 'Refusé'
             };
             
             return statusMap[status] || status.charAt(0).toUpperCase() + status.slice(1).replace('-', ' ');
@@ -438,60 +465,120 @@
         }
         
         function updateTimeline(status) {
-            for (let i = 1; i <= 4; i++) {
-                document.getElementById(`step${i}-icon`).classList.remove('active', 'completed');
-                document.getElementById(`step${i}-label`).classList.remove('active', 'completed');
-            }
-            
-            let currentStep = 1;
-            let progressWidth = '0%';
-            
-            switch(status) {
-                case 'demande-recue':
-                    currentStep = 1;
-                    progressWidth = '0%';
-                    break;
-                case 'en-preparation':
-                    currentStep = 2;
-                    progressWidth = '33%';
-                    break;
-                case 'document-pret':
-                    currentStep = 3;
-                    progressWidth = '66%';
-                    break;
-                case 'termine':
-                    currentStep = 4;
-                    progressWidth = '100%';
-                    break;
-            }
-            
-            document.getElementById('progress-bar').style.width = progressWidth;
-            
-            for (let i = 1; i <= 4; i++) {
-                const icon = document.getElementById(`step${i}-icon`);
-                const label = document.getElementById(`step${i}-label`);
-                
-                if (i < currentStep) {
-                    icon.classList.add('completed', 'border-blue-500', 'bg-blue-500');
-                    icon.querySelector('i').classList.add('text-white');
-                    label.classList.add('completed', 'text-blue-600', 'font-medium');
-                } else if (i === currentStep) {
-                    icon.classList.add('active', 'border-blue-500');
-                    icon.querySelector('i').classList.add('text-blue-500');
-                    label.classList.add('active', 'text-blue-600', 'font-medium');
-                }
-            }
+    // Réinitialiser toutes les étapes
+    for (let i = 1; i <= 4; i++) {
+        const icon = document.getElementById(`step${i}-icon`);
+        const label = document.getElementById(`step${i}-label`);
+        
+        // Réinitialiser les classes
+        icon.className = 'w-12 h-12 rounded-full border-4 border-gray-200 bg-white flex items-center justify-center mb-2 transition-all duration-300';
+        label.className = 'text-sm text-center text-gray-500';
+        
+        // Réinitialiser le contenu de l'icône (important pour l'étape 4 qui pourrait avoir un X)
+        if (i === 4) {
+            icon.innerHTML = '<i class="fas fa-check-circle text-gray-400"></i>';
+            label.textContent = 'Terminé';
+        } else if (i === 1) {
+            icon.innerHTML = '<i class="fas fa-inbox text-gray-400"></i>';
+            label.textContent = 'Demande reçue';
+        } else if (i === 2) {
+            icon.innerHTML = '<i class="fas fa-cog text-gray-400"></i>';
+            label.textContent = 'En préparation';
+        } else if (i === 3) {
+            icon.innerHTML = '<i class="fas fa-file-alt text-gray-400"></i>';
+            label.textContent = 'Document prêt';
         }
+    }
+
+    let currentStep = 1;
+    let progressWidth = '0%';
+    let isRefused = status === 'refus';
+    
+    if (isRefused) {
+        // Configuration pour le cas refusé
+        document.getElementById('progress-bar').style.width = '100%';
+        document.getElementById('progress-bar').style.background = 'linear-gradient(to right, #ef4444, #dc2626)';
+        
+        // Étapes 1 à 3 en rouge
+        for (let i = 1; i <= 3; i++) {
+            const icon = document.getElementById(`step${i}-icon`);
+            const label = document.getElementById(`step${i}-label`);
+            
+            icon.classList.add('border-red-500', 'bg-red-500');
+            icon.querySelector('i').classList.add('text-white');
+            label.classList.add('text-red-600', 'font-medium');
+        }
+        
+        // Configuration spéciale pour l'étape 4 (refus)
+        const lastStepIcon = document.getElementById('step4-icon');
+        const lastStepLabel = document.getElementById('step4-label');
+        
+        lastStepIcon.innerHTML = '<i class="fas fa-times text-white"></i>';
+        lastStepIcon.classList.add('border-red-500', 'bg-red-500');
+        lastStepLabel.textContent = 'Refusé';
+        lastStepLabel.classList.add('text-red-600', 'font-medium');
+        
+        return;
+    }
+    
+    // Configuration pour les autres états
+    document.getElementById('progress-bar').style.background = 'linear-gradient(to right, #3b82f6, #6366f1)';
+    
+    switch(status) {
+        case 'demande-recue':
+            currentStep = 1;
+            progressWidth = '16%';
+            break;
+        case 'en-preparation':
+            currentStep = 2;
+            progressWidth = '33%';
+            break;
+        case 'document-pret':
+            currentStep = 3;
+            progressWidth = '66%';
+            break;
+        case 'termine':
+            currentStep = 4;
+            progressWidth = '100%';
+            break;
+    }
+    
+    document.getElementById('progress-bar').style.width = progressWidth;
+    
+    // Appliquer les styles pour l'état actuel
+    for (let i = 1; i <= 4; i++) {
+        const icon = document.getElementById(`step${i}-icon`);
+        const label = document.getElementById(`step${i}-label`);
+        
+        if (i < currentStep) {
+            icon.classList.add('border-blue-500', 'bg-blue-500');
+            icon.querySelector('i').classList.add('text-white');
+            label.classList.add('text-blue-600', 'font-medium');
+        } else if (i === currentStep) {
+            icon.classList.add('border-blue-500');
+            icon.querySelector('i').classList.add('text-blue-500');
+            label.classList.add('text-blue-600', 'font-medium');
+        }
+    }
+}
         
         function showForm() {
             document.getElementById('request-details-container').classList.add('hidden');
             document.getElementById('form-container').classList.remove('hidden');
         }
 
+        // Gestion des clics en dehors du combobox pour le fermer
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.relative.w-full.sm\\:w-72')) {
+                document.getElementById('history-options').classList.add('hidden');
+                document.getElementById('history-chevron').classList.remove('rotate-180');
+            }
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('cancelBtn').addEventListener('click', function() {
                 if (confirm('Voulez-vous vraiment annuler votre demande ?')) {
-                    document.getElementById('documentRequestForm').reset();
+                    document.querySelector('form').reset();
                     showAlert('error', 'Demande annulée', 'Votre demande a été annulée avec succès.');
                 }
             });
@@ -510,7 +597,7 @@
                 };
                 
                 const alert = document.createElement('div');
-                alert.className = `border-l-4 ${alertTypes[type].className} p-4 mb-4 rounded-lg flex items-start animate-fade-in`;
+                alert.className = `border-l-4 ${alertTypes[type].className} p-4 mb-4 rounded-lg flex items-start`;
                 alert.innerHTML = `
                     <i class="fas ${alertTypes[type].icon} mt-1 mr-3"></i>
                     <div>

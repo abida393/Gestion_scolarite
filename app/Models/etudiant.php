@@ -13,53 +13,15 @@ class etudiant extends Authenticatable
 {
     use HasFactory, Notifiable, HasApiTokens;
     protected $table = 'etudiants';
+
     protected $fillable = [
-        // Profile type
-        'type_profile',
-
-        // Personal Information
-        'etudiant_nom',
-        'etudiant_prenom',
-        'etudiant_cin',
-        'etudiant_date_naissance',
-        'etudiant_lieu_naissance',
-        'etudiant_sexe',
-        'etudiant_nationalite',
-        'PHOTOS',
-
-        // Contact Information
-        'etudiant_adresse',
-        'ville',
-        'etudiant_code_postal',
-        'etudiant_tel',
-        'etudiant_email',
-        'email_ecole',
-
-        // Academic Information
-        'formation_id',
-        'classes_id',
-        'filiere_id',
-        'identifiant',
-        'password',
-        'etudiant_cne',
-        'DOSSIERCOMPLET',
-
-        // Baccalaureate Information
-        'etudiant_serie_bac',
-        'etudiant_session_bac',
-        'etudiant_mention_bac',
-        'annee_obtention_bac',
-
-        // Parent Information
-        'nom_pere',
-        'prenom_pere',
-        'fonction_pere',
-        'telephone_pere',
-        'cnss',
-        'nom_mere',
-        'prenom_mere',
-        'fonction_mere',
-        'telephone_mere',
+        'type_profile', 'formation_id', 'classes_id', 'filiere_id', 'email_ecole', 'password',
+        'identifiant', 'etudiant_cin', 'etudiant_serie_bac', 'etudiant_cne', 'etudiant_session_bac',
+        'etudiant_mention_bac', 'annee_obtention_bac', 'etudiant_nom', 'etudiant_prenom',
+        'etudiant_date_naissance', 'etudiant_lieu_naissance', 'etudiant_sexe', 'etudiant_nationalite',
+        'PHOTOS', 'etudiant_adresse', 'etudiant_code_postal', 'DOSSIERCOMPLET', 'ville', 'etudiant_tel',
+        'etudiant_email', 'nom_pere', 'prenom_pere', 'fonction_pere', 'telephone_pere', 'cnss', 'nom_mere',
+        'prenom_mere', 'fonction_mere', 'telephone_mere'
     ];
 
     public function getEmailForPasswordReset()
@@ -124,5 +86,16 @@ class etudiant extends Authenticatable
     {
         return $this->morphMany(Message::class, 'receiver');
     }
+
+    public function getNomAttribute()
+    {
+        return $this->attributes['etudiant_nom']; // Accède à 'etudiant_nom'
+    }
+
+    public function getPrenomAttribute()
+    {
+        return $this->attributes['etudiant_prenom']; // Accède à 'etudiant_prenom'
+    }
+
 
 }

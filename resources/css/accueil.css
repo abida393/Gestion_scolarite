@@ -47,8 +47,9 @@ body {
 
 /* ==================== SIDEBAR ==================== */
 .sidebar {
+    border-right: black;
     width: var(--sidebar-width);
-    background-color: var(--white);
+    background-color: white;
     border-right: 1px solid var(--gray-medium);
     padding: 35px 0;
     display: flex;
@@ -60,10 +61,11 @@ body {
     z-index: 1000;
     box-shadow: 5px 0 20px rgba(0, 0, 0, 0.03);
     transition: transform 0.3s ease;
+    color: black;
 }
 
 .logo {
-    padding: 0 30px 35px;
+    padding-left: 50px;
     display: flex;
     justify-content: space-between;
     align-items: center;
