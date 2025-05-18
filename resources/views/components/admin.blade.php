@@ -100,8 +100,8 @@
                 <i class="fas fa-home"></i>
                 <span>Accueil</span>
             </a>
-            <a href="{{ route('responsable.absences.index') }}" 
-            class="nav-item {{ Route::is('responsable.absences.index') ? 'active' : '' }}"
+            <a href="{{ route('responsable.absences') }}" 
+            class="nav-item {{ Route::is('responsable.absences') ? 'active' : '' }}"
             data-page="absences">
             <i class="fas fa-user-clock"></i>
             <span>Absence et justif</span>

@@ -1,7 +1,10 @@
 <?php
+use App\Http\Controllers\AbsenceResponsableController;
+use App\Models\etudiant;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\Auth\PasswordController;
@@ -19,13 +22,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NewsController;
 // ===========================================
 
-
-//==================================testemploi=========================================
-// use App\Http\Controllers\EmploiDuTempsController;
-// use App\Http\Controllers\ClasseController;
-// use App\Http\Controllers\FiliereController;
-// use App\Http\Controllers\MatiereController;
-// use App\Http\Controllers\EnseignantController;
+use App\Exports\AbsencesExport;
 // ==================== AUTHENTICATION ====================
 Route::middleware('guest')->group(function () {
     Route::get('/', [AuthController::class, 'index'])->name('home.welcome');
@@ -87,29 +84,6 @@ Route::middleware('auth.multi:etudiant')->prefix('emploi')->group(function () {
     Route::get('/emploi', [EmploiTempsController::class, 'emploiEtudiant'])->name('etudiant.emploi');
 
 });
-// ==================== EMPLOI DU TEMPS RESPONSABLE ====================
-// Route::middleware('auth:responsable')->group(function () {
-//     Route::get('/responsable/create_emploi_complet', [EmploiTempsController::class, 'createComplet'])->name('responsable.create_emploi_complet');
-//     Route::post('/responsable/create_emploi_complet/store', [EmploiTempsController::class, 'storeMultiple'])->name('responsable.storeMultiple'); 
-//     Route::get('/responsable/{timetable}/edit', [EmploiTempsController::class, 'edit_emploi'])->name('responsable.edit');
-//     Route::put('/responsable/{timetable}', [EmploiTempsController::class, 'update'])->name('responsable.update');
-//     Route::delete('/responsable/{timetable}', [EmploiTempsController::class, 'destroy'])->name('responsable.destroy');
-//     Route::get('/responsable/emploi', action: [EmploiTempsController::class, 'afficherEmploi'])->name('responsable.emploi');
-//     Route::get('/classe-details/{id}', [EmploiTempsController::class, 'getClasseDetails'])->name('classe.details');
-//     Route::get('/responsable/download', [EmploiTempsController::class, 'download'])->name('responsable.download');
-//     Route::get('/responsable/create', [EmploiTempsController::class, 'create'])->name('responsable.create');
-//     Route::post('/responsable/store', [EmploiTempsController::class, 'store'])->name('responsable.store');
-
-// });
-// ==================== EMPLOI DU TEMPS ETUDIANT ====================
-// Route::middleware('auth.multi:etudiant')->group(function () {
-//     Route::get('/filieres-par-formation/{formationId}', [EmploiTempsController::class, 'getFilieresByFormation']);
-//     Route::get('/classes-par-filiere/{filiereId}', [EmploiTempsController::class, 'getClassesByFiliere']);
-//     Route::get('/dashboard', [EmploiTempsController::class, 'dashboard'])->name('dashboard');
-//         Route::get('/emploi', [EmploiTempsController::class, 'emploiEtudiant'])->name('emploi');
-
-// });
-
 // ==================== EVENEMENTS ====================
 Route::middleware('auth.multi:etudiant')->prefix('events')->group(function () {
     Route::get('/', [EvenementController::class, 'index']);
@@ -150,20 +124,6 @@ Route::middleware(['auth:responsable'])->group(function () {
     // Supprimer un stage
     Route::delete('/stages/{id}', [StageController::class, 'destroy'])->name('stages.destroy');
 });
-
-
-// ==================== ABSENCES ====================
-Route::middleware('auth.multi:etudiant')->group(function () {
-    Route::get('/absences', [AbsenceController::class, 'index'])->name('absences.index');
-    Route::post('/absences/justify/{id}', [AbsenceController::class, 'justify'])->name('absences.justify');
-    Route::post('/justifier-absence', [AbsenceController::class, 'justifier'])->name('justifier-absence');
-});
-// ========ABSENCES responsables (route de la page ajouter par imad)=======
-Route::middleware('auth.multi:responsable')->group(function () {
-   Route::get('/responsable/absences', [AbsenceController::class, 'index'])->name('responsable.absences.index');
-});
-
-
 // ==================== NOTES ====================
 Route::get('/notes/{etudiantId}', [NoteController::class, 'afficherNotes'])->middleware("auth.multi:etudiant");
 
@@ -213,10 +173,9 @@ Route::middleware('auth:responsable')->group(function () {
     Route::post('/responsable/event/store', [CalendarController::class, 'storeEvent'])->name('responsable.calendar.event.store');
     Route::post('/responsable/plan/store', [CalendarController::class, 'storePlan'])->name('responsable.calendar.plan.store');
     Route::get('/responsable/calendar/events', [CalendarController::class, 'getEvents'])->name('responsable.calendar.events');
-    Route::put('/responsable/event/update/{id}', [CalendarController::class, 'update'])->name('responsable.calendar.event.update');
-Route::get('/responsable/calendar/{id}/json', [CalendarController::class, 'getEventJson']);Route::delete('/responsable/calendar/{id}', [CalendarController::class, 'delete'])->name('responsable.calendar.delete');
-// Route::get('/responsable/calendar/{id}', [CalendarController::class, 'show'])->name('responsable.calendar.show');
-//  Route::delete('/calendar/{id}', [CalendarController::class, 'delete'])->name('responsable.calendar.delete');
+    Route::put('/responsable/event/update/{id}', [CalendarController::class, 'update'])->name('responsable.calendar.event.update'); 
+    Route::get('/responsable/calendar/{id}/json', [CalendarController::class, 'getEventJson']);
+    Route::delete('/responsable/calendar/{id}', [CalendarController::class, 'delete'])->name('responsable.calendar.delete');
  Route::delete('/calendar/{id}', [CalendarController::class, 'delete']);
   });  
 Route::middleware(['auth.multi:etudiant'])->group(function () {
@@ -276,3 +235,37 @@ Route::put('/responsable/emploi/{id}', [EmploiTempsController::class, 'update'])
             ->get();
     });
 });
+// ==================== absence ====================
+// Routes étudiant
+Route::middleware(['auth:etudiant'])->group(function() {
+    Route::post('/etudiant/absences/justifier', [AbsenceController::class, 'justifier'])
+         ->name('etudiant.absences.justifier');
+             Route::get('/absence_justif', [AbsenceController::class, 'index'])->name('absence_justif');
+
+         
+    Route::get('/etudiant/absences/download/{id}', [AbsenceController::class, 'downloadJustificatif'])
+         ->name('etudiant.absences.download');
+});
+
+// Routes responsable
+
+
+Route::middleware(['auth:responsable'])->prefix('responsable/absences')->group(function () {
+    Route::get('/', [AbsenceResponsableController::class, 'index'])->name('responsable.absences');
+    Route::get('/justifications', [AbsenceResponsableController::class, 'justificationsEnAttente'])->name('responsable.absences.justifications');
+    Route::post('/validate/{absence}', [AbsenceResponsableController::class, 'validerJustification'])->name('responsable.absences.validate');
+    Route::get('/download/{id}', [AbsenceResponsableController::class, 'downloadJustificatif'])->name('responsable.absences.download');
+    Route::get('/create', [AbsenceResponsableController::class, 'create'])->name('responsable.absences.create');
+    Route::post('/store', [AbsenceResponsableController::class, 'store'])->name('responsable.absences.store');
+    Route::get('/edit/{absence}', [AbsenceResponsableController::class, 'edit'])->name('responsable.absences.edit');
+    Route::put('/update/{absence}', [AbsenceResponsableController::class, 'update'])->name('responsable.absences.update');
+    Route::delete('/destroy/{absence}', [AbsenceResponsableController::class, 'destroy'])->name('responsable.absences.destroy');
+    Route::get('/export', [AbsenceResponsableController::class, 'export'])->name('responsable.absences.export');
+});
+
+//  pour chargement dynamique 
+Route::get('/absences/etudiants-par-classe/{classeId}', [AbsenceResponsableController::class, 'getEtudiantsParClasse']);
+Route::get('/absences/seances-par-classe/{classeId}', [AbsenceResponsableController::class, 'getSeancesParClasse']);
+
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+
