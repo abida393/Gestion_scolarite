@@ -20,6 +20,7 @@ return new class extends Migration
             $table->Double("montant_restant");
             $table->string("mode_paiement");
             $table->string("status");
+            $table->string("numero_cheque"  )->nullable();    
             $table->date("date_paiement");
             $table->timestamps();
         });
@@ -32,4 +33,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('paiements');
     }
+
+    
 };

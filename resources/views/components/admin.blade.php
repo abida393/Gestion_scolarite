@@ -97,10 +97,24 @@
         </div>
         <br>
         <div class="nav-menu">
+            <a href="{{ route('chatbot') }}" class="nav-item {{ Route::is('chatbot') ? 'active' : '' }}" data-page="chatbot">
+                <i class="fas fa-home"></i>
+                <span>chatbot</span>
+            </a>
+            <a href="{{ route('paiements.index') }}"
+                class="nav-item {{ Route::is('paiements.index') ? 'active' : '' }}" data-page="paiements.index">
+                <i class="far fa-calendar-alt"></i>
+                <span>paiement</span>
+            </a>
+            <a href="{{ route('notes-admin') }}"
+                class="nav-item {{ Route::is('notes-admin') ? 'active' : '' }}" data-page="notes-admin">
+                <i class="fas fa-file-alt"></i>
+                <span>notes</span>
             <a href="{{ route('responsable.absences.index') }}"
-                class="nav-item {{ Route::is('responsable.absences.index') ? 'active' : '' }}" data-page="absences">
-                <i class="fas fa-user-clock"></i>
-                <span>Absence et justif</span>
+            class="nav-item {{ Route::is('responsable.absences.index') ? 'active' : '' }}"
+            data-page="absences">
+            <i class="fas fa-user-clock"></i>
+            <span>Absence et justif</span>
             </a>
             <!-- Ajouter par imad -->
             <a href="{{ route('responsable.documents.index') }}"
@@ -144,6 +158,7 @@
             <!-- Ajouter par imad -->
             <a href="{{ route('news.index') }}" class="nav-item {{ Route::is('news.index') ? 'active' : '' }}"
                 data-page="news">
+            {{-- <a href="{{ route('news') }}" class="nav-item {{ Route::is('news') ? 'active' : '' }}" data-page="news"> --}}
                 <i class="fas fa-newspaper"></i>
                 <span>News</span>
             </a>
