@@ -101,6 +101,12 @@
                 <i class="fas fa-home"></i>
                 <span>chatbot</span>
             </a>
+            <a href="{{ route('responsable.absences') }}"
+            class="nav-item {{ Route::is('responsable.absences') ? 'active' : '' }}"
+                data-page="absences">
+                <i class="fas fa-user-clock"></i>
+                <span>Absence et justif</span>
+            </a>
             <a href="{{ route('paiements.index') }}"
                 class="nav-item {{ Route::is('paiements.index') ? 'active' : '' }}" data-page="paiements.index">
                 <i class="far fa-calendar-alt"></i>
@@ -110,12 +116,6 @@
                 class="nav-item {{ Route::is('notes-admin') ? 'active' : '' }}" data-page="notes-admin">
                 <i class="fas fa-file-alt"></i>
                 <span>notes</span>
-            <a href="{{ route('responsable.absences.index') }}"
-            class="nav-item {{ Route::is('responsable.absences.index') ? 'active' : '' }}"
-            data-page="absences">
-            <i class="fas fa-user-clock"></i>
-            <span>Absence et justif</span>
-            </a>
             <!-- Ajouter par imad -->
             <a href="{{ route('responsable.documents.index') }}"
                 class="nav-item {{ Route::is('responsable.documents.index') ? 'active' : '' }}" data-page="demandes">

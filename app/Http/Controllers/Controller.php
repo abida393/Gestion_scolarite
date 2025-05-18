@@ -163,6 +163,10 @@ public function welcome()
 {
     return view('authentification.welcome');
 }
+public function showLoginForm()
+{
+    return view('authentification.welcome');
+}
 /*public function show($id)
 {
 $etudiant = Etudiant::findOrFail($id);

@@ -63,12 +63,12 @@ class DatabaseSeeder extends Seeder
         responsable::factory(10)->create();
         etudiant::factory(10)->create();
         seance::factory(10)->create();
-        etudiant_absence::factory(10)->create();
+        // etudiant_absence::factory(10)->create();
         annee_formation::factory(10)->create();
         document::factory(10)->create();
         // demandes_documents::factory(10)->create();
         periode::factory(10)->create();
-        emplois_temps::factory(10)->create();
+        // emplois_temps::factory(10)->create();
         stage::factory(10)->create();
         news::factory(10)->create();
         evenement::factory(10)->create();

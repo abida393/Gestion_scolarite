@@ -86,16 +86,26 @@ class etudiant extends Authenticatable
     {
         return $this->morphMany(Message::class, 'receiver');
     }
+    public function totalRetardMinutes($periode = 'month')
+{
+    return $this->absences()
+        ->where('type', 'retard')
+        ->whereBetween('date_absence', [now()->startOfMonth(), now()->endOfMonth()])
+        ->sum('duree_minutes');
+}
+public function absences()
+{
+    return $this->hasMany(etudiant_absence::class, 'etudiant_id');
+}
+    // public function getNomAttribute()
+    // {
+    //     return $this->attributes['etudiant_nom']; // Accède à 'etudiant_nom'
+    // }
 
-    public function getNomAttribute()
-    {
-        return $this->attributes['etudiant_nom']; // Accède à 'etudiant_nom'
-    }
-
-    public function getPrenomAttribute()
-    {
-        return $this->attributes['etudiant_prenom']; // Accède à 'etudiant_prenom'
-    }
+    // public function getPrenomAttribute()
+    // {
+    //     return $this->attributes['etudiant_prenom']; // Accède à 'etudiant_prenom'
+    // }
 
 
 }
