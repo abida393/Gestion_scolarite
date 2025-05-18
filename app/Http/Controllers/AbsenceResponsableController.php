@@ -13,18 +13,27 @@ use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\AbsencesExport;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Response;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AbsenceResponsableController extends Controller
 {
-    public function index()
-    {
-        $absences = etudiant_absence::with(['etudiant', 'matiere', 'classe', 'emploiTemps.matiere'])
-         
-        ->orderBy('date_absence', 'desc')
-            ->paginate(20);
+  public function index($request = null)
+{
+    $request = $request ?? request();
+    $classes = Classe::all();
+    $query = etudiant_absence::with(['etudiant', 'matiere', 'classe', 'emploiTemps.matiere'])
+        ->orderBy('date_absence', 'desc');
 
-        return view('responsable.absences', compact('absences'));
+    if ($request->filled('classe_id')) {
+        $query->whereHas('etudiant', function($q) use ($request) {
+            $q->where('classes_id', $request->classe_id);
+        });
     }
+
+    $absences = $query->paginate(20)->appends(request()->query());
+    return view('responsable.absences', compact('absences', 'classes'));
+}
 
     public function justificationsEnAttente()
     {
@@ -206,5 +215,64 @@ public function getSeancesParClasse($classeId)
             ];
         });
     return response()->json($seances);
+}
+
+public function exportCSV(Request $request)
+{
+    $absences = etudiant_absence::with(['etudiant', 'emploiTemps.matiere'])
+        ->when($request->classe_id, function($query) use ($request) {
+            return $query->whereHas('etudiant', function($q) use ($request) {
+                $q->where('classes_id', $request->classe_id);
+            });
+        })
+        ->get();
+
+    $headers = [
+        'Content-Type' => 'text/csv',
+        'Content-Disposition' => 'attachment; filename="absences.csv"',
+    ];
+
+    $callback = function() use ($absences) {
+        $file = fopen('php://output', 'w');
+        fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+        // En-têtes CSV
+        fputcsv($file, ['Nom', 'Prénom', 'Matière', 'Date', 'Heure', 'Type', 'Statut']);
+        foreach ($absences as $absence) {
+            fputcsv($file, [
+                $absence->etudiant->etudiant_nom,
+                $absence->etudiant->etudiant_prenom,
+                $absence->emploiTemps->matiere->nom_matiere ?? 'Inconnue',
+                \Carbon\Carbon::parse($absence->date_absence)->format('d/m/Y'),
+                $absence->emploiTemps && $absence->emploiTemps->heure_debut && $absence->emploiTemps->heure_fin
+                    ? \Carbon\Carbon::parse($absence->emploiTemps->heure_debut)->format('H:i') . ' - ' . \Carbon\Carbon::parse($absence->emploiTemps->heure_fin)->format('H:i')
+                    : 'Inconnu',
+                $absence->type === 'retard' ? 'Retard' : 'Absence',
+                $absence->Justifier ? 'Justifiée' : ($absence->status === 'pending' ? 'En attente' : 'Non justifiée'),
+            ]);
+        }
+        fclose($file);
+    };
+
+    return response()->stream($callback, 200, $headers);
+}
+
+
+
+public function exportPDF(Request $request)
+{
+    $absences = etudiant_absence::with(['etudiant', 'emploiTemps.matiere'])
+        ->when($request->classe_id, function($query) use ($request) {
+            return $query->whereHas('etudiant', function($q) use ($request) {
+                $q->where('classes_id', $request->classe_id);
+            });
+        })
+        ->get();
+
+    $pdf = Pdf::loadView('responsable.absences-pdf', [
+        'absences' => $absences,
+        'classe' => $request->classe_id ? Classe::find($request->classe_id) : null
+    ]);
+
+    return $pdf->download('absences_' . now()->format('Y-m-d_H-i') . '.pdf');
 }
 }

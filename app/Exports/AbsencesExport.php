@@ -7,6 +7,7 @@ use App\Models\EtudiantAbsence;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Events\AfterSheet;
 
 class AbsencesExport implements FromCollection, WithHeadings, WithMapping
 {
@@ -48,4 +49,14 @@ class AbsencesExport implements FromCollection, WithHeadings, WithMapping
             $absence->date_justif ? $absence->date_justif->format('d/m/Y H:i') : 'N/A'
         ];
     }
+    public function registerEvents(): array
+{
+    return [
+        AfterSheet::class => function(AfterSheet $event) {
+            $event->sheet->getDelegate()->getColumnDimension('A')->setWidth(20);
+            $event->sheet->getDelegate()->getColumnDimension('B')->setWidth(30);
+            // etc.
+        },
+    ];
+}
 }

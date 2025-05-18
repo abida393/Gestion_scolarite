@@ -301,4 +301,10 @@ Route::get('/absences/etudiants-par-classe/{classeId}', [AbsenceResponsableContr
 Route::get('/absences/seances-par-classe/{classeId}', [AbsenceResponsableController::class, 'getSeancesParClasse']);
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/absences/export/csv', [AbsenceResponsableController::class, 'exportCSV'])
+    ->name('responsable.absences.export.csv');
+
+
+Route::post('/absences/export/pdf', [AbsenceResponsableController::class, 'exportPDF'])
+    ->name('responsable.absences.export.pdf');
 
