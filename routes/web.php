@@ -22,6 +22,8 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NewsController;
 // ===========================================
 
+use App\Notifications\DocumentPretNotification;
+
 use App\Exports\AbsencesExport;
 // ==================== AUTHENTICATION ====================
 Route::middleware('guest')->group(function () {
@@ -136,6 +138,7 @@ Route::middleware('auth.multi:etudiant')->prefix('documents')->group(function ()
         return Storage::disk('documents')->download($filename);
     })->name('documents.file');
     Route::get('/{filename}/download', [DocumentController::class, 'downloadFile']);
+
 });
 
 Route::get('/demandes/{id}/download', [DocumentController::class, 'download'])->name('demandes.download');
@@ -155,7 +158,16 @@ Route::middleware('auth.multi:responsable')->prefix('responsable/documents')->gr
     Route::get('/download/{id}', [DocumentController::class, 'downloadFile'])->name('documents.download');
     Route::post('/upload/{id}', [DocumentController::class, 'uploadDocument'])->name('responsable.demande.upload');
     Route::get('/modifier/{id}', [DocumentController::class, 'modifier'])->name('responsable.demande.modifier');
+    Route::post('/terminer/{id}', [DocumentController::class, 'terminerDemande'])->name('responsable.demande.terminer');
 
+    Route::get('/test-notification', function() {
+    $demande = \App\Models\Document::first();
+    $user = $demande->etudiant;
+    
+    $user->notify(new DocumentPretNotification($demande));
+    
+    return 'Notification envoyée !';
+});
 });
 
 
@@ -307,4 +319,9 @@ Route::post('/absences/export/csv', [AbsenceResponsableController::class, 'expor
 
 Route::post('/absences/export/pdf', [AbsenceResponsableController::class, 'exportPDF'])
     ->name('responsable.absences.export.pdf');
+
+
+    // notification email 
+    // Dans routes/web.php (temporairement)
+
 

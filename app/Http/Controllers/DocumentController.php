@@ -9,6 +9,8 @@ use App\Models\Filiere;
 use App\Models\Formation;
 use App\Models\Classe;
 use Illuminate\Support\Facades\Response;
+use App\Notifications\DocumentPretNotification;
+
 
 class DocumentController extends Controller
 {
@@ -184,4 +186,20 @@ class DocumentController extends Controller
 
         return view('document', compact('formations', 'filieres', 'classes'));
     }
+  public function terminerDemande(Request $request, $id)
+{
+    $demande = DemandesDocuments::findOrFail($id);
+
+    // Mettre à jour le statut
+    $demande->etat_demande = 'termine';
+    $demande->save();
+
+    // Générer l'URL du fichier s'il existe
+    $fichierUrl = $demande->fichier ? asset('storage/documents/' . $demande->fichier) : null;
+
+    // Envoyer la notification avec le lien du fichier
+    $demande->etudiant->notify(new DocumentPretNotification($demande, $fichierUrl));
+
+    return redirect()->back()->with('success', 'Demande terminée et étudiant notifié.');
+}
 }
