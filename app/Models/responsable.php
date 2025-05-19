@@ -35,8 +35,17 @@ class responsable extends Authenticatable
     }
     // app/Models/Responsable.php
 
-    public function messages()
+    // public function messages()
+    // {
+    //     return $this->belongsToMany(Message::class, 'receiver_type','responsable');
+    // }
+    public function sentMessages()
     {
-        return $this->belongsToMany(Message::class, 'message_responsable');
+        return $this->morphMany(Message::class, 'sender');
+    }
+
+    public function receivedMessages()
+    {
+        return $this->morphMany(Message::class, 'receiver');
     }
 }

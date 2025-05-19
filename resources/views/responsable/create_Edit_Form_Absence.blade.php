@@ -1,5 +1,5 @@
-<x-admin 
-    titre="{{ isset($absence) ? 'Modifier' : 'Ajouter' }} une absence" 
+<x-admin
+    titre="{{ isset($absence) ? 'Modifier' : 'Ajouter' }} une absence"
     page_titre="{{ isset($absence) ? 'Modifier' : 'Ajouter' }} une absence"
     :nom_complete="Auth::guard('responsable')->user()->respo_nom . ' ' . Auth::guard('responsable')->user()->respo_prenom"
 >
@@ -50,8 +50,8 @@
 
         <!-- Form Card -->
         <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
-            <form 
-                action="{{ isset($absence) ? route('responsable.absences.update', $absence->id) : route('responsable.absences.store') }}" 
+            <form
+                action="{{ isset($absence) ? route('responsable.absences.update', $absence->id) : route('responsable.absences.store') }}"
                 method="POST"
             >
                 @csrf
@@ -67,15 +67,15 @@
                             <label for="classe_id" class="block text-sm font-medium text-gray-700 mb-1">
                                 Classe <span class="text-red-500">*</span>
                             </label>
-                            <select 
-                                id="classe_id" 
-                                name="classe_id" 
+                            <select
+                                id="classe_id"
+                                name="classe_id"
                                 class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
                                 required
                             >
                                 <option value="">Sélectionner une classe</option>
                                 @foreach($classes as $classe)
-                                    <option 
+                                    <option
                                         value="{{ $classe->id }}"
                                         {{ (isset($absence) && $absence->classe_id == $classe->id ? 'selected' : '' )}}
                                     >
@@ -90,11 +90,11 @@
                             <label for="etudiant_id" class="block text-sm font-medium text-gray-700 mb-1">
                                 Étudiant <span class="text-red-500">*</span>
                             </label>
-                            <select 
-                                id="etudiant_id" 
-                                name="etudiant_id" 
+                            <select
+                                id="etudiant_id"
+                                name="etudiant_id"
                                 class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
-                                required 
+                                required
                                 {{ isset($absence) ? '' : 'disabled' }}
                             >
                                 <option value="">Sélectionner un étudiant</option>
@@ -114,22 +114,22 @@
                             <label for="emploi_temps_id" class="block text-sm font-medium text-gray-700 mb-1">
                                 Séance <span class="text-red-500">*</span>
                             </label>
-                            <select 
-                                id="emploi_temps_id" 
-                                name="emploi_temps_id" 
+                            <select
+                                id="emploi_temps_id"
+                                name="emploi_temps_id"
                                 class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
-                                required 
+                                required
                                 {{ isset($absence) ? '' : 'disabled' }}
                             >
                                 <option value="">Sélectionner une séance</option>
                                 @if(isset($absence))
                                     @foreach($emplois->where('classe_id', $absence->classe_id ?? $absence->etudiant->classe_id) as $emploi)
-                                        <option 
-                                            value="{{ $emploi->id }}" 
+                                        <option
+                                            value="{{ $emploi->id }}"
                                             {{ $absence->emploi_temps_id == $emploi->id ? 'selected' : '' }}
                                         >
-                                            {{ \Carbon\Carbon::parse($emploi->heure_debut)->format('H:i') }} à 
-                                            {{ \Carbon\Carbon::parse($emploi->heure_fin)->format('H:i') }} - 
+                                            {{ \Carbon\Carbon::parse($emploi->heure_debut)->format('H:i') }} à
+                                            {{ \Carbon\Carbon::parse($emploi->heure_fin)->format('H:i') }} -
                                             {{ $emploi->matiere->nom }}
                                         </option>
                                     @endforeach
@@ -142,12 +142,12 @@
                             <label for="date_absence" class="block text-sm font-medium text-gray-700 mb-1">
                                 Date de l'absence <span class="text-red-500">*</span>
                             </label>
-                            <input 
-                                type="date" 
-                                id="date_absence" 
+                            <input
+                                type="date"
+                                id="date_absence"
                                 name="date_absence"
                                 class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
-                                value="{{ isset($absence) ? \Carbon\Carbon::parse($absence->date_absence)->format('Y-m-d') : old('date_absence') }}" 
+                                value="{{ isset($absence) ? \Carbon\Carbon::parse($absence->date_absence)->format('Y-m-d') : old('date_absence') }}"
                                 required
                             >
                         </div>
@@ -162,13 +162,13 @@
                             </label>
                             <div class="flex space-x-6">
                                 <div class="flex items-center">
-                                    <input 
-                                        class="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500" 
-                                        type="radio" 
-                                        name="type" 
+                                    <input
+                                        class="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        type="radio"
+                                        name="type"
                                         id="type_absence"
-                                        value="absence" 
-                                        {{ (isset($absence) && $absence->type == 'absence') ? 'checked' : '' }} 
+                                        value="absence"
+                                        {{ (isset($absence) && $absence->type == 'absence') ? 'checked' : '' }}
                                         required
                                     >
                                     <label for="type_absence" class="ml-2">
@@ -178,12 +178,12 @@
                                     </label>
                                 </div>
                                 <div class="flex items-center">
-                                    <input 
-                                        class="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500" 
-                                        type="radio" 
-                                        name="type" 
+                                    <input
+                                        class="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        type="radio"
+                                        name="type"
                                         id="type_retard"
-                                        value="retard" 
+                                        value="retard"
                                         {{ (isset($absence) && $absence->type == 'retard') ? 'checked' : '' }}
                                     >
                                     <label for="type_retard" class="ml-2">
@@ -201,9 +201,9 @@
                                 Durée du retard (minutes)
                             </label>
                             <div class="mt-1 flex rounded-md shadow-sm">
-                                <input 
-                                    type="number" 
-                                    id="duree_minutes" 
+                                <input
+                                    type="number"
+                                    id="duree_minutes"
                                     name="duree_minutes"
                                     class="focus:ring-blue-500 focus:border-blue-500 flex-1 block w-full rounded-none rounded-l-md sm:text-sm border-gray-300"
                                     value="{{ isset($absence) ? $absence->duree_minutes : old('duree_minutes') }}"
@@ -219,14 +219,14 @@
 
                 <!-- Form Footer -->
                 <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 flex justify-end space-x-3">
-                    <a 
-                        href="{{ route('responsable.absences') }}" 
+                    <a
+                        href="{{ route('responsable.absences') }}"
                         class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                     >
                         <i class="fas fa-times mr-2"></i> Annuler
                     </a>
-                    <button 
-                        type="submit" 
+                    <button
+                        type="submit"
                         class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                     >
                         <i class="fas fa-save mr-2"></i> {{ isset($absence) ? 'Mettre à jour' : 'Enregistrer' }}

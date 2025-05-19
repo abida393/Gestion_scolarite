@@ -66,28 +66,28 @@ class EmploiTempsController extends Controller
         ));
     }
 
-    
+
     private function detectConflicts($emplois)
     {
         $conflicts = 0;
         $grouped = $emplois->groupBy(function($item) {
             return $item->date . '|' . $item->heure_debut . '|' . $item->heure_fin;
         });
-        
+
         foreach ($grouped as $group) {
             // Conflit de salle
             $salles = $group->pluck('salle')->unique();
             if ($salles->count() < $group->count()) {
                 $conflicts += $group->count() - $salles->count();
             }
-            
+
             // Conflit d'enseignant
             $enseignants = $group->pluck('enseignant_id')->unique();
             if ($enseignants->count() < $group->count()) {
                 $conflicts += $group->count() - $enseignants->count();
             }
         }
-        
+
         return $conflicts;
     }
 //     public function classeStats($classeId)
@@ -116,7 +116,7 @@ class EmploiTempsController extends Controller
 //         'conflitsCount' => $conflitsCount,
 //     ]);
 // }
-    
+
     public function create()
     {
         return view('responsable.create_emploi', [
@@ -125,7 +125,7 @@ class EmploiTempsController extends Controller
             'enseignants' => Enseignant::orderBy('enseignant_nom')->get(),
         ]);
     }
-    
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -138,7 +138,7 @@ class EmploiTempsController extends Controller
             'heure_fin' => 'required|date_format:H:i|after:heure_debut',
             'salle' => 'required|string|max:50',
         ]);
-        
+
         // Vérification des conflits
         $conflict = emplois_temps::where('date', $validated['date'])
             ->where(function($query) use ($validated) {
@@ -154,19 +154,19 @@ class EmploiTempsController extends Controller
                       ->orWhere('enseignant_id', $validated['enseignant_id']);
             })
             ->exists();
-            
+
         if ($conflict) {
             return back()->withInput()->withErrors([
                 'conflict' => 'Conflit détecté: la salle ou l\'enseignant est déjà occupé sur ce créneau'
             ]);
         }
-        
+
         emplois_temps::create($validated);
-        
+
         return redirect()->route('responsable.emploi', ['classe_id' => $validated['classe_id']])
             ->with('success', 'Cours ajouté avec succès');
     }
-    
+
     public function edit($id)
 {
     $emploiTemps = emplois_temps::findOrFail($id);
@@ -174,7 +174,7 @@ class EmploiTempsController extends Controller
     $enseignants = Enseignant::all();
     return view('responsable.edit_emploi', compact('emploiTemps', 'matieres', 'enseignants'));
 }
-   
+
 public function update(Request $request, $id)
 {
     // dd($request->all());
@@ -196,7 +196,7 @@ public function update(Request $request, $id)
         ->with('success', 'Cours mis à jour avec succès.');
 }
 
-  
+
 public function destroy(emplois_temps $timetable)
 {
     $timetable->delete();
@@ -209,12 +209,12 @@ public function destroy(emplois_temps $timetable)
             ->orderByRaw("FIELD(jour, 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi')")
             ->orderBy('heure_debut')
             ->get();
-            
+
         $pdf = PDF::loadView('responsable.emploi_pdf', compact('classe', 'emploisTemps'));
-        
+
         return $pdf->download('emploi-du-temps-' . Str::slug($classe->nom_classe) . '.pdf');
     }
-    
+
     public function createComplet()
     {
        return view('responsable.create_emploi_complet', [
@@ -225,8 +225,8 @@ public function destroy(emplois_temps $timetable)
         'enseignants' => Enseignant::orderBy('enseignant_nom')->get(),
     ]);
     }
-    
-   
+
+
 
 public function storeMultiple(Request $request)
 {
@@ -283,24 +283,24 @@ public function storeMultiple(Request $request)
     return redirect()->route('responsable.emploi', ['classe_id' => $validated['classe_id']])
         ->with('success', 'Emploi du temps généré avec succès.');
 }
-    
+
     private function generateTimeSlots()
     {
         $slots = [];
         $start = Carbon::createFromTime(8, 45); // Début à 8h45
         $end = Carbon::createFromTime(17, 30);  // Fin à 17h30
-        
+
         while ($start < $end) {
             $next = $start->copy()->addMinutes(90); // Cours de 1h30
-            
+
             if ($next > $end) break;
-            
+
             $slots[] = $start->format('H:i') . ' - ' . $next->format('H:i');
-            
+
             // Pause de 15 minutes (30 minutes après le matin)
             $start = $next->copy()->addMinutes($start->hour < 12 ? 15 : 30);
         }
-        
+
         return $slots;
     }
     public function checkConflits(Request $request)
@@ -329,18 +329,18 @@ public function storeMultiple(Request $request)
         ->where('id', '!=', $validated['emploi_id']);
 
     $conflits = [];
-    
+
     // Vérification conflit salle
     $conflitSalle = $query->clone()->where('salle', $validated['salle'])->first();
     if ($conflitSalle) {
-        $conflits[] = "La salle est déjà occupée par " . $conflitSalle->matiere->nom_matiere . 
+        $conflits[] = "La salle est déjà occupée par " . $conflitSalle->matiere->nom_matiere .
                       " (" . $conflitSalle->classe->nom_classe . ")";
     }
-    
+
     // Vérification conflit enseignant
     $conflitEnseignant = $query->clone()->where('enseignant_id', $validated['enseignant_id'])->first();
     if ($conflitEnseignant) {
-        $conflits[] = "L'enseignant a déjà cours pour " . $conflitEnseignant->matiere->nom_matiere . 
+        $conflits[] = "L'enseignant a déjà cours pour " . $conflitEnseignant->matiere->nom_matiere .
                       " (" . $conflitEnseignant->classe->nom_classe . ")";
     }
 
@@ -369,12 +369,12 @@ public function emploiEtudiant()
         ->orderBy('jour')
         ->orderBy('heure_debut')
         ->get();
-        
+
 
     return view('etudiant.emploi', [
         'emploisTemps' => $emploisTemps,
         'classeName' => $user->classe->nom_classe ?? 'Classe Non Spécifiée',
-        
+
     ]);
 }
 public function downloadForEtudiant()
@@ -393,7 +393,7 @@ public function downloadForEtudiant()
     }
 
     // Utiliser le chemin correct pour la vue
-    $pdf = \PDF::loadView('responsable.emploi_pdf', compact('classe', 'emploisTemps'));
+    $pdf = PDF::loadView('responsable.emploi_pdf', compact('classe', 'emploisTemps'));
 
     $fileName = 'emploi_du_temps_' . str_replace(' ', '_', strtolower($classe->nom_classe)) . '.pdf';
     return $pdf->download($fileName);

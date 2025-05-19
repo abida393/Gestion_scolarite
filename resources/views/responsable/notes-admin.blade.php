@@ -1,4 +1,4 @@
-<x-admin titre="notes" page_titre="Saisie des Notes" :nom_complete="Auth::guard('responsable')->user()->respo_nom . ' ' . Auth::guard('responsable')->user()->respo_prenom">
+<x-admin titre="notes" page_titre="Saisie des Notes" :nom_complete="Auth::guard('responsable')->user()->respo_nom . ',' . Auth::guard('responsable')->user()->respo_prenom">
     <div class="p-6 bg-white rounded-lg shadow-md">
         <div class="flex gap-4 mb-6">
             <button id="btn-saisie" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Saisie Note</button>

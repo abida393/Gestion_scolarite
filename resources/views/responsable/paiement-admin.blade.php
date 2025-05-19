@@ -1,4 +1,4 @@
-<x-admin titre="paiement" page_titre="paiement" :nom_complete="Auth::guard('responsable')->user()->respo_nom . ' ' . Auth::guard('responsable')->user()->respo_prenom">
+<x-admin titre="paiement" page_titre="paiement" :nom_complete="Auth::guard('responsable')->user()->respo_nom . ',' . Auth::guard('responsable')->user()->respo_prenom">
     <div class="container mx-auto px-4 py-8">
 
         <!-- Success Message -->
@@ -93,7 +93,7 @@
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
             <div class="p-6">
                 <h2 class="text-xl font-bold text-gray-800 mb-4">Historique des paiements</h2>
-                
+
                 <div class="w-full">
                     <table class="w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">

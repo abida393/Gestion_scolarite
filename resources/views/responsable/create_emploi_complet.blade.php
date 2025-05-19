@@ -1,13 +1,13 @@
 
-<x-admin titre="Créer un Emploi du Temps Complet" page_titre="Créer un EDT Complet" :nom_complete="Auth::guard('responsable')->user()->respo_nom . ' ' . Auth::guard('responsable')->user()->respo_prenom">
+<x-admin titre="Créer un Emploi du Temps Complet" page_titre="Créer un EDT Complet" :nom_complete="Auth::guard('responsable')->user()->respo_nom . ',' . Auth::guard('responsable')->user()->respo_prenom">
 
 <div class="max-w-7xl mx-auto py-8 px-4">
     <div class="bg-white rounded-lg shadow-md p-6 border border-gray-200">
         <h2 class="text-2xl font-bold text-gray-800 mb-6">Créer un nouvel emploi du temps complet</h2>
-        
+
         <form action="{{ route('responsable.storeMultiple') }}" method="POST">
             @csrf
-            
+
             <!-- Sélection de la classe -->
             <div class="mb-8">
                 <label for="classe_id" class="block text-sm font-medium text-gray-700 mb-1">Classe</label>
@@ -59,14 +59,14 @@
                     Générer la structure
                 </button>
             </div>
-            
+
             <!-- Liste des cours générés -->
             <div id="cours-list" class="space-y-4 mb-8">
                 <div class="text-center text-gray-500 py-8">
                     <p>Générez d'abord la structure de l'emploi du temps</p>
                 </div>
             </div>
-            
+
             <!-- Boutons -->
             <div class="flex justify-end space-x-4">
                 <a href="{{ route('responsable.emploi') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md">

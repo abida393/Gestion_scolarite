@@ -145,5 +145,5 @@ public function update(Request $request, $id)
 
      return redirect()->route('stages-responsable')->with('success', 'Stage supprimé avec succès');
  }
- 
+
 }

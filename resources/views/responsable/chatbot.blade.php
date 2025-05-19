@@ -1,4 +1,4 @@
-<x-admin titre="chatbot" page_titre="chatbot" :nom_complete="Auth::guard('responsable')->user()->respo_nom . ' ' . Auth::guard('responsable')->user()->respo_prenom">
+<x-admin titre="chatbot" page_titre="chatbot" :nom_complete="Auth::guard('responsable')->user()->respo_nom . ',' . Auth::guard('responsable')->user()->respo_prenom">
 <!DOCTYPE html>
 <html lang="fr">
 <head>

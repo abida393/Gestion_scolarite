@@ -13,10 +13,13 @@ use App\Http\Controllers\EvenementController;
 use App\Http\Controllers\EmploiTempsController;
 use App\Http\Controllers\StageController;
 use App\Http\Controllers\AbsenceController;
+use App\Http\Controllers\ajouterEnseignantController;
+use App\Http\Controllers\ajouterEtudiantController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\MessageController;
+use Illuminate\Http\Request;
 
 //=============Ajouter par imad===============
 use App\Http\Controllers\NewsController;
@@ -76,6 +79,7 @@ Route::middleware('auth:responsable')->group(function () {
     Route::get('/messagerie', [MessageController::class, 'indexResponsable'])->name('messagerie');
     Route::get('/responsable/messages/{etudiant}', [MessageController::class, 'getEtudiantMessages']);
     Route::post('/responsable/messages', [MessageController::class, 'sendResponsableMessage']);
+
 });
 
 // ==================== EMPLOI DU TEMPS ====================
@@ -113,16 +117,16 @@ Route::get('/stage', [StageController::class, 'index'])->name('stages.index')->m
 Route::middleware(['auth:responsable'])->group(function () {
     // Afficher la liste des stages et le formulaire d'ajout
     Route::get('/stages', [StageController::class, 'indexResponsable'])->name('stages-responsable');
- 
+
     // Ajouter un stage (traité par POST)
     Route::post('/stages', [StageController::class, 'store'])->name('stages.store');
- 
+
     // Afficher le formulaire de modification d'un stage
     Route::get('/stages/edit/{id}', [StageController::class, 'edit'])->name('stages.edit');
- 
+
     // Mettre à jour un stage
     Route::put('/stages/{id}', [StageController::class, 'update'])->name('stages.update');
- 
+
     // Supprimer un stage
     Route::delete('/stages/{id}', [StageController::class, 'destroy'])->name('stages.destroy');
 });
@@ -131,8 +135,8 @@ Route::get('/notes/{etudiantId}', [NoteController::class, 'afficherNotes'])->mid
 
 // ==================== DOCUMENTS ====================
 Route::middleware('auth.multi:etudiant')->prefix('documents')->group(function () {
-    Route::post('/', [DocumentController::class, 'store'])->name('documents.store');
     Route::get('/', [DocumentController::class, 'documents'])->name('documents.index');
+    Route::post('/', [DocumentController::class, 'store'])->name('documents.store');
     Route::get('/download/{id}', [DocumentController::class, 'download'])->name('documents.download');
     Route::get('/{filename}', function ($filename) {
         return Storage::disk('documents')->download($filename);
@@ -178,7 +182,7 @@ Route::prefix('calendrier')->name('calendar.')->group(function () {
     Route::get('/', [CalendarController::class, 'index'])->name('calendrier');
     Route::post('/event/store', [CalendarController::class, 'storeEvent'])->name('event.store');
     Route::post('/plan/store', [CalendarController::class, 'storePlan'])->name('plan.store');
-    
+
 });
 Route::middleware('auth:responsable')->group(function () {
     Route::get('/calendrier', [CalendarController::class, 'index'])->name('responsable.calendrier');
@@ -187,9 +191,8 @@ Route::middleware('auth:responsable')->group(function () {
     Route::get('/responsable/calendar/events', [CalendarController::class, 'getEvents'])->name('responsable.calendar.events');
     Route::put('/responsable/event/update/{id}', [CalendarController::class, 'update'])->name('responsable.calendar.event.update');
     Route::get('/responsable/calendar/{id}/json', [CalendarController::class, 'getEventJson']);Route::delete('/responsable/calendar/{id}', [CalendarController::class, 'delete'])->name('responsable.calendar.delete');
-
     Route::delete('/calendar/{id}', [CalendarController::class, 'delete']);
-  });  
+  });
     Route::middleware(['auth.multi:etudiant'])->group(function () {
     Route::get('/etudiant/calendrier', [CalendarController::class, 'studentView'])->name('etudiant.calendrier');
     Route::get('/etudiant/events', [CalendarController::class, 'studentEvents'])->name('etudiant.events');
@@ -199,6 +202,14 @@ Route::middleware('auth:responsable')->group(function () {
 Route::post('/chatbot/repondre', [ChatbotController::class, 'repondre'])->name('chatbot.repondre');
 Route::get('/api/chatbot/messages', [ChatbotController::class, 'messages']);
 Route::get('/chatbot', fn() => view('chatbot'));
+
+//  ==================== RESPONSABLE PAGES ====================
+Route::middleware('auth.multi:responsable')->group(function(){
+    Route::get('/ajouter-etudiant', [ajouterEtudiantController::class, 'index'])->name('ajouter-etudiant');
+    Route::post('/ajouter-etudiant/store', [ajouterEtudiantController::class, 'store'])->name('admin.etudiants.store');
+    Route::get('/ajouter-enseignant', [ajouterEnseignantController::class, 'index'])->name('ajouter-enseignant');
+    Route::post('/ajouter-enseignant/store', [ajouterEnseignantController::class, 'store'])->name('admin.enseignants.store');
+});
 
 
 use App\Http\Controllers\AdminChatbotController;
@@ -271,7 +282,7 @@ Route::put('/responsable/emploi/{id}', [EmploiTempsController::class, 'update'])
         return \App\Models\Filiere::where('formation_id', $request->formation_id)
             ->orderBy('nom_filiere')
             ->get();
-           
+
 
     });
     Route::get('/api/classes', function(Request $request) {
@@ -287,7 +298,7 @@ Route::middleware(['auth:etudiant'])->group(function() {
          ->name('etudiant.absences.justifier');
              Route::get('/absence_justif', [AbsenceController::class, 'index'])->name('absence_justif');
 
-         
+
     Route::get('/etudiant/absences/download/{id}', [AbsenceController::class, 'downloadJustificatif'])
          ->name('etudiant.absences.download');
 });
@@ -308,7 +319,7 @@ Route::middleware(['auth:responsable'])->prefix('responsable/absences')->group(f
     Route::get('/export', [AbsenceResponsableController::class, 'export'])->name('responsable.absences.export');
 });
 
-//  pour chargement dynamique 
+//  pour chargement dynamique
 Route::get('/absences/etudiants-par-classe/{classeId}', [AbsenceResponsableController::class, 'getEtudiantsParClasse']);
 Route::get('/absences/seances-par-classe/{classeId}', [AbsenceResponsableController::class, 'getSeancesParClasse']);
 
