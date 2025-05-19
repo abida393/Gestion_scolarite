@@ -122,7 +122,7 @@
             </a>
             <!-- Ajouter par imad -->
             <a href="{{ route('responsable.documents.index') }}"
-            class="nav-item {{ Route::is('responsable.documents.index') ? 'active' : '' }}" data-page="demandes">
+            class="nav-item {{ Route::is('responsable.documents.index') ? 'active' : '' }}" data-page="demandes">gestion document </a>
             <a href="{{ route('responsable.emploi') }}"
    class="nav-item {{ Route::is('responsable.emploi') ? 'active' : '' }}" data-page="Emploi">
    <i class="fas fa-calendar-alt"></i>
@@ -154,12 +154,6 @@
                 <span>News</span>
             </a>
             <!---------------------->
-
-            <a href="{{ route('paiement') }}" class="nav-item {{ Route::is('paiement') ? 'active' : '' }}"
-                data-page="paiement">
-                <i class="fas fa-money-bill-wave"></i>
-                <span>Paiement</span>
-            </a>
 
             <!-- Ajouter par imad -->
             <a href="{{ route('stages-responsable') }}" class="nav-item {{ Route::is('stages-responsable') ? 'active' : '' }}" data-page="stage">
