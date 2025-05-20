@@ -74,4 +74,14 @@ class emplois_temps extends Model
         
         return $slots;
     }
+    public function scopeNormal($query)
+    {
+        return $query->where('statut', 'normal');
+    }
+
+    // Scope pour les cours annulés
+    public function scopeAnnules($query)
+    {
+        return $query->where('statut', 'annule');
+    }
 }

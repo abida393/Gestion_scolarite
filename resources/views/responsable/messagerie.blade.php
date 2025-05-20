@@ -19,7 +19,7 @@
                         @foreach ($etudiants as $etudiant)
                         <div class="p-3 hover:bg-gray-100 cursor-pointer flex items-center conversation-item"
                              data-etudiant-id="{{ $etudiant->id }}"
-                             data-search-name="{{ strtolower($etudiant->etudiant_nom . ' ' . $etudiant->etudiant_prenom) }}"
+                             data-search-name="{{ strtolower("{$etudiant->etudiant_nom} {$etudiant->etudiant_prenom}") }}"
                              data-search-message="{{ $etudiant->last_message ? strtolower($etudiant->last_message->content) : '' }}"
                              onclick="loadConversation({{ $etudiant->id }}, '{{ $etudiant->etudiant_nom }} {{ $etudiant->etudiant_prenom }}')">
                             <div class="flex-shrink-0">
@@ -43,9 +43,11 @@
                                 </p>
                             </div>
                             @if($etudiant->unread_count > 0)
-                            <div class="ml-2 flex-shrink-0">
-                                <span class="h-2 w-2 rounded-full bg-indigo-600 block"></span>
-                            </div>
+                                <div class="ml-2 flex-shrink-0">
+                                    <span class="inline-flex items-center justify-center px-2 py-0.5 rounded-full text-xs font-bold bg-blue-600 text-white unread-badge">
+                                        {{ $etudiant->unread_count }}
+                                    </span>
+                                </div>
                             @endif
                         </div>
                         @endforeach
@@ -138,6 +140,21 @@
                 document.getElementById('recipient-initial').textContent = etudiantName.charAt(0);
                 document.getElementById('etudiant_id').value = etudiantId;
                 document.getElementById('message-content').disabled = false;
+                // Marquer comme lu côté backend
+    fetch(`/responsable/messages/${etudiantId}/mark-as-read`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Accept': 'application/json'
+        }
+    }).then(() => {
+        // Masquer le badge côté front
+        const conversationItem = document.querySelector(`.conversation-item[data-etudiant-id="${etudiantId}"]`);
+        if (conversationItem) {
+            const badge = conversationItem.querySelector('.unread-badge');
+            if (badge) badge.style.display = 'none';
+        }
+    });
 
                 // Fetch messages
                 fetch(`/responsable/messages/${etudiantId}`)

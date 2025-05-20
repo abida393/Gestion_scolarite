@@ -81,7 +81,8 @@ Route::middleware('auth:responsable')->group(function () {
     Route::post('/responsable/messages', [MessageController::class, 'sendResponsableMessage']);
 
 });
-
+Route::post('/messages/{responsable}/mark-as-read', [MessageController::class, 'markAsRead'])->middleware('auth:etudiant');
+Route::post('/responsable/messages/{etudiant}/mark-as-read', [MessageController::class, 'markAsReadByResponsable'])->middleware('auth:responsable');
 // ==================== EMPLOI DU TEMPS ====================
 Route::middleware('auth.multi:etudiant')->prefix('emploi')->group(function () {
     Route::get('/etudiant', [EmploiTempsController::class, 'emploiEtudiant'])->name('emploi.etudiant');
@@ -277,14 +278,11 @@ Route::put('/responsable/emploi/{id}', [EmploiTempsController::class, 'update'])
     // Emploi complet
     Route::get('/emplois/complet', [EmploiTempsController::class, 'createComplet'])->name('responsable.create_emploi_complet');
     Route::post('/emplois/complet', [EmploiTempsController::class, 'storeMultiple'])->name('responsable.storeMultiple');
-    // API pour les dépendances
-    Route::get('/api/filieres', function(Request $request) {
-        return \App\Models\Filiere::where('formation_id', $request->formation_id)
-            ->orderBy('nom_filiere')
-            ->get();
+ 
 
+Route::post('/responsable/emplois/declarer-absence', [EmploiTempsController::class, 'declarerAbsence'])->name('responsable.declarer_absence');
 
-    });
+Route::post('/emplois/store', [EmploiTempsController::class, 'store'])->name('responsable.store');
     Route::get('/api/classes', function(Request $request) {
         return \App\Models\Classe::where('filiere_id', $request->filiere_id)
             ->orderBy('nom_classe')
@@ -298,9 +296,12 @@ Route::middleware(['auth:etudiant'])->group(function() {
          ->name('etudiant.absences.justifier');
              Route::get('/absence_justif', [AbsenceController::class, 'index'])->name('absence_justif');
 
-
+Route::get('/etudiant/absences/details/{id}', [AbsenceController::class, 'details'])
+        ->name('etudiant.absences.details');
     Route::get('/etudiant/absences/download/{id}', [AbsenceController::class, 'downloadJustificatif'])
          ->name('etudiant.absences.download');
+             Route::get('/etudiant/absences', [AbsenceController::class, 'index'])->name('etudiant.absence_justif');
+
 });
 
 // Routes responsable
@@ -317,6 +318,9 @@ Route::middleware(['auth:responsable'])->prefix('responsable/absences')->group(f
     Route::put('/update/{absence}', [AbsenceResponsableController::class, 'update'])->name('responsable.absences.update');
     Route::delete('/destroy/{absence}', [AbsenceResponsableController::class, 'destroy'])->name('responsable.absences.destroy');
     Route::get('/export', [AbsenceResponsableController::class, 'export'])->name('responsable.absences.export');
+    Route::post('/absences/bulk-action', [AbsenceController::class, 'bulkAction'])
+    ->name('etudiant.absences.bulk-action')
+    ->middleware('auth:etudiant');
 });
 
 //  pour chargement dynamique

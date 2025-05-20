@@ -99,7 +99,7 @@
                             </svg>
                         </button>
                         
-                        @if($demande->etat_demande == 'document-pret')
+                        <!-- @if($demande->etat_demande == 'document-pret')
     <form action="{{ route('responsable.demande.terminer', $demande->id) }}" method="POST" class="inline">
         @csrf
         <button type="submit" 
@@ -108,7 +108,7 @@
             <i class="fas fa-check-circle"></i>
         </button>
     </form>
-    @endif
+    @endif -->
     
     @if($demande->etat_demande == 'termine')
     <form action="{{ route('responsable.demande.supprimer', $demande->id) }}" method="POST" class="inline">

@@ -141,10 +141,15 @@
             <!---------------------->
 
             <a href="{{ route('messagerie') }}" class="nav-item {{ Route::is('messagerie') ? 'active' : '' }}"
-                data-page="messagerie">
-                <i class="fa-solid fa-inbox"></i>
-                <span>Messagerie</span>
-            </a>
+    data-page="messagerie" style="position: relative;">
+    <i class="fa-solid fa-inbox"></i>
+    <span>Messagerie</span>
+    @if(($unreadCount ?? 0) > 0)
+        <span style="position: absolute; top: 8px; right: 10px; background:blue; color: white; border-radius: 9999px; font-size: 10px; padding: 2px 6px; min-width: 16px; text-align: center;">
+            {{ ($unreadCount ?? 0) > 9 ? '9+' : $unreadCount }}
+        </span>
+    @endif
+</a>
             <a href="{{ route('ajouter-etudiant') }}"
                 class="nav-item {{ Route::is('ajouter-etudiant') ? 'active' : '' }}" data-page="ajouter-etudiant">
                 <i class="far fa-sticky-note"></i>

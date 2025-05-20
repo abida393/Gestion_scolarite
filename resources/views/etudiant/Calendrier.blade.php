@@ -5,7 +5,10 @@
         <i class="fas fa-calendar-alt text-indigo-600 mr-2"></i> Mon Calendrier
       </h2>
       <h4 id="currentDate" class="text-center text-gray-600 text-sm sm:text-base md:text-lg mb-6 font-medium"></h4>
-
+<!-- À placer dans le <head> de ton layout -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/locales-all.min.js"></script>
      <div class="calendar-wrapper flex-grow bg-white/60 backdrop-blur-xl rounded-3xl border border-white/40 shadow-[0_10px_30px_rgba(0,0,0,0.1)]">
   <div id="calendar" class="bg-white rounded-xl shadow-inner p-4 sm:p-5 md:p-6"></div>
 </div>

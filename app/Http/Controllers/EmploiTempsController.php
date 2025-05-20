@@ -398,4 +398,19 @@ public function downloadForEtudiant()
     $fileName = 'emploi_du_temps_' . str_replace(' ', '_', strtolower($classe->nom_classe)) . '.pdf';
     return $pdf->download($fileName);
 }
+ public function declarerAbsence(Request $request)
+    {
+        $request->validate([
+            'emploi_id' => 'required|exists:emplois_temps,id',
+            'statut' => 'required|in:annule,reporte',
+            'motif_annulation' => 'required|string|max:500'
+        ]);
+
+        emplois_temps::where('id', $request->emploi_id)->update([
+            'statut' => $request->statut,
+            'motif_annulation' => $request->motif_annulation
+        ]);
+
+        return back()->with('success', 'Statut du cours mis à jour avec succès');
+    }
 }

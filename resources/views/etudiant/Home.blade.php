@@ -5,7 +5,7 @@
         <p id="current-date-time"></p>
     </section>
 
-   <div class="bg-gray-50 font-sans py-4 px-4">
+  <div class="bg-gray-50 font-sans py-4 px-4">
     <div class="max-w-4xl mx-auto">
         <h1 class="text-4xl font-extrabold text-center text-blue-700 uppercase tracking-tight mb-10">
             Cours de {{ ucfirst($today) }}
@@ -22,17 +22,36 @@
         @else
             <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach($emploisTemps as $cours)
-                    <div class="bg-white border border-blue-100 rounded-xl shadow hover:shadow-lg transition duration-300 p-5">
+                    <div class="bg-white border border-blue-100 rounded-xl shadow hover:shadow-lg transition duration-300 p-5 relative
+                        @if($cours->statut === 'annule') border-red-200 bg-red-50 @endif
+                        @if($cours->statut === 'reporte') border-yellow-200 bg-yellow-50 @endif">
+                        
+                        <!-- Badge d'absence -->
+                        @if($cours->statut !== 'normal')
+                        <div class="absolute -top-2 -right-2">
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
+                                @if($cours->statut === 'annule') bg-red-100 text-red-800 @endif
+                                @if($cours->statut === 'reporte') bg-yellow-100 text-yellow-800 @endif">
+                                @if($cours->statut === 'annule') Annulé @endif
+                                @if($cours->statut === 'reporte') Reporté @endif
+                            </span>
+                        </div>
+                        @endif
+
                         <div class="flex items-center justify-between mb-4">
-                            <span class="bg-blue-600 text-white text-sm font-medium px-4 py-1 rounded-full">
+                            <span class="bg-blue-600 text-white text-sm font-medium px-4 py-1 rounded-full
+                                @if($cours->statut === 'annule') bg-red-600 @endif
+                                @if($cours->statut === 'reporte') bg-yellow-600 @endif">
                                 {{ $cours->matiere->name }}
                             </span>
                             <span class="text-sm text-gray-500">{{ $cours->salle }}</span>
                         </div>
 
                         <div class="flex items-center text-sm text-gray-600 mb-2">
-                            <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" viewBox="0 0 24 24"
-                                 stroke="currentColor">
+                            <svg class="w-5 h-5 text-blue-500 mr-2
+                                @if($cours->statut === 'annule') text-red-500 @endif
+                                @if($cours->statut === 'reporte') text-yellow-500 @endif" 
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
@@ -40,13 +59,22 @@
                         </div>
 
                         <div class="flex items-center text-sm text-gray-600 font-semibold">
-                            <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" viewBox="0 0 24 24"
-                                 stroke="currentColor">
+                            <svg class="w-5 h-5 text-blue-500 mr-2
+                                @if($cours->statut === 'annule') text-red-500 @endif
+                                @if($cours->statut === 'reporte') text-yellow-500 @endif" 
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
                             {{ $cours->enseignant->name }}
                         </div>
+
+                        <!-- Section motif d'absence -->
+                        @if($cours->statut !== 'normal')
+                        <div class="mt-3 pt-3 border-t border-gray-100">
+                            <p class="text-xs text-gray-500"><span class="font-medium">Motif :</span> {{ $cours->motif_annulation }}</p>
+                        </div>
+                        @endif
                     </div>
                 @endforeach
             </div>

@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Message;
 use Illuminate\Http\Request;
 use App\Models\Document;
 use Illuminate\Support\Facades\Auth;
@@ -113,7 +114,7 @@ class DocumentController extends Controller
         return view('responsable.modifier_demande', compact('demande', 'classes'));
     }
 
-    public function updateEtat(Request $request, $id)
+   public function updateEtat(Request $request, $id)
 {
     $demande = DemandesDocuments::findOrFail($id);
 
@@ -121,32 +122,50 @@ class DocumentController extends Controller
         'etat_demande' => 'required|in:demande-recue,en-preparation,document-pret,termine,refus',
     ];
 
-    if ($request->etat_demande === 'termine') {
+    // Plus besoin de forcer "termine" pour le fichier, on gère ça automatiquement
+    if ($request->hasFile('document')) {
         $rules['document'] = 'required|file|mimes:pdf,docx,jpeg,png|max:10240';
     }
 
     if ($request->etat_demande === 'refus') {
-        $rules['justif_refus'] = 'required|string|max:1000'; // validation de la justification
+        $rules['justif_refus'] = 'required|string|max:1000';
     }
 
     $request->validate($rules);
 
-    $demande->etat_demande = $request->etat_demande;
-
-    // Enregistrement du fichier si terminé
+    // Si un document est uploadé, on passe automatiquement à "termine"
     if ($request->hasFile('document')) {
         $path = $request->file('document')->store('documents', 'public');
         $demande->fichier = basename($path);
+        $demande->etat_demande = 'termine';
+    } else {
+        $demande->etat_demande = $request->etat_demande;
     }
 
-    // Enregistrement de la justification si refus
-    if ($request->etat_demande === 'refus') {
+    // Gestion du refus
+    if ($demande->etat_demande === 'refus') {
         $demande->justif_refus = $request->justif_refus;
     } else {
-        $demande->justif_refus = null; // Optionnel : vider si autre état
+        $demande->justif_refus = null;
     }
 
     $demande->save();
+
+    // Notification automatique si terminé
+    if ($demande->etat_demande === 'termine') {
+        // Message dans la messagerie
+        Message::create([
+            'content' => 'Votre document "' . $demande->document->nom_document . '" est prêt. Vous pouvez le télécharger.',
+            'sender_id' => Auth::guard('responsable')->id(),
+            'sender_type' => 'responsable',
+            'receiver_id' => $demande->id_etudiant,
+            'receiver_type' => 'etudiant',
+            'is_read' => false,
+        ]);
+        // Notification
+        $fichierUrl = $demande->fichier ? asset('storage/documents/' . $demande->fichier) : null;
+        $demande->etudiant->notify(new DocumentPretNotification($demande, $fichierUrl));
+    }
 
     return redirect()->route('responsable.documents.index')->with('success', 'État de la demande mis à jour.');
 }
@@ -193,6 +212,15 @@ class DocumentController extends Controller
     // Mettre à jour le statut
     $demande->etat_demande = 'termine';
     $demande->save();
+     // Envoyer un message dans la messagerie
+    Message::create([
+        'content' => 'Votre document "' . $demande->document->nom_document . '" est prêt. Vous pouvez le telecharger.',
+        'sender_id' => Auth::guard('responsable')->id(),
+        'sender_type' => 'responsable',
+        'receiver_id' => $demande->id_etudiant,
+        'receiver_type' => 'etudiant',
+        'is_read' => false,
+    ]);
 
     // Générer l'URL du fichier s'il existe
     $fichierUrl = $demande->fichier ? asset('storage/documents/' . $demande->fichier) : null;
