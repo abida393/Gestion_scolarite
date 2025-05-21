@@ -347,6 +347,37 @@ h1::after {
     margin-top: auto;
 }
 
+/* Modal QR */
+.qr-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.qr-container {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 300px;
+    animation: fadeIn 0.3s;
+}
+
+.qr-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+}
 
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.9); }
@@ -483,7 +514,7 @@ h1::after {
             @foreach ($stages as $stage)
             <div class="offre-card" data-domaine="{{ strtolower($stage->domaine) }}">
                 <div class="card-header">
-                    <img src="{{ asset('/' . $stage->photo) }}" alt="Logo {{ $stage->entreprise }}" class="entreprise-logo">
+                    <img src="{{  asset('storage/' . $stage->photo) }}" alt="Logo {{ $stage->entreprise }}" class="entreprise-logo">
                     <div class="entreprise-info">
                         <h3 class="entreprise-nom">{{ $stage->entreprise }}</h3>
                         <span class="entreprise-secteur">{{ $stage->domaine }}</span>

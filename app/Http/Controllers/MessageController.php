@@ -14,8 +14,8 @@ class MessageController extends Controller
     {
         $etudiant = Auth::guard('etudiant')->user();
         $responsables = responsable::all();
-
-        return view('etudiant.messagerie', compact('responsables', 'etudiant'));
+        $receivedMessages = $etudiant->receivedMessages;
+        return view('etudiant.messagerie', compact('responsables', 'etudiant', 'receivedMessages'));
     }
     public function indexResponsable()
     {

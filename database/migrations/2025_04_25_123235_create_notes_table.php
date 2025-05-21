@@ -17,9 +17,11 @@ return new class extends Migration
             $table->unsignedBigInteger("matiere_id");
             $table->foreign('etudiant_id')->references('id')->on('etudiants');
             $table->foreign('matiere_id')->references('id')->on('matieres');
-            $table->double("note1");
-            $table->double("note2");
-            $table->double("note_finale");
+            $table->double('note1')->nullable();
+            $table->double('note2')->nullable();
+
+            $table->double("note_finale")->nullable();
+
             $table->timestamps();
         });
     }

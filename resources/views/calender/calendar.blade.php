@@ -25,7 +25,8 @@
         .fc-toolbar-title {
             font-size: 1.8rem;
             font-weight: 800;
-            color: #1f2937; /* text-gray-800 */
+            color: #1f2937;
+            /* text-gray-800 */
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
 
@@ -72,9 +73,11 @@
             }
 
             .fc-toolbar-chunk:nth-child(2) {
-                order: 3; /* title goes last */
+                order: 3;
+                /* title goes last */
                 display: flex;
-                justify-content: flex-end; /* align title to the right */
+                justify-content: flex-end;
+                /* align title to the right */
                 width: 100%;
             }
 
@@ -123,7 +126,7 @@
     </style>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             let calendarEl = document.getElementById('calendar');
             let calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',

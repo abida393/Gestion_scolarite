@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 // Correction de l'import (en haut du fichier)
@@ -16,6 +14,7 @@ class DemandesDocuments extends Model
         'id_document',
         'annee_academique',
         'fichier',
+        'justif_refus',
         'etat_demande',
     ];
 

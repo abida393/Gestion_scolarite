@@ -10,15 +10,21 @@ class etudiant_absence extends Model
     use HasFactory;
 
     protected $table = 'etudiant_absences';
+    protected $dates = ['date_absence', 'date_justif'];
 
-    protected $fillable = [
-        'seance_id',
-        'etudiant_id',
-        'date_justif',
-        'justification',
-        'justifier',
-        'justification_file', // Ajout de la colonne pour le fichier PDF
-    ];
+   protected $fillable = [
+    'emploi_temps_id',
+    'etudiant_id',
+    'date_absence',
+    'date_justif',
+    'type',
+    'duree_minutes',
+    'Justifier',
+    'justification',
+    'justification_file',
+    'status', // Ajouté
+     
+];
 
     public function seance()
     {
@@ -29,4 +35,25 @@ class etudiant_absence extends Model
     {
         return $this->belongsTo(etudiant::class, 'etudiant_id');
     }
+
+    public function classe()
+{
+    return $this->belongsTo(Classe::class, 'classe_id');
+}
+    public function emploiTemps()
+    {
+        return $this->belongsTo(emplois_temps::class, 'emploi_temps_id');
+    }
+    public function matiere()
+    {
+        return $this->belongsTo(matiere::class, 'matiere_id');
+    }
+
+    // Uncomment if you need to define a relationship with the Etudiant model
+
+// public function etudiants()
+// {
+//     return $this->hasMany(Etudiant::class);
+// }
+
 }

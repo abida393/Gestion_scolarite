@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreign("id_document")->references('id')->on('documents');
             $table->string("annee_academique")->nullable();
             $table->string("fichier")->nullable();
+            $table->string("justif_refus")->nullable();
             $table->string("etat_demande")->default("demande-recue");
             $table->timestamps();
         });

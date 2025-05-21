@@ -13,19 +13,15 @@ class etudiant extends Authenticatable
 {
     use HasFactory, Notifiable, HasApiTokens;
     protected $table = 'etudiants';
+
     protected $fillable = [
-        'nom',
-        'prenom',
-        'email_ecole',
-        'password',
-        'telephone',
-        'date_naissance',
-        'lieu_naissance',
-        'adresse',
-        'photo',
-        'sexe',
-        'filiere_id',
-        'niveau_id',
+        'type_profile', 'formation_id', 'classes_id', 'filiere_id', 'email_ecole', 'password',
+        'identifiant', 'etudiant_cin', 'etudiant_serie_bac', 'etudiant_cne', 'etudiant_session_bac',
+        'etudiant_mention_bac', 'annee_obtention_bac', 'etudiant_nom', 'etudiant_prenom',
+        'etudiant_date_naissance', 'etudiant_lieu_naissance', 'etudiant_sexe', 'etudiant_nationalite',
+        'PHOTOS', 'etudiant_adresse', 'etudiant_code_postal', 'DOSSIERCOMPLET', 'ville', 'etudiant_tel',
+        'etudiant_email', 'nom_pere', 'prenom_pere', 'fonction_pere', 'telephone_pere', 'cnss', 'nom_mere',
+        'prenom_mere', 'fonction_mere', 'telephone_mere'
     ];
 
     public function getEmailForPasswordReset()
@@ -77,9 +73,39 @@ class etudiant extends Authenticatable
         return $this->hasMany(Note::class);
     }
     // app/Models/Etudiant.php
-
-    public function messages()
+    // public function messages()
+    // {
+    //     return $this->belongsToMany(Message::class, 'message_etudiant');
+    // }
+    public function sentMessages()
     {
-        return $this->belongsToMany(Message::class, 'message_etudiant');
+        return $this->morphMany(Message::class, 'sender');
     }
+
+    public function receivedMessages()
+    {
+        return $this->morphMany(Message::class, 'receiver');
+    }
+    public function totalRetardMinutes($periode = 'month')
+{
+    return $this->absences()
+        ->where('type', 'retard')
+        ->whereBetween('date_absence', [now()->startOfMonth(), now()->endOfMonth()])
+        ->sum('duree_minutes');
+}
+public function absences()
+{
+    return $this->hasMany(etudiant_absence::class, 'etudiant_id');
+}
+    // public function getNomAttribute()
+    // {
+    //     return $this->attributes['etudiant_nom']; // Accède à 'etudiant_nom'
+    // }
+
+    // public function getPrenomAttribute()
+    // {
+    //     return $this->attributes['etudiant_prenom']; // Accède à 'etudiant_prenom'
+    // }
+
+
 }

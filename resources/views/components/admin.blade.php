@@ -8,8 +8,16 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $page_titre }}</title>
+
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- jQuery (requis pour Select2) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <!-- Font Awesome (latest version) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -21,12 +29,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;600;800&display=swap" rel="stylesheet">
 
     <!-- FullCalendar CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet" />
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> -->
 
     <!-- FullCalendar JS -->
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <!-- Vite (CSS and JS) -->
@@ -34,6 +41,7 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
         /* Header with background animation
@@ -67,20 +75,21 @@
         .logo {
             display: flex;
             margin: auto;
-            padding:0 30px 10px;
+            padding: 0 30px 10px;
 
         }
     </style>
 </head>
-
+<script src="//unpkg.com/alpinejs" defer></script>
 <body>
     <!-- Sidebar -->
     <div class="sidebar" style="height: 100vh; overflow-y: auto; overflow-x: hidden;">
-       <div class="flex justify-end p-3">
-    <div class="burger-menu p-2 bg-[#4270f4]/10 hover:bg-[#4270f4]/20 text-[#4270f4] hover:text-[#4270f4]/90 cursor-pointer transition-all duration-200" id="mobile-toggle">
-        <i class="fas fa-bars text-xl"></i>
-    </div>
-</div>
+        <div class="flex justify-end p-3">
+            <div class="burger-menu p-2 bg-[#4270f4]/10 hover:bg-[#4270f4]/20 text-[#4270f4] hover:text-[#4270f4]/90 cursor-pointer transition-all duration-200"
+                id="mobile-toggle">
+                <i class="fas fa-bars text-xl"></i>
+            </div>
+        </div>
         <div class="logo">
             <img src="{{ asset('/images/logo1.jpg') }}" alt="Logo Établissement" style="align-items:left;width:150px">
             {{-- <div class="burger-menu" id="mobile-toggle">
@@ -89,52 +98,79 @@
         </div>
         <br>
         <div class="nav-menu">
-            <a href="{{ route('home') }}" class="nav-item {{ Route::is('home') ? 'active' : '' }}" data-page="accueil">
+            <a href="{{ route('chatbot') }}" class="nav-item {{ Route::is('chatbot') ? 'active' : '' }}" data-page="chatbot">
                 <i class="fas fa-home"></i>
-                <span>Accueil</span>
+                <span>chatbot</span>
             </a>
-            <a href="{{ route('responsable.absences.index') }}" class="nav-item {{ Route::is('responsable.absences.index') ? 'active' : '' }}"data-page="absences">
+            <a href="{{ route('responsable.absences') }}"
+            class="nav-item {{ Route::is('responsable.absences') ? 'active' : '' }}"
+                data-page="absences">
                 <i class="fas fa-user-clock"></i>
                 <span>Saisie des absences</span>
             </a>
-            <a href="{{ route('responsable.absences.index') }}" class="nav-item {{ Route::is('responsable.absences.index') ? 'active' : '' }}"data-page="absences">
-                <i class="fas fa-user-clock"></i>
-                <span>Suivie des absences</span>
+            <a href="{{ route('paiements.index') }}"
+                class="nav-item {{ Route::is('paiements.index') ? 'active' : '' }}" data-page="paiements.index">
+                <i class="far fa-calendar-alt"></i>
+                <span>paiement</span>
             </a>
-            <a href="{{ route('documents.index') }}"
-                class="nav-item {{ Route::is('documents.index') ? 'active' : '' }}" data-page="demandes">
+            <a href="{{ route('notes-admin') }}"
+                class="nav-item {{ Route::is('notes-admin') ? 'active' : '' }}" data-page="notes-admin">
                 <i class="fas fa-file-alt"></i>
-                <span>Demande documents</span>
+                <span>notes</span>
+            <!-- Ajouter par imad -->
+            <a href="{{ route('responsable.documents.index') }}"
+                class="nav-item {{ Route::is('responsable.documents.index') ? 'active' : '' }}" data-page="demandes">
+                <i class="fas fa-file-alt"></i>
+                <span>Suivi documents</span>
             </a>
-            <a href="{{ route('events') }}" class="nav-item {{ Route::is('events') ? 'active' : '' }}"
-                data-page="event">
+            <a href="{{ route('responsable.emploi') }}"
+                class="nav-item {{ Route::is('responsable.emploi') ? 'active' : '' }}" data-page="Emploi">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Emplois Du Temps</span>
+            </a>
+            <a href="{{ route('responsable.calendrier') }}"
+                class="nav-item {{ Route::is('responsable.calendrier') ? 'active' : '' }}" data-page="Emploi">
+                <i class="far fa-calendar-alt"></i>
+                <span>Calendrier</span>
+            </a>
+            <a href="{{ route('responsable.events') }}"
+                class="nav-item {{ Route::is('responsable.events') ? 'active' : '' }}" data-page="evenements">
                 <i class="fas fa-briefcase"></i>
-                <span>Evenements</span>
+                <span>Événements</span>
             </a>
+            <!---------------------->
+
             <a href="{{ route('messagerie') }}" class="nav-item {{ Route::is('messagerie') ? 'active' : '' }}"
                 data-page="messagerie">
                 <i class="fa-solid fa-inbox"></i>
                 <span>Messagerie</span>
             </a>
-            <a href="{{ route('notes') }}" class="nav-item {{ Route::is('notes') ? 'active' : '' }}"
-                data-page="notes">
+            <a href="{{ route('ajouter-etudiant') }}"
+                class="nav-item {{ Route::is('ajouter-etudiant') ? 'active' : '' }}" data-page="ajouter-etudiant">
                 <i class="far fa-sticky-note"></i>
-                <span>Notes</span>
+                <span>Ajouter etudiant</span>
             </a>
-            <a href="{{ route('news') }}" class="nav-item {{ Route::is('news') ? 'active' : '' }}" data-page="news">
+            <a href="{{ route('ajouter-enseignant') }}"
+                class="nav-item {{ Route::is('ajouter-enseignant') ? 'active' : '' }}" data-page="ajouter-enseignant">
+                <i class="far fa-sticky-note"></i>
+                <span>Ajouter enseignant</span>
+            </a>
+
+            <!-- Ajouter par imad -->
+            <a href="{{ route('news.index') }}" class="nav-item {{ Route::is('news.index') ? 'active' : '' }}"
+                data-page="news">
+            {{-- <a href="{{ route('news') }}" class="nav-item {{ Route::is('news') ? 'active' : '' }}" data-page="news"> --}}
                 <i class="fas fa-newspaper"></i>
                 <span>News</span>
             </a>
-            <a href="{{ route('paiement') }}" class="nav-item {{ Route::is('paiement') ? 'active' : '' }}"
-                data-page="paiement">
-                <i class="fas fa-money-bill-wave"></i>
-                <span>Paiement</span>
-            </a>
-            <a href="{{ route('stages') }}" class="nav-item {{ Route::is('stages') ? 'active' : '' }}"
-                data-page="stage">
+            <!-- Ajouter par imad -->
+            <a href="{{ route('stages-responsable') }}"
+                class="nav-item {{ Route::is('stages-responsable') ? 'active' : '' }}" data-page="stage">
                 <i class="fas fa-briefcase"></i>
                 <span>Stages</span>
             </a>
+            <!---------------------->
+
         </div>
     </div>
 
@@ -155,8 +191,8 @@
                 @else
                     @php
                         $initial =
-                            strtoupper(substr(Auth::guard('responsable')->user()->responsable_nom, 0, 1)) .
-                            strtoupper(substr(Auth::guard('responsable')->user()->responsable_prenom, 0, 1));
+                            strtoupper(substr(Auth::guard('responsable')->user()->respo_nom, 0, 1)) .
+                            strtoupper(substr(Auth::guard('responsable')->user()->respo_prenom, 0, 1));
                     @endphp
                     <div
                         class="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-indigo-400 text-white font-bold text-sm cursor-pointer border-2 border-indigo-500 hover:border-indigo-600 transition-all duration-200 shadow-sm">
@@ -169,8 +205,8 @@
                     class="absolute right-0 mt-2 w-56 origin-top-right bg-white rounded-xl shadow-xl opacity-0 invisible scale-95 group-hover:opacity-100 group-hover:visible group-hover:scale-100 transition-all duration-200 z-50 border border-gray-100 overflow-hidden transform-gpu">
                     <div class="px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-indigo-50 to-indigo-100">
                         <p class="text-sm font-medium text-indigo-900 truncate">
-                            {{ Auth::guard('responsable')->user()->responsable_prenom }}
-                            {{ Auth::guard('responsable')->user()->responsable_nom }}
+                            {{ Auth::guard('responsable')->user()->respo_prenom }}
+                            {{ Auth::guard('responsable')->user()->respo_nom }}
                         </p>
                         <p class="text-xs text-indigo-600 truncate">
                             {{ Auth::guard('responsable')->user()->email ?? '' }}
@@ -206,9 +242,9 @@
             </div>
 
             <div class="profile-info flex flex-col items-start text-white">
-                {{-- <div class="profile-name font-semibold text-lg">
+                <div class="profile-name font-semibold text-lg">
                     {{ $nom_complete }}
-                </div> --}}
+                </div>
             </div>
         </div>
     </header>

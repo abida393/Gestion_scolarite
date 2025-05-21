@@ -108,4 +108,77 @@ public function destroy($id)
     {
         return view('calendar');
     }
+
+
+
+
+    public function afficherEvenementsResponsable()
+{
+    $evenements = Evenement::all(); // Tu peux filtrer plus tard si nécessaire
+    return view('responsable.evenement', compact('evenements'));
+}
+
+public function addEvent(Request $request)
+{
+    $validatedData = $request->validate([
+        'title' => 'required|string|max:255',
+        'start' => 'required|date',
+        'start_time' => 'required|date_format:H:i',
+        'end_time' => 'required|date_format:H:i|after:start_time',
+    ]);
+
+    try {
+        Evenement::create([
+            'titre' => $validatedData['title'],
+            'date' => $validatedData['start'],
+            'heure_debut' => date('H:i', strtotime($validatedData['start_time'])),  // Format H:i (heure et minute)
+            'heure_fin' => date('H:i', strtotime($validatedData['end_time'])),      // Format H:i (heure et minute)
+        ]);
+
+        return redirect()->route('responsable.events')->with('message', 'Événement ajouté avec succès.');
+    } catch (\Exception $e) {
+        \Log::error('Erreur lors de la création de l\'événement: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Erreur lors de la création de l\'événement: ' . $e->getMessage());
+    }
+}
+
+
+
+public function updateEvent(Request $request, $id)
+{
+    $validatedData = $request->validate([
+        'title' => 'required|string|max:255',
+        'start' => 'required|date',
+        'start_time' => 'required|date_format:H:i',
+        'end_time' => 'required|date_format:H:i',
+    ]);
+
+    try {
+        $evenement = Evenement::findOrFail($id);
+        $evenement->titre = $validatedData['title'];
+        $evenement->date = $validatedData['start'];
+        $evenement->heure_debut = $validatedData['start_time'];
+        $evenement->heure_fin = $validatedData['end_time'];
+        $evenement->save();
+
+        return redirect()->route('responsable.events')->with('message', 'Événement modifié avec succès');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Erreur lors de la mise à jour de l\'événement.');
+    }
+}
+
+
+
+public function deleteEvent($id)
+{
+    try {
+        $evenement = Evenement::findOrFail($id);
+        $evenement->delete();
+
+        return redirect()->route('responsable.events')->with('message', 'Événement supprimé avec succès');
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Erreur lors de la suppression de l\'événement.'], 500);
+    }
+}
+
 }
