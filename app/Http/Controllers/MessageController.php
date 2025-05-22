@@ -11,19 +11,59 @@ use Illuminate\Support\Facades\Auth;
 class MessageController extends Controller
 {
     public function index()
-    {
-        $etudiant = Auth::guard('etudiant')->user();
-        $responsables = responsable::all();
-        $receivedMessages = $etudiant->receivedMessages;
-        return view('etudiant.messagerie', compact('responsables', 'etudiant', 'receivedMessages'));
-    }
-    public function indexResponsable()
-    {
-        $responsable = Auth::guard('responsable')->user();
-        $etudiants = etudiant::all();
+{
+    $etudiant = Auth::guard('etudiant')->user();
+    $responsables = responsable::all();
+    $receivedMessages = $etudiant->receivedMessages;
 
-        return view('responsable.messagerie', compact('responsable', 'etudiants'));
+    // Ajoute unread_count à chaque responsable
+    foreach ($responsables as $responsable) {
+        $responsable->unread_count = Message::where('sender_id', $responsable->id)
+            ->where('sender_type', 'responsable')
+            ->where('receiver_id', $etudiant->id)
+            ->where('receiver_type', 'etudiant')
+            ->where('is_read', false)
+            ->count();
     }
+
+    // Calcul du total pour la notif globale
+    $unreadCount = $responsables->sum('unread_count');
+
+    return view('etudiant.messagerie', compact('responsables', 'etudiant', 'receivedMessages', 'unreadCount'));
+}
+    public function indexResponsable()
+{
+    $responsable = Auth::guard('responsable')->user();
+    $etudiants = etudiant::all();
+
+    // Ajoute unread_count à chaque étudiant
+    foreach ($etudiants as $etudiant) {
+        $etudiant->unread_count = Message::where('sender_id', $etudiant->id)
+            ->where('sender_type', 'etudiant')
+            ->where('receiver_id', $responsable->id)
+            ->where('receiver_type', 'responsable')
+            ->where('is_read', false)
+            ->count();
+    }
+
+    // Calcul du total pour la notif globale
+    $unreadCount = $etudiants->sum('unread_count');
+
+    return view('responsable.messagerie', compact('responsable', 'etudiants', 'unreadCount'));
+}
+public function markAsReadByResponsable($etudiantId)
+{
+    $responsableId = Auth::guard('responsable')->id();
+
+    Message::where('sender_id', $etudiantId)
+        ->where('sender_type', 'etudiant')
+        ->where('receiver_id', $responsableId)
+        ->where('receiver_type', 'responsable')
+        ->where('is_read', false)
+        ->update(['is_read' => true]);
+
+    return response()->json(['success' => true]);
+}
 
     public function getMessages($responsableId)
     {
@@ -102,4 +142,17 @@ class MessageController extends Controller
 
         return response()->json(['message' => $message]);
     }
+    public function markAsRead($responsableId)
+{
+    $etudiantId = Auth::guard('etudiant')->id();
+
+    Message::where('sender_id', $responsableId)
+        ->where('sender_type', 'responsable')
+        ->where('receiver_id', $etudiantId)
+        ->where('receiver_type', 'etudiant')
+        ->where('is_read', false)
+        ->update(['is_read' => true]);
+
+    return response()->json(['success' => true]);
+}
 }

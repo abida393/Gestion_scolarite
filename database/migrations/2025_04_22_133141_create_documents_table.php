@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
             $table->string('nom_document');
+            $table->string('pdf_template_path')->nullable();
             $table->timestamps();
         });
     }

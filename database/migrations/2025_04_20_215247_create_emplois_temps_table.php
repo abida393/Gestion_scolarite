@@ -24,7 +24,11 @@ return new class extends Migration
             $table->string('salle');
             $table->unsignedBigInteger('classe_id');
             $table->foreign('classe_id')->references('id')->on('classes');
+         $table->enum('statut', ['normal', 'annule', 'reporte'])
+    ->default('normal');
+$table->text('motif_annulation')->nullable();
             $table->timestamps();
+
         });
     }
 

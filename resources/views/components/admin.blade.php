@@ -141,10 +141,15 @@
             <!---------------------->
 
             <a href="{{ route('messagerie') }}" class="nav-item {{ Route::is('messagerie') ? 'active' : '' }}"
-                data-page="messagerie">
-                <i class="fa-solid fa-inbox"></i>
-                <span>Messagerie</span>
-            </a>
+    data-page="messagerie" style="position: relative;">
+    <i class="fa-solid fa-inbox"></i>
+    <span>Messagerie</span>
+    @if(($unreadCount ?? 0) > 0)
+        <span style="position: absolute; top: 8px; right: 10px; background:blue; color: white; border-radius: 9999px; font-size: 10px; padding: 2px 6px; min-width: 16px; text-align: center;">
+            {{ ($unreadCount ?? 0) > 9 ? '9+' : $unreadCount }}
+        </span>
+    @endif
+</a>
             <a href="{{ route('ajouter-etudiant') }}"
                 class="nav-item {{ Route::is('ajouter-etudiant') ? 'active' : '' }}" data-page="ajouter-etudiant">
                 <i class="far fa-sticky-note"></i>
@@ -214,7 +219,7 @@
                     </div>
 
                     <div class="py-1">
-                        <a href="{{ route('profile') }}"
+                        <a href="{{ route('responsable.profile') }}"
                             class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                             <svg class="w-4 h-4 mr-3 text-indigo-500" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
@@ -242,10 +247,10 @@
             </div>
 
             <div class="profile-info flex flex-col items-start text-white">
-                <div class="profile-name font-semibold text-lg">
-                    {{ $nom_complete }}
-                </div>
+            <div class="profile-name font-semibold" style="font-size:17px;">
+                {{ $nom_complete }}
             </div>
+        </div>
         </div>
     </header>
 

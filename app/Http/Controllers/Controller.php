@@ -43,6 +43,7 @@ class Controller extends BaseController
         // // Puis on envoie les données à la vue
         // $absences = etudiant_absence::with('seance')->where('etudiant_id', $etudiantId)->get();
         // return view('absence', compact('absences'));
+        
         return view("authentification.welcome",compact("values"));
     }
 

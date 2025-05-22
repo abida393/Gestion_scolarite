@@ -1,325 +1,375 @@
 <x-admin 
     titre="Gestion des Absences" 
-    page_titre="Gestion des Absences" 
+    page_titre="Tableau de Bord des Absences" 
     :nom_complete="Auth::guard('responsable')->user()->respo_nom . ' ' . Auth::guard('responsable')->user()->respo_prenom"
 >
-<div class="min-h-screen bg-gray-50">
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
     <!-- Header Section -->
-    <div class="bg-gradient-to-r from-blue-600 to-blue-800 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-6 md:mb-0">
-                    <h1 class="text-3xl font-bold text-white flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                        </svg>
-                        Gestion des Absences
-                    </h1>
-                    <p class="mt-2 text-blue-100">Suivi et gestion des absences étudiantes</p>
+    <div class="bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div class="flex items-start gap-4">
+                    <div class="p-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg">
+                        <i class="fas fa-calendar-times text-white text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl md:text-3xl font-bold text-gray-800">
+                            Gestion des Absences
+                        </h1>
+                        <p class="mt-1 text-gray-600">Suivi analytique des présences étudiantes</p>
+                    </div>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 w-full md:w-auto">
+                    <div class="bg-white rounded-lg p-3 shadow-sm border border-gray-100">
+                        <p class="text-xs font-medium text-gray-500">Total Absences</p>
+                        <p class="text-xl font-bold text-blue-600">{{ $totalAbsences }}</p>
+                    </div>
+                    <div class="bg-white rounded-lg p-3 shadow-sm border border-gray-100">
+                        <p class="text-xs font-medium text-gray-500">Justifiées</p>
+                        <p class="text-xl font-bold text-green-600">{{ $justifiedAbsences }}</p>
+                    </div>
+                    <div class="bg-white rounded-lg p-3 shadow-sm border border-gray-100">
+                        <p class="text-xs font-medium text-gray-500">En attente</p>
+                        <p class="text-xl font-bold text-yellow-600">{{ $pendingAbsences }}</p>
+                    </div>
+                    <div class="bg-white rounded-lg p-3 shadow-sm border border-gray-100">
+                        <p class="text-xs font-medium text-gray-500">Non justifiées</p>
+                        <p class="text-xl font-bold text-red-600">{{ $unjustifiedAbsences }}</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Main Content -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 -mt-10">
-        <!-- Filter Card -->
-        <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6 border border-gray-200">
-            <div class="px-6 py-4">
-                <form method="GET" action="{{ route('responsable.absences') }}">
-                    <div class="flex flex-col md:flex-row md:items-center gap-4">
-                        <!-- Classe Select -->
-                        <div class="flex-1">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <!-- Advanced Filter Section -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6 border border-gray-100">
+            <div class="p-5">
+                <h2 class="text-lg font-semibold text-gray-800 flex items-center mb-4">
+                    <i class="fas fa-sliders text-blue-500 mr-2"></i>
+                    Filtres Avancés
+                </h2>
+                <form method="GET" action="{{ route('responsable.absences') }}" id="filter-form">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <!-- Classe Filter -->
+                        <div>
                             <label for="classe_id" class="block text-sm font-medium text-gray-700 mb-1 flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                                </svg>
-                                Filtrer par classe
+                                <i class="fas fa-chalkboard-user text-blue-400 mr-2"></i>
+                                Classe
                             </label>
-                            <div class="relative mt-1">
-                                <select 
-                                    name="classe_id" 
-                                    id="classe_id" 
-                                    class="block w-full pl-10 pr-3 py-2.5 text-base border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-                                >
-                                    <option value="">Toutes les classes</option>
-                                    @foreach($classes as $classe)
-                                        <option value="{{ $classe->id }}" {{ request('classe_id') == $classe->id ? 'selected' : '' }}>
-                                            {{ $classe->nom_classe ?? $classe->nom }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                                    </svg>
-                                </div>
-                            </div>
+                            <select name="classe_id" id="classe_id" class="filter-select appearance-none">
+                                <option value="">Toutes les classes</option>
+                                @foreach($classes as $classe)
+                                    <option value="{{ $classe->id }}" {{ request('classe_id') == $classe->id ? 'selected' : '' }}>
+                                        {{ $classe->nom_classe ?? $classe->nom }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                         
-                        <!-- Buttons -->
-                        <div class="flex items-end space-x-3">
-                            <button 
-                                type="submit" 
-                                class="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
-                                </svg>
-                                Appliquer
-                            </button>
-                            
-                            @if(request('classe_id'))
-                            <a 
-                                href="{{ route('responsable.absences') }}" 
-                                class="inline-flex items-center px-4 py-2.5 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                </svg>
-                                Réinitialiser
-                            </a>
-                            @endif
+                        <!-- Student Filter -->
+                        <div>
+                            <label for="etudiant_id" class="block text-sm font-medium text-gray-700 mb-1 flex items-center">
+                                <i class="fas fa-user-graduate text-blue-400 mr-2"></i>
+                                Étudiant
+                            </label>
+                            <select name="etudiant_id" id="etudiant_id" class="filter-select appearance-none">
+                                <option value="">Tous les étudiants</option>
+                                @foreach($classes as $classe)
+                                    @foreach($classe->etudiants as $etudiant)
+                                        <option value="{{ $etudiant->id }}" {{ request('etudiant_id') == $etudiant->id ? 'selected' : '' }}>
+                                            {{ $etudiant->etudiant_prenom }} {{ $etudiant->etudiant_nom }}
+                                        </option>
+                                    @endforeach
+                                @endforeach
+                            </select>
+                        </div>
+                        
+                        <!-- Status Filter -->
+                        <div>
+                            <label for="status" class="block text-sm font-medium text-gray-700 mb-1 flex items-center">
+                                <i class="fas fa-info-circle text-blue-400 mr-2"></i>
+                                Statut
+                            </label>
+                            <select name="status" id="status" class="filter-select appearance-none">
+                                <option value="">Tous les statuts</option>
+                                <option value="justified" {{ request('status') == 'justified' ? 'selected' : '' }}>Justifiées</option>
+                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>En attente</option>
+                                <option value="unjustified" {{ request('status') == 'unjustified' ? 'selected' : '' }}>Non justifiées</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Type Filter -->
+                        <div>
+                            <label for="type" class="block text-sm font-medium text-gray-700 mb-1 flex items-center">
+                                <i class="fas fa-clock text-blue-400 mr-2"></i>
+                                Type d'absence
+                            </label>
+                            <select name="type" id="type" class="filter-select appearance-none">
+                                <option value="">Tous types</option>
+                                <option value="absence" {{ request('type') == 'absence' ? 'selected' : '' }}>Absence</option>
+                                <option value="retard" {{ request('type') == 'retard' ? 'selected' : '' }}>Retard</option>
+                            </select>
                         </div>
                     </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex justify-end gap-3 mt-6">
+    <button type="reset"
+        class="inline-flex items-center px-4 py-2 rounded-md bg-gray-100 text-gray-700 font-semibold shadow hover:bg-gray-200 hover:text-blue-600 transition focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <i class="fas fa-undo mr-2"></i> Réinitialiser
+    </button>
+    <button type="submit"
+        class="inline-flex items-center px-4 py-2 rounded-md bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow hover:from-blue-700 hover:to-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-400">
+        <i class="fas fa-filter mr-2"></i> Appliquer
+    </button>
+</div>
                 </form>
             </div>
         </div>
 
-        <!-- Navigation Tabs -->
-        <div class="flex border-b border-gray-200 mb-6">
-            <a 
-                href="{{ route('responsable.absences') }}" 
-                class="py-3 px-6 font-medium text-sm border-b-2 border-blue-500 text-blue-600 flex items-center"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                </svg>
-                Toutes les absences
-            </a>
-            <a 
-                href="{{ route('responsable.absences.justifications') }}" 
-                class="py-3 px-6 font-medium text-sm text-gray-500 hover:text-blue-500 flex items-center"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Justifications en attente
-            </a>
-        </div>
-
-        <!-- Absences Table Card -->
-        <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
-            <!-- Card Header -->
-            <div class="px-6 py-4 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                    <h2 class="text-lg font-semibold text-gray-800 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        Liste des absences
-                    </h2>
-                    <p class="text-sm text-gray-500 mt-1">
-                        {{ $absences->total() }} absences enregistrées
-                    </p>
+        <!-- Dashboard Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+            <!-- Absence Trends Card -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                <div class="p-5">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-base font-semibold text-gray-800 mb-1">Tendance des absences</h3>
+                            <p class="text-xs text-gray-500">Évolution sur 30 jours</p>
+                        </div>
+                        <div class="p-2 rounded-lg bg-blue-50 text-blue-600">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 h-32">
+    <div class="flex items-end h-full space-x-1">
+        @foreach($absenceTrends as $day)
+            <div class="flex-1 flex flex-col items-center">
+                <div 
+                    class="w-full bg-gradient-to-t from-blue-500 to-blue-300 rounded-t-sm" 
+                    style="height: {{ $day['percentage'] }}%"
+                    title="{{ $day['count'] }} absences le {{ $day['date'] }}"
+                ></div>
+                <span class="text-xs text-gray-500 mt-1">{{ $day['day'] }}</span>
+            </div>
+        @endforeach
+    </div>
+</div>
                 </div>
-                
-                <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-                    <a 
-                        href="{{ route('responsable.absences.create') }}" 
-                        class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
-                        Ajouter une absence
-                    </a>
-                    
-                    <!-- Export Dropdown -->
-                    <div x-data="{ exportOpen: false }" class="relative">
-                        <button 
-                            @click="exportOpen = !exportOpen" 
-                            class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"
-                            type="button"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                            </svg>
-                            Exporter
-                            <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        
-                        <div 
-                            x-show="exportOpen" 
-                            @click.away="exportOpen = false" 
-                            class="absolute right-0 mt-2 w-56 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
-                            x-transition:enter="transition ease-out duration-100"
-                            x-transition:enter-start="transform opacity-0 scale-95"
-                            x-transition:enter-end="transform opacity-100 scale-100"
-                            x-transition:leave="transition ease-in duration-75"
-                            x-transition:leave-start="transform opacity-100 scale-100"
-                            x-transition:leave-end="transform opacity-0 scale-95"
-                            style="display: none;"
-                        >
-                            <div class="py-1">
-                                <form method="POST" action="{{ route('responsable.absences.export.csv') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                    @csrf
-                                    <input type="hidden" name="classe_id" value="{{ request('classe_id') }}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                    </svg>
-                                    <button type="submit" class="w-full text-left">Export CSV</button>
-                                </form>
-                                <form method="POST" action="{{ route('responsable.absences.export.pdf') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                    @csrf
-                                    <input type="hidden" name="classe_id" value="{{ request('classe_id') }}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                    </svg>
-                                    <button type="submit" class="w-full text-left">Export PDF</button>
-                                </form>
+            </div>
+            
+            <!-- Top Classes Card -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                <div class="p-5">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-base font-semibold text-gray-800 mb-1">Classes avec plus d'absences</h3>
+                            <p class="text-xs text-gray-500">Top 5 cette semaine</p>
+                        </div>
+                        <div class="p-2 rounded-lg bg-red-50 text-red-600">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 space-y-3">
+                        @foreach($topClasses as $class)
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="font-medium">Classe {{ $class->nom_classe }}</span>
+                                <span class="text-gray-600">{{ $class->absences_count }} absences</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-1.5">
+                                <div 
+                                    class="bg-red-500 h-1.5 rounded-full" 
+                                    style="width: {{ ($class->absences_count / $maxClassAbsences) * 100 }}%"
+                                ></div>
                             </div>
                         </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
+            
+            <!-- Quick Actions Card -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+    <div class="p-5">
+        <div class="flex justify-between items-start">
+            <div>
+                <h3 class="text-base font-semibold text-gray-800 mb-1">Actions Rapides</h3>
+                <p class="text-xs text-gray-500">Gestion des absences</p>
+            </div>
+            <div class="p-2 rounded-lg bg-green-50 text-green-600">
+                <i class="fas fa-bolt"></i>
+            </div>
+        </div>
+        <div class="mt-3 grid grid-cols-2 gap-2">
+            <a href="{{ route('responsable.absences.create') }}" class="quick-action-btn bg-blue-50 text-blue-600 hover:bg-blue-100 py-2 border-radius: var(--radius-xl)">
+                <i class="fas fa-plus-circle"></i>
+                <span class="text-xs">Nouvelle absence</span>
+            </a>
+            <a href="{{ route('responsable.absences.justifications') }}" class="quick-action-btn bg-yellow-50 text-yellow-600 hover:bg-yellow-100 py-2 border-radius: var(--radius-xl)">
+                <i class="fas fa-clock-rotate-left"></i>
+                <span class="text-xs">Justifications</span>
+            </a>
+            <a href="{{ route('responsable.absences.export.csv') }}" class="quick-action-btn bg-green-50 text-green-600 hover:bg-green-100 py-2 border-radius: var(--radius-xl)">
+                <i class="fas fa-file-csv"></i>
+                <span class="text-xs">Export CSV</span>
+            </a>
+            <a href="{{ route('responsable.absences.export.pdf') }}" class="quick-action-btn bg-red-50 text-red-600 hover:bg-red-100 py-2 border-radius: var(--radius-xl)">
+                <i class="fas fa-file-pdf"></i>
+                <span class="text-xs">Export PDF</span>
+            </a>
+        </div>
+    </div>
+</div>
+        </div>
+
+        <!-- Main Table Card -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+            <!-- Card Header -->
+            <div class="px-5 py-4 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-800 flex items-center">
+                        <i class="fas fa-table-cells-large text-indigo-500 mr-2"></i>
+                        Détail des Absences
+                    </h2>
+                    <p class="text-xs text-gray-500 mt-1">
+                        {{ $absences->total() }} absences trouvées • 
+                        <span class="text-green-600">{{ $justifiedAbsences }} justifiées</span> • 
+                        <span class="text-yellow-600">{{ $pendingAbsences }} en attente</span> • 
+                        <span class="text-red-600">{{ $unjustifiedAbsences }} non justifiées</span>
+                    </p>
+                </div>
+                
+                <!-- View Toggle -->
+                <div class="inline-flex rounded-md shadow-sm space-x-2">
+    <button type="button" class="view-toggle-btn active" data-view="list">
+        <i class="fas fa-list"></i>
+    </button>
+    <button type="button" class="view-toggle-btn" data-view="grid">
+        <i class="fas fa-th-large"></i>
+    </button>
+</div>
+            </div>
 
             <!-- Table Content -->
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto" id="list-view">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Étudiant</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Séance</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            <th scope="col" class="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <input type="checkbox" class="bulk-checkbox">
+                            </th>
+                            <th scope="col" class="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Étudiant</th>
+                            <th scope="col" class="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Détails</th>
+                            <th scope="col" class="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                            <th scope="col" class="px-5 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse($absences as $absence)
                         <tr class="hover:bg-gray-50 transition-colors duration-150">
+                            <!-- Checkbox Column -->
+                            <td class="px-5 py-4 whitespace-nowrap">
+                                <input type="checkbox" class="item-checkbox" value="{{ $absence->id }}">
+                            </td>
+                            
                             <!-- Student Column -->
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-5 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
-                                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                                        <span class="text-blue-600 font-medium">
-                                            {{ substr($absence->etudiant->etudiant_prenom, 0, 1) }}{{ substr($absence->etudiant->etudiant_nom, 0, 1) }}
-                                        </span>
+                                    <div class="flex-shrink-0 h-9 w-9 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white font-medium shadow-sm">
+                                        {{ substr($absence->etudiant->etudiant_prenom, 0, 1) }}{{ substr($absence->etudiant->etudiant_nom, 0, 1) }}
                                     </div>
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900">
+                                    <div class="ml-3">
+                                        <div class="text-sm font-semibold text-gray-900">
                                             {{ $absence->etudiant->etudiant_prenom }} {{ $absence->etudiant->etudiant_nom }}
                                         </div>
-                                        <div class="text-sm text-gray-500">
-                                            {{ $absence->etudiant->numero_etudiant }}
+                                        <div class="text-xs text-gray-500 flex items-center mt-1">
+                                            <span class="inline-block w-2 h-2 rounded-full bg-blue-400 mr-1"></span>
+                                            Classe {{ $absence->etudiant->classe->nom_classe }}
                                         </div>
                                     </div>
                                 </div>
                             </td>
                             
-                            <!-- Session Column -->
-                            <td class="px-6 py-4">
-                                <div class="text-sm font-medium text-gray-900">
-                                    {{ $absence->emploiTemps->matiere->nom_matiere ?? 'Inconnue' }}
+                            <!-- Details Column -->
+                            <td class="px-5 py-4">
+                                <div class="flex flex-col space-y-2">
+                                    <div class="text-sm font-semibold text-gray-900 flex items-center">
+                                        <i class="fas fa-book-open text-blue-400 mr-2 text-sm"></i>
+                                        {{ $absence->emploiTemps->matiere->nom_matiere ?? 'Inconnue' }}
+                                    </div>
+                                    <div class="flex flex-wrap gap-x-4 gap-y-2">
+                                        <div class="text-xs text-gray-500 flex items-center">
+                                            <i class="far fa-calendar-alt text-gray-400 mr-1"></i>
+                                            {{ \Carbon\Carbon::parse($absence->date_absence)->format('d/m/Y') }}
+                                        </div>
+                                        <div class="text-xs text-gray-500 flex items-center">
+                                            <i class="far fa-clock text-gray-400 mr-1"></i>
+                                            @if($absence->emploiTemps && $absence->emploiTemps->heure_debut && $absence->emploiTemps->heure_fin)
+                                                {{ \Carbon\Carbon::parse($absence->emploiTemps->heure_debut)->format('H:i') }} - {{ \Carbon\Carbon::parse($absence->emploiTemps->heure_fin)->format('H:i') }}
+                                            @else
+                                                Horaire inconnu
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="text-sm text-gray-500">
-                                    @if($absence->emploiTemps && $absence->emploiTemps->heure_debut && $absence->emploiTemps->heure_fin)
-                                        {{ \Carbon\Carbon::parse($absence->emploiTemps->heure_debut)->format('H:i') }} - {{ \Carbon\Carbon::parse($absence->emploiTemps->heure_fin)->format('H:i') }}
-                                    @else
-                                        Horaire inconnu
-                                    @endif
-                                </div>
-                            </td>
-                            
-                            <!-- Type Column -->
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                @if($absence->type === 'retard')
-                                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        Retard ({{ $absence->duree_minutes }} min)
-                                    </span>
-                                @else
-                                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                        </svg>
-                                        Absence
-                                    </span>
-                                @endif
                             </td>
                             
                             <!-- Status Column -->
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                @if($absence->Justifier)
-                                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                        Justifiée
-                                    </span>
-                                @elseif($absence->status === 'pending')
-                                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        En attente
-                                    </span>
-                                @else
-                                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                        Non justifiée
-                                    </span>
-                                @endif
+                            <td class="px-5 py-4 whitespace-nowrap">
+                                <div class="flex flex-col space-y-2">
+                                    @if($absence->Justifier)
+                                        <span class="status-badge bg-green-100 text-green-800 inline-flex items-center">
+                                            <i class="fas fa-check-circle mr-1"></i> Justifiée
+                                        </span>
+                                        @if($absence->justification_file)
+                                        <a href="{{ route('responsable.absences.download', $absence->id) }}" class="text-xs text-blue-600 hover:text-blue-800 flex items-center">
+                                            <i class="fas fa-paperclip mr-1"></i> Pièce jointe
+                                        </a>
+                                        @endif
+                                    @elseif($absence->status === 'pending')
+                                        <span class="status-badge bg-yellow-100 text-yellow-800 inline-flex items-center">
+                                            <i class="fas fa-hourglass-half mr-1"></i> En attente
+                                        </span>
+                                    @else
+                                        <span class="status-badge bg-red-100 text-red-800 inline-flex items-center">
+                                            <i class="fas fa-times-circle mr-1"></i> Non justifiée
+                                        </span>
+                                    @endif
+                                </div>
                             </td>
                             
                             <!-- Actions Column -->
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex justify-end space-x-4">
-                                    <a 
-                                        href="{{ route('responsable.absences.edit', $absence->id) }}" 
-                                        class="text-blue-600 hover:text-blue-900 transition-colors duration-200"
-                                        title="Modifier"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                        </svg>
+                            <td class="px-5 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <div class="flex justify-end space-x-2">
+                                    <a href="{{ route('responsable.absences.edit', $absence->id) }}" 
+                                       class="action-btn bg-blue-50 text-blue-600 hover:bg-blue-100"
+                                       title="Modifier">
+                                        <i class="fas fa-pencil-alt text-sm"></i>
                                     </a>
                                     
                                     @if($absence->justification_file)
-                                    <a 
-                                        href="{{ route('responsable.absences.download', $absence->id) }}" 
-                                        class="text-indigo-600 hover:text-indigo-900 transition-colors duration-200"
-                                        title="Télécharger"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                        </svg>
+                                    <a href="{{ route('responsable.absences.download', $absence->id) }}" 
+                                       class="action-btn bg-indigo-50 text-indigo-600 hover:bg-indigo-100"
+                                       title="Télécharger">
+                                        <i class="fas fa-download text-sm"></i>
                                     </a>
                                     @endif
                                     
-                                    <form 
-                                        action="{{ route('responsable.absences.destroy', $absence->id) }}" 
-                                        method="POST" 
-                                        class="inline"
-                                        onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette absence?')"
-                                    >
+                                    <form action="{{ route('responsable.absences.destroy', $absence->id) }}" 
+                                          method="POST" 
+                                          class="inline"
+                                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette absence?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button 
-                                            type="submit" 
-                                            class="text-red-600 hover:text-red-900 transition-colors duration-200"
-                                            title="Supprimer"
-                                        >
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg>
+                                        <button type="submit" 
+                                                class="action-btn bg-red-50 text-red-600 hover:bg-red-100"
+                                                title="Supprimer">
+                                            <i class="fas fa-trash-alt text-sm"></i>
                                         </button>
                                     </form>
                                 </div>
@@ -327,13 +377,16 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-8 text-center">
+                            <td colspan="5" class="px-5 py-8 text-center">
                                 <div class="flex flex-col items-center justify-center text-gray-400">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    <h4 class="text-lg font-medium text-gray-500">Aucune absence enregistrée</h4>
-                                    <p class="mt-1 text-sm">Votre historique d'absence apparaîtra ici</p>
+                                    <h4 class="text-base font-medium text-gray-500">Aucune absence trouvée</h4>
+                                    <p class="mt-1 text-xs">Vos résultats d'absence apparaîtront ici</p>
+                                    <a href="{{ route('responsable.absences.create') }}" class="mt-3 inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        <i class="fas fa-plus-circle mr-1"></i> Ajouter une absence
+                                    </a>
                                 </div>
                             </td>
                         </tr>
@@ -342,9 +395,121 @@
                 </table>
             </div>
 
+            <!-- Grid View (Hidden by Default) -->
+            <div id="grid-view" class="hidden p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                @forelse($absences as $absence)
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-300">
+                    <div class="p-4">
+                        <!-- Student Header -->
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white font-medium shadow-sm">
+                                {{ substr($absence->etudiant->etudiant_prenom, 0, 1) }}{{ substr($absence->etudiant->etudiant_nom, 0, 1) }}
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-semibold text-gray-900">
+                                    {{ $absence->etudiant->etudiant_prenom }} {{ $absence->etudiant->etudiant_nom }}
+                                </h3>
+                                <p class="text-xs text-gray-500">
+                                    Classe {{ $absence->etudiant->classe->nom_classe }}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Absence Details -->
+                        <div class="mt-3">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="text-xs font-medium text-gray-500">Module</h4>
+                                    <p class="text-sm font-medium text-gray-900 mt-1">
+                                        {{ $absence->emploiTemps->matiere->nom_matiere ?? 'Inconnue' }}
+                                    </p>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-medium text-gray-500">Date</h4>
+                                    <p class="text-sm font-medium text-gray-900 mt-1">
+                                      {{ \Carbon\Carbon::parse($absence->date_absence)->format('d/m/Y') }}
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-3">
+                                <h4 class="text-xs font-medium text-gray-500">Horaire</h4>
+                                <p class="text-sm font-medium text-gray-900 mt-1">
+                                    @if($absence->emploiTemps && $absence->emploiTemps->heure_debut && $absence->emploiTemps->heure_fin)
+                                        {{ \Carbon\Carbon::parse($absence->emploiTemps->heure_debut)->format('H:i') }} - {{ \Carbon\Carbon::parse($absence->emploiTemps->heure_fin)->format('H:i') }}
+                                    @else
+                                        Horaire inconnu
+                                    @endif
+                                </p>
+                            </div>
+                            
+                            @if($absence->type === 'retard')
+                            <div class="mt-2">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
+                                    <i class="fas fa-clock mr-1"></i>
+                                    Retard de {{ $absence->duree_minutes }} minutes
+                                </span>
+                            </div>
+                            @endif
+                        </div>
+                        
+                        <!-- Status & Actions -->
+                        <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between items-center">
+                            <div>
+                                @if($absence->Justifier)
+                                    <span class="status-badge bg-green-100 text-green-800">
+                                        <i class="fas fa-check-circle mr-1"></i> Justifiée
+                                    </span>
+                                @elseif($absence->status === 'pending')
+                                    <span class="status-badge bg-yellow-100 text-yellow-800">
+                                        <i class="fas fa-hourglass-half mr-1"></i> En attente
+                                    </span>
+                                @else
+                                    <span class="status-badge bg-red-100 text-red-800">
+                                        <i class="fas fa-times-circle mr-1"></i> Non justifiée
+                                    </span>
+                                @endif
+                            </div>
+                            
+                            <div class="flex space-x-1">
+                                <a href="{{ route('responsable.absences.edit', $absence->id) }}" class="text-blue-600 hover:text-blue-800 p-1">
+                                    <i class="fas fa-pencil-alt text-sm"></i>
+                                </a>
+                                <form action="{{ route('responsable.absences.destroy', $absence->id) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:text-red-800 p-1">
+                                        <i class="fas fa-trash-alt text-sm"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @empty
+                <div class="col-span-3 py-8 text-center">
+                    <div class="flex flex-col items-center justify-center text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <h4 class="text-base font-medium text-gray-500">Aucune absence trouvée</h4>
+                        <p class="mt-1 text-xs">Vos résultats d'absence apparaîtront ici</p>
+                    </div>
+                </div>
+                @endforelse
+            </div>
+
+            <!-- Calendar View (Hidden by Default) -->
+            <div id="calendar-view" class="hidden p-4">
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div id="absence-calendar" class="p-2"></div>
+                </div>
+            </div>
+
             <!-- Pagination -->
-            <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center">
-                <div class="text-sm text-gray-500 mb-4 sm:mb-0">
+            @if($absences->hasPages())
+            <div class="bg-gray-50 px-5 py-3 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-3">
+                <div class="text-xs text-gray-500">
                     Affichage <span class="font-medium">{{ $absences->firstItem() }}</span> à <span class="font-medium">{{ $absences->lastItem() }}</span> 
                     sur <span class="font-medium">{{ $absences->total() }}</span> résultats
                 </div>
@@ -352,16 +517,170 @@
                     {{ $absences->links() }}
                 </div>
             </div>
+            @endif
         </div>
     </div>
 </div>
 
 <!-- Custom Styles -->
 <style>
-    [x-cloak] { display: none !important; }
-    .shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
-    .bg-white\/10 { background-color: rgba(255, 255, 255, 0.1); }
-    .border-white\/20 { border-color: rgba(255, 255, 255, 0.2); }
-    .backdrop-blur-sm { backdrop-filter: blur(4px); }
+    .filter-select {
+        @apply w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+    }
+    
+    .filter-input {
+        @apply w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm;
+    }
+    
+    .apply-btn {
+        @apply inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500;
+    }
+    
+    .reset-btn {
+        @apply inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500;
+    }
+    
+    .status-badge {
+        @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium;
+    }
+    
+    .view-toggle-btn {
+        @apply px-3 py-2 -ml-px text-sm font-medium text-gray-500 bg-white border border-gray-300 hover:bg-gray-50 focus:z-10 focus:outline-none;
+    }
+    
+    .view-toggle-btn:first-child {
+        @apply rounded-l-md;
+    }
+    
+    .view-toggle-btn:last-child {
+        @apply rounded-r-md;
+    }
+    
+    .view-toggle-btn.active {
+        @apply bg-blue-500 text-white border-blue-500;
+    }
+    
+    .action-btn {
+        @apply inline-flex items-center justify-center p-1.5 rounded-md hover:bg-gray-100;
+    }
+    
+    .quick-action-btn {
+        @apply flex flex-col items-center justify-center p-2 rounded-lg hover:shadow-sm text-center;
+    }
+    
+    .quick-action-btn i {
+        @apply text-lg mb-1;
+    }
+    
+    .bulk-checkbox, .item-checkbox {
+        @apply h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500;
+    }
 </style>
+
+<!-- Scripts -->
+<script>
+    window.classesData = @json($classes);
+    document.addEventListener('DOMContentLoaded', function() {
+        // View toggle functionality
+        const viewToggleButtons = document.querySelectorAll('.view-toggle-btn');
+        const views = {
+            'list': document.getElementById('list-view'),
+            'grid': document.getElementById('grid-view'),
+            'calendar': document.getElementById('calendar-view')
+        };
+        
+        viewToggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const view = this.getAttribute('data-view');
+                
+                // Update active button
+                viewToggleButtons.forEach(btn => btn.classList.remove('active', 'bg-blue-500', 'text-white', 'border-blue-500'));
+                this.classList.add('active', 'bg-blue-500', 'text-white', 'border-blue-500');
+                
+                // Show selected view
+                Object.values(views).forEach(viewEl => viewEl.classList.add('hidden'));
+                views[view].classList.remove('hidden');
+                
+                // Initialize calendar if needed
+                if (view === 'calendar' && !window.calendarInitialized) {
+                    initAbsenceCalendar();
+                    window.calendarInitialized = true;
+                }
+            });
+        });
+        
+        // Initialize calendar
+        function initAbsenceCalendar() {
+            const calendarEl = document.getElementById('absence-calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                events: [
+                    @foreach($absences as $absence)
+                    {
+                        title: '{{ $absence->etudiant->etudiant_prenom }} {{ $absence->etudiant->etudiant_nom }}',
+                        start: '{{ \Carbon\Carbon::parse($absence->date_absence)->format('Y-m-d') }}',
+                        color: '{{ $absence->Justifier ? '#10B981' : ($absence->status === 'pending' ? '#F59E0B' : '#EF4444') }}',
+                        url: '{{ route('responsable.absences.edit', $absence->id) }}'
+                    },
+                    @endforeach
+                ],
+                eventClick: function(info) {
+                    info.jsEvent.preventDefault();
+                    window.location.href = info.event.url;
+                }
+            });
+            calendar.render();
+        }
+        
+        // Bulk select/deselect
+        document.querySelector('.bulk-checkbox').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.item-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+    const classeSelect = document.getElementById('classe_id');
+    const etudiantSelect = document.getElementById('etudiant_id');
+    const classes = window.classesData;
+
+    function updateEtudiants() {
+        const classeId = classeSelect.value;
+        etudiantSelect.innerHTML = '<option value="">Tous les étudiants</option>';
+        if (!classeId) return;
+        const classe = classes.find(c => c.id == classeId);
+        if (classe && classe.etudiants) {
+            classe.etudiants.forEach(etudiant => {
+                const option = document.createElement('option');
+                option.value = etudiant.id;
+                option.textContent = etudiant.etudiant_prenom + ' ' + etudiant.etudiant_nom;
+                etudiantSelect.appendChild(option);
+            });
+        }
+    }
+
+    // Met à jour au changement de classe
+    classeSelect.addEventListener('change', updateEtudiants);
+
+    // Si une classe est déjà sélectionnée (ex: retour de filtre), recharge les étudiants
+    if (classeSelect.value) {
+        updateEtudiants();
+        // Remet la sélection si besoin
+        const selected = "{{ request('etudiant_id') }}";
+        if (selected) etudiantSelect.value = selected;
+    }
+});
+   
+</script>
 </x-admin>

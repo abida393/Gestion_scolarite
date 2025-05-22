@@ -1,5 +1,6 @@
 <x-admin titre="Page Absence" page_titre="Page Absence" :nom_complete="Auth::guard('responsable')->user()->respo_nom . ' ' . Auth::guard('responsable')->user()->respo_prenom">
 <div class="min-h-screen bg-gray-50 p-6">
+    
     <!-- Header Section -->
     <div class="flex flex-col space-y-4 mb-8">
         <h1 class="text-3xl font-bold text-gray-800">Justifications en attente de validation</h1>
@@ -9,7 +10,10 @@
             <div class="h-1 w-4 bg-blue-200 rounded-full"></div>
         </div>
     </div>
-
+<a href="{{ route('responsable.absences') }}" 
+   class="inline-flex items-center px-4 py-2 mb-6 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded shadow transition">
+    <i class="fas fa-arrow-left mr-2"></i> Retour au tableau de bord
+</a>
     <!-- Main Card -->
     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
         <!-- Card Header -->
@@ -108,7 +112,6 @@
                                             <option value="reject" class="text-red-600">Rejeter</option>
                                             <option value="non_justifier" class="text-yellow-600">Non justifier</option>
                                         </select>
-                                        <input type="text" name="commentaire" class="block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Commentaire">
                                         <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                             Valider
                                         </button>
@@ -222,4 +225,8 @@
         </div>
     </div>
 </div>
+<a href="{{ route('responsable.absences') }}" 
+   class="inline-flex items-center px-4 py-2 mb-6 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded shadow transition">
+    <i class="fas fa-arrow-left mr-2"></i> Retour au tableau de bord
+</a>
 </x-admin>

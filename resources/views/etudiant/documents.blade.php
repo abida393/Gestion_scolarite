@@ -438,7 +438,7 @@
                 }
             });
         }
-        
+        // STATUS
         function formatStatus(status) {
             const statusMap = {
                 'demande-recue': 'Demande reçue',
