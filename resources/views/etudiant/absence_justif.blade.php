@@ -51,7 +51,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
                     <div class="p-5">
                         <div class="flex items-center">
@@ -67,7 +67,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
                     <div class="p-5">
                         <div class="flex items-center">
@@ -101,33 +101,33 @@
                                 {{ $absences->total() }} absences enregistrées
                             </p>
                         </div>
-                        
+
                         <div class="flex space-x-3">
                             <div class="inline-flex rounded-md shadow-sm" role="group">
-                                <button 
-                                    @click="activeTab = 'all'" 
-                                    :class="activeTab === 'all' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'" 
+                                <button
+                                    @click="activeTab = 'all'"
+                                    :class="activeTab === 'all' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'"
                                     class="px-4 py-2 text-sm font-medium rounded-l-lg border border-gray-200 focus:z-10 focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 >
                                     Toutes
                                 </button>
-                                <button 
-                                    @click="activeTab = 'justified'" 
-                                    :class="activeTab === 'justified' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'" 
+                                <button
+                                    @click="activeTab = 'justified'"
+                                    :class="activeTab === 'justified' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'"
                                     class="px-4 py-2 text-sm font-medium border-t border-b border-gray-200 focus:z-10 focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 >
                                     Justifiées
                                 </button>
-                                <button 
-                                    @click="activeTab = 'pending'" 
-                                    :class="activeTab === 'pending' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'" 
+                                <button
+                                    @click="activeTab = 'pending'"
+                                    :class="activeTab === 'pending' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'"
                                     class="px-4 py-2 text-sm font-medium border-t border-b border-gray-200 focus:z-10 focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 >
                                     En attente
                                 </button>
-                                <button 
-                                    @click="activeTab = 'unjustified'" 
-                                    :class="activeTab === 'unjustified' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'" 
+                                <button
+                                    @click="activeTab = 'unjustified'"
+                                    :class="activeTab === 'unjustified' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'"
                                     class="px-4 py-2 text-sm font-medium rounded-r-lg border border-gray-200 focus:z-10 focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 >
                                     Non justifiées
@@ -151,7 +151,7 @@
                         <tbody class="bg-white divide-y divide-gray-100">
                             @forelse($absences as $absence)
                             <tr class="hover:bg-gray-50 transition-colors duration-150" x-show="
-                                activeTab === 'all' || 
+                                activeTab === 'all' ||
                                 (activeTab === 'justified' && {{ $absence->Justifier ? 'true' : 'false' }}) ||
                                 (activeTab === 'pending' && {{ $absence->status === 'pending' ? 'true' : 'false' }}) ||
                                 (activeTab === 'unjustified' && {{ !$absence->Justifier && $absence->status !== 'pending' ? 'true' : 'false' }})
@@ -181,7 +181,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                
+
                                 <!-- Type -->
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($absence->type === 'retard')
@@ -200,7 +200,7 @@
                                         </span>
                                     @endif
                                 </td>
-                                
+
                                 <!-- Status -->
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($absence->Justifier)
@@ -234,14 +234,14 @@
                                         </span>
                                     @endif
                                 </td>
-                                
+
                                 <!-- Actions -->
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex justify-end space-x-3">
                                         @if(!$absence->Justifier && $absence->status !== 'pending')
-                                            <button 
-                                                @click="openModal = {{ $absence->id }}" 
-                                                type="button" 
+                                            <button
+                                                @click="openModal = {{ $absence->id }}"
+                                                type="button"
                                                 class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -249,17 +249,6 @@
                                                 </svg>
                                                 Justifier
                                             </button>
-                                        @endif
-                                        @if($absence->justification_file)
-                                            <a 
-                                                href="{{ route('etudiant.absences.download', $absence->id) }}" 
-                                                class="inline-flex items-center px-3 py-1 border border-gray-300 text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                                            >
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                                </svg>
-                                                Télécharger
-                                            </a>
                                         @endif
                                     </div>
                                 </td>
@@ -280,11 +269,11 @@
                         </tbody>
                     </table>
                 </div>
-                
+
                 <!-- Table Footer -->
                 <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center">
                     <div class="text-sm text-gray-500 mb-4 sm:mb-0">
-                        Affichage <span class="font-medium">{{ $absences->firstItem() }}</span> à <span class="font-medium">{{ $absences->lastItem() }}</span> 
+                        Affichage <span class="font-medium">{{ $absences->firstItem() }}</span> à <span class="font-medium">{{ $absences->lastItem() }}</span>
                         sur <span class="font-medium">{{ $absences->total() }}</span> résultats
                     </div>
                     <div class="flex space-x-2">
@@ -297,8 +286,8 @@
         <!-- Justification Modals -->
         @foreach($absences as $absence)
             @if(!$absence->Justifier && $absence->status !== 'pending')
-            <div 
-                x-show="openModal === {{ $absence->id }}" 
+            <div
+                x-show="openModal === {{ $absence->id }}"
                 class="fixed inset-0 z-50 overflow-y-auto"
                 aria-labelledby="modal-title"
                 aria-modal="true"
@@ -306,10 +295,10 @@
             >
                 <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                     <!-- Background overlay -->
-                    <div 
-                        x-show="openModal === {{ $absence->id }}" 
+                    <div
+                        x-show="openModal === {{ $absence->id }}"
                         @click="openModal = null"
-                        class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
+                        class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
                         aria-hidden="true"
                         x-transition:enter="ease-out duration-300"
                         x-transition:enter-start="opacity-0"
@@ -320,7 +309,7 @@
                     ></div>
 
                     <!-- Modal panel -->
-                    <div 
+                    <div
                         x-show="openModal === {{ $absence->id }}"
                         class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
                         x-transition:enter="ease-out duration-300"
@@ -339,9 +328,9 @@
                                     </svg>
                                     Justifier une absence
                                 </h3>
-                                <button 
-                                    @click="openModal = null" 
-                                    type="button" 
+                                <button
+                                    @click="openModal = null"
+                                    type="button"
                                     class="text-white hover:text-blue-100 focus:outline-none"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -350,7 +339,7 @@
                                 </button>
                             </div>
                         </div>
-                        
+
                         <!-- Modal body -->
                         <form action="{{ route('etudiant.absences.justifier') }}" method="POST" enctype="multipart/form-data">
                             @csrf
@@ -362,7 +351,7 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Détails de l'absence</label>
                                         <div class="mt-1 bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-600 text-sm">
                                             <div class="grid grid-cols-2 gap-4">
-                                               
+
                                                 <div>
                                                     <p class="font-medium">Matière</p>
                                                     <p>{{ $absence->emploiTemps && $absence->emploiTemps->matiere ? $absence->emploiTemps->matiere->nom_matiere : 'Inconnue' }}</p>
@@ -371,26 +360,26 @@
                                                     <p class="font-medium">Type</p>
                                                     <p>{{ $absence->type === 'retard' ? 'Retard' : 'Absence' }}</p>
                                                 </div>
-                                               
+
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Justification Text -->
                                     <div>
                                         <label for="justification" class="block text-sm font-medium text-gray-700 mb-1">
                                             Justification <span class="text-red-500">*</span>
                                         </label>
-                                        <textarea 
-                                            id="justification" 
-                                            name="justification" 
-                                            rows="4" 
-                                            class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-3" 
-                                            placeholder="Décrivez précisément la raison de votre absence..." 
+                                        <textarea
+                                            id="justification"
+                                            name="justification"
+                                            rows="4"
+                                            class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-3"
+                                            placeholder="Décrivez précisément la raison de votre absence..."
                                             required
                                         ></textarea>
                                     </div>
-                                    
+
                                     <!-- File Upload -->
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -404,11 +393,11 @@
                                                 <div class="flex text-sm text-gray-600">
                                                     <label class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
                                                         <span>Téléverser un fichier</span>
-                                                        <input 
-                                                            type="file" 
-                                                            name="justification_file" 
-                                                            class="sr-only" 
-                                                            required 
+                                                        <input
+                                                            type="file"
+                                                            name="justification_file"
+                                                            class="sr-only"
+                                                            required
                                                             accept=".pdf,.jpg,.jpeg,.png"
                                                         >
                                                     </label>
@@ -422,11 +411,11 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- Modal footer -->
                             <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                                <button 
-                                    type="submit" 
+                                <button
+                                    type="submit"
                                     class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -434,9 +423,9 @@
                                     </svg>
                                     Envoyer la justification
                                 </button>
-                                <button 
-                                    @click="openModal = null" 
-                                    type="button" 
+                                <button
+                                    @click="openModal = null"
+                                    type="button"
                                     class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                                 >
                                     Annuler

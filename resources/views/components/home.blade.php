@@ -216,7 +216,7 @@
                     {{ $nom_complete }}
                 </div>
                 <div class="profile-class text-sm">
-                    {{ $filiere->nom_filiere }}
+                    {{ Auth::guard('etudiant')->user()->classe->nom_classe }}
                 </div>
             </div>
         </div>

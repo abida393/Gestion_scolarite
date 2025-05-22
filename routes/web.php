@@ -212,7 +212,7 @@ use App\Http\Controllers\PaiementController;
 
 
 Route::get('/paiements', [PaiementController::class, 'index'])->name('paiements.index');
-Route::post('/paiements', [PaiementController::class, 'store'])->name('paiements.store');
+Route::post('/paiements/store', [PaiementController::class, 'store'])->name('paiements.store');
 Route::get('/admin/paiements', [PaiementController::class, 'search'])->name('paiements.index');
 Route::post('/admin/paiements/{paiement}/changer-statut', [PaiementController::class, 'changerStatut'])->name('paiements.changer-statut');
 
@@ -255,7 +255,7 @@ Route::prefix('responsable')->middleware(['auth:responsable'])->group(function()
     // Emplois du temps
     Route::get('/emplois', [EmploiTempsController::class, 'affich'])->name('responsable.emploi');
     Route::get('/emplois/create', [EmploiTempsController::class, 'create'])->name('responsable.create');
-    Route::post('/emplois', [EmploiTempsController::class, 'store'])->name('responsable.store');
+    Route::post('/emplois/store', [EmploiTempsController::class, 'store'])->name('responsable.store');
     Route::get('/emploi/{id}/edit', [EmploiTempsController::class, 'edit'])->name('responsable.edit');
 Route::put('/responsable/emploi/{id}', [EmploiTempsController::class, 'update'])->name('responsable.update');
     Route::delete('/emplois/{timetable}', [EmploiTempsController::class, 'destroy'])->name('responsable.destroy');

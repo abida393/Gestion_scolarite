@@ -75,7 +75,7 @@
                             </div>
                             <div class="flex flex-col items-end gap-1">
                                 <p class="text-sm text-gray-500">{{ $paiement->date_paiement }}</p>
-                                @if ($paiement->status == 'validé')
+                                @if ($paiement->status == 'confirmé')
                                     <span class="text-xs font-medium px-2 py-1 bg-green-100 text-green-700 rounded-full">Validé</span>
                                 @elseif ($paiement->status == 'en attente')
                                     <span class="text-xs font-medium px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full">En attente</span>
