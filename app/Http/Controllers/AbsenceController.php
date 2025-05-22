@@ -20,14 +20,29 @@ class AbsenceController extends Controller
         ->orderBy('date_absence', 'desc')
         ->paginate(10);
 
-    return view('etudiant.absence_justif', compact('absences'));
+ $monthlyTrends = etudiant_absence::selectRaw("DATE_FORMAT(date_absence, '%Y-%m') as month, COUNT(*) as count")
+        ->where('etudiant_id', Auth::id())
+        ->groupBy('month')
+        ->orderBy('month')
+        ->get();
+
+    return view('etudiant.absence_justif', compact('absences', 'monthlyTrends'));
+}
+public function details($id)
+{
+    $absence = etudiant_absence::with(['emploiTemps.matiere'])
+        ->where('id', $id)
+        ->where('etudiant_id', \Auth::id())
+        ->firstOrFail();
+
+    return view('etudiant.absence_details', compact('absence'));
 }
    public function justifier(Request $request)
 {
     $request->validate([
         'absence_id' => 'required|exists:etudiant_absences,id',
         'justification' => 'required|string',
-        'justification_file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048'
+'justification_file' => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:2048', // Limite de 2 Mo
     ]);
 
     // Vérifier que l'absence appartient à l'étudiant connecté

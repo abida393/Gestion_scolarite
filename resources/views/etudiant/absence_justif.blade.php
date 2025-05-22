@@ -15,18 +15,6 @@
                     </h1>
                     <p class="mt-2 text-blue-100 font-light">Suivi et justification de vos absences en temps réel</p>
                 </div>
-                <div class="bg-white/20 backdrop-blur-sm rounded-xl px-6 py-3 shadow-sm border border-white/10">
-                    <div class="flex items-center space-x-3">
-                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-white/20 flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                        </div>
-                        <span class="text-white font-medium">
-                            {{ Auth::guard('etudiant')->user()->etudiant_nom }} {{ Auth::guard('etudiant')->user()->etudiant_prenom }}
-                        </span>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -448,4 +436,19 @@
         .backdrop-blur-lg { backdrop-filter: blur(16px); }
     </style>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('input[name="justification_file"]').forEach(function(fileInput) {
+        const label = fileInput.closest('label');
+        const span = label.querySelector('span');
+        fileInput.addEventListener('change', function () {
+            if (fileInput.files.length > 0) {
+                span.textContent = fileInput.files[0].name;
+            } else {
+                span.textContent = "Téléverser un fichier";
+            }
+        });
+    });
+});
+</script>
 </x-home>
