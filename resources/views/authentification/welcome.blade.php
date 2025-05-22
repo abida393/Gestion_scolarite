@@ -45,7 +45,7 @@
             }
         }
     </script>
-     <style type="text/tailwindcss">
+    <style type="text/tailwindcss">
         @layer utilities {
             .bg-gradient-primary {
                 background: linear-gradient(to right, #4361ee, #4895ef);
@@ -59,69 +59,62 @@
                 backdrop-filter: blur(6px);
             }
         }
+        html {
+            height: 100%;
+            overflow: hidden;
+        }
+        body {
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            overflow: auto;
+        }
     </style>
 </head>
-{{-- <body class="min-h-screen font-poppins bg-white bg-combined"> --}}
-    <div class="absolute inset-0 overflow-hidden">
-    <body class="min-h-screen font-poppins bg-white bg-cover" style="background-image: url('{{ asset('images/tech.jpg') }}'); background-size: cover; background-position: center;">
+<body class="h-full font-poppins bg-white" style="background-image: url('{{ asset('images/bg1.png') }}');">
 
-    <!-- Floating decorative elements -->
-    <div class="absolute top-1/4 left-1/4 w-16 h-16 rounded-full bg-primary/10 blur-xl animate-floating"></div>
-    <div class="absolute top-1/3 right-1/4 w-24 h-24 rounded-full bg-accent/10 blur-xl animate-floating animation-delay-2000"></div>
-    <div class="absolute bottom-1/4 right-1/3 w-20 h-20 rounded-full bg-success/10 blur-xl animate-floating animation-delay-4000"></div>
-
-    <div class="relative min-h-screen flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8 card-3d">
-        <div class="w-full max-w-md bg-white/65 backdrop-blur-sm rounded-2xl shadow-3d transform transition-all duration-500 hover:rotate-y-3 hover:rotate-x-2 group p-8 sm:p-10 inner-3d shadow-lg">
-            <!-- Logo section with enhanced 3D -->
-            <div class="text-center mb-10 transform transition-all duration-300 group-hover:-translate-y-1">
-                <div class="relative inline-block animate-pulse">
-                    <i class="fas fa-graduation-cap text-6xl text-gradient-primary"></i>
-                    <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-md -z-10"></div>
+    <div class="fixed inset-0 flex items-center justify-center p-4">
+        <div class="w-full max-w-md bg-white rounded-2xl shadow-3d p-8 sm:p-10 mx-auto">
+            <!-- Logo section -->
+            <div class="text-center mb-10">
+                <div class="relative inline-block">
+                    <img src="{{ asset('images/logo.jpeg') }}" alt="Logo"
+                        class="mx-auto w-40 h-40 object-contain border-0 bg-transparent"
+                        style="border-radius:0; box-shadow:none;">
                 </div>
-                <h1 class="text-4xl font-bold text-gradient-primary mt-4">Gestion Scolaire</h1>
-                <p class="text-gray-500 mt-2 text-sm font-medium">Connectez-vous à votre espace</p>
+                <p class="text-gray-500 mt-4 text-sm font-medium">Connectez-vous à votre espace</p>
             </div>
-            <!-- Login form with 3D inputs -->
+            <!-- Login form -->
             <form method="POST" action="{{ route("login") }}" class="space-y-6">
                 @csrf
-                <!-- Email input with floating effect -->
-<div class="relative transform transition-all duration-300 hover:-translate-y-1">
-    <div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 rounded-xl blur-sm -z-10"></div>
-    <i class="fas fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-primary/80"></i>
-    <input id="email" type="email" name="email" placeholder="Email"
-        class="w-full pl-12 pr-4 py-4 border border-gray-200/80 rounded-xl bg-white/90 focus:border-primary focus:ring-2 focus:ring-primary/30 outline-none shadow-sm transition-all duration-300 hover:shadow-md">
-        @error('email')
-        <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
-        @enderror
-</div>
-
-                <!-- Password input with floating effect -->
-                <div class="relative transform transition-all duration-300 hover:-translate-y-1">
-    <div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 rounded-xl blur-sm -z-10"></div>
-    <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-primary/80"></i>
-    <input id="password" type="password" name="password" placeholder="Mot de passe"
-        class="w-full pl-12 pr-10 py-4 border border-gray-200/80 rounded-xl bg-white/90 focus:border-primary focus:ring-2 focus:ring-primary/30 outline-none shadow-sm transition-all duration-300 hover:shadow-md">
-    <button type="button" id="togglePassword" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-primary/80 focus:outline-none">
-        <i class="fas fa-eye"></i>
-    </button>
-    @error('password')
-        <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
-    @enderror
-</div>
-
-                <!-- Remember me and forgot password -->
+                <div class="relative">
+                    <i class="fas fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-primary/80"></i>
+                    <input id="email" type="email" name="email" placeholder="Email"
+                        class="w-full pl-12 pr-4 py-4 border border-gray-200/80 rounded-xl bg-white focus:border-primary focus:ring-2 focus:ring-primary/30 outline-none shadow-sm transition-all duration-300 hover:shadow-md">
+                    @error('email')
+                        <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="relative">
+                    <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-primary/80"></i>
+                    <input id="password" type="password" name="password" placeholder="Mot de passe"
+                        class="w-full pl-12 pr-10 py-4 border border-gray-200/80 rounded-xl bg-white focus:border-primary focus:ring-2 focus:ring-primary/30 outline-none shadow-sm transition-all duration-300 hover:shadow-md">
+                    <button type="button" id="togglePassword" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-primary/80 focus:outline-none">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    @error('password')
+                        <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
+                    @enderror
+                </div>
                 <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary">
-                        <label for="remember-me" class="ml-2 block text-sm text-gray-700">Se souvenir de moi</label>
-                    </div>
-
                     <div class="text-sm">
-                    <a href="{{ route('password.request') }}" class="font-medium text-primary hover:text-primary/80">Mot de passe oublié?</a>
+                        <a href="{{ route('password.request') }}" class="font-medium text-primary hover:text-primary/80">Mot de passe oublié?</a>
                     </div>
                 </div>
-
-                <!-- Login button with 3D effect -->
                 <div>
                     <button type="submit"
                         class="group relative w-full flex justify-center py-4 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-primary hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
@@ -132,38 +125,21 @@
                     </button>
                 </div>
             </form>
-
-            <!-- Footer -->
             <div class="text-center text-gray-500 text-xs mt-8">
-                &copy; {{ date('Y') }} Système de Gestion Scolaire - Tous droits réservés
+                &copy; {{ date('Y') }} UOR - Tous droits réservés
             </div>
         </div>
     </div>
 
     <script>
-        // 3D effect on mouse move
-        const loginContainer = document.querySelector('.group');
-        loginContainer.addEventListener('mousemove', (e) => {
-            const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
-            const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
-            loginContainer.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-        });
-
-        // Reset when mouse leaves
-        loginContainer.addEventListener('mouseleave', () => {
-            loginContainer.style.transform = 'rotateY(0) rotateX(0)';
-        });
+        // Password eye toggle
         const togglePassword = document.querySelector('#togglePassword');
-    const passwordInput = document.querySelector('#password');
-
-    togglePassword.addEventListener('click', () => {
-        // Toggle the type attribute
-        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordInput.setAttribute('type', type);
-
-        // Toggle the icon
-        togglePassword.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
-    });
+        const passwordInput = document.querySelector('#password');
+        togglePassword.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            togglePassword.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        });
     </script>
 </body>
 </html>

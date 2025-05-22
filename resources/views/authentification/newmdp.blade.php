@@ -38,24 +38,38 @@
                 50% { transform: translateY(-15px) rotate(2deg); }
             }
         }
+        html {
+            height: 100%;
+            overflow: hidden;
+        }
+        body {
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            overflow: auto;
+        }
     </style>
 </head>
-<body class="min-h-screen font-poppins bg-white bg-cover" style="background-image: url('{{ asset('images/tech.jpg') }}'); background-size: cover; background-position: center;">
+<body class="h-full font-poppins bg-white" style="background-image: url('{{ asset('images/tech.jpg') }}');">
 
     <!-- Floating decorative elements -->
     <div class="absolute top-1/4 left-1/4 w-16 h-16 rounded-full bg-primary/10 blur-xl floating"></div>
     <div class="absolute top-1/3 right-1/4 w-24 h-24 rounded-full bg-accent/10 blur-xl floating" style="animation-delay: 2s"></div>
     <div class="absolute bottom-1/4 right-1/3 w-20 h-20 rounded-full bg-success/10 blur-xl floating" style="animation-delay: 4s"></div>
 
-    <div class="relative min-h-screen flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-        <div class="w-full max-w-md bg-white/65 backdrop-blur-sm rounded-2xl shadow-3d transform transition-all duration-500 hover:rotate-y-3 hover:rotate-x-2 group p-8 sm:p-10 shadow-lg">
+    <div class="fixed inset-0 flex items-center justify-center p-4">
+        <div class="w-full max-w-md bg-white/65 backdrop-blur-sm rounded-2xl shadow-3d transform transition-all duration-500 hover:rotate-y-3 hover:rotate-x-2 group p-8 sm:p-10 shadow-lg mx-auto">
             <!-- Logo section -->
             <div class="text-center mb-10 transform transition-all duration-300 group-hover:-translate-y-1">
                 <div class="relative inline-block animate-pulse">
-                    <i class="fas fa-key text-6xl text-gradient-primary"></i>
-                    <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-md -z-10"></div>
+                    <img src="{{ asset('images/logo.jpeg') }}" alt="Logo"
+                        class="mx-auto w-40 h-40 object-contain border-0 bg-transparent"
+                        style="border-radius:0; box-shadow:none; filter: blur(0.5px);">
                 </div>
-                <h1 class="text-4xl font-bold text-gradient-primary mt-4">Gestion Scolaire</h1>
                 <p class="text-gray-500 mt-2 text-sm font-medium">Réinitialiser votre mot de passe</p>
             </div>
 
@@ -66,7 +80,7 @@
                 </div>
             @endif
 
-            @if ($errors->any())
+            @if ($errors->any()))
                 <div class="mb-4">
                     <div class="font-medium text-red-600">
                         {{ __('Whoops! Something went wrong.') }}
@@ -136,7 +150,7 @@
 
             <!-- Footer -->
             <div class="text-center text-gray-500 text-xs mt-8">
-                &copy; {{ date('Y') }} Système de Gestion Scolaire - Tous droits réservés
+                &copy; {{ date('Y') }} UOR - Tous droits réservés
             </div>
         </div>
     </div>

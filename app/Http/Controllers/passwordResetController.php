@@ -28,7 +28,7 @@ class PasswordResetController extends Controller
         $user->password = Hash::make($request->new_password);
         $user->save();
 
-        return back()->with('success', 'Mot de passe changé avec succès.');
+        return redirect()->route('profile')->with('success', 'Mot de passe changé avec succès');
     }
 }
 

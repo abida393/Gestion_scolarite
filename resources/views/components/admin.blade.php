@@ -91,7 +91,7 @@
             </div>
         </div>
         <div class="logo">
-            <img src="{{ asset('/images/logo1.jpg') }}" alt="Logo Établissement" style="align-items:left;width:150px">
+            <img src="{{ asset('/images/logo.jpeg') }}" alt="Logo Établissement" style="align-items:left;width:110px">
             {{-- <div class="burger-menu" id="mobile-toggle">
                 <i class="fas fa-bars"></i>
             </div> --}}

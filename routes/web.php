@@ -340,10 +340,11 @@ Route::post('/absences/export/pdf', [AbsenceResponsableController::class, 'expor
     // Dans routes/web.php (temporairement)
 
 
-
+//========================== profile responsable ========================================
+//profile responsable
 Route::get('/responsable/profile',[ResponsableProfileController::class,'showProfile'])->name('responsable.profile');
 
-
+//changement du mot de passe du responsable
 Route::post('/responsable/password/update', [ResponsableProfileController::class, 'updatePassword'])
     ->middleware('auth:responsable')
     ->name('password.update');
