@@ -24,7 +24,7 @@ class AuthController extends Controller
             return redirect()->route('home');
         }elseif(Auth::guard('responsable')->attempt(['email_ecole' => $credentials['email'], 'password' => $credentials['password']])){
             $request->session()->regenerate();
-            return redirect()->route('admin');
+            return redirect()->route('responsable.afficher_etudiant');
     }else{
         return redirect()->back()->withErrors(['email' => 'Invalid credentials'])->withInput();
     }

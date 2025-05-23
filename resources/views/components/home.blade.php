@@ -8,6 +8,10 @@
 <html lang="fr">
 
 <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script src="//unpkg.com/alpinejs" defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -73,7 +77,8 @@
         }
     </style>
 </head>
-
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="//unpkg.com/alpinejs" defer></script>
 <body>
     <!-- Sidebar -->
     <div class="sidebar" style="height: 100vh; overflow-y: auto; overflow-x: hidden;">
@@ -83,7 +88,7 @@
     </div>
 </div>
         <div class="logo">
-            <img src="{{ asset('/images/logo1.jpg') }}" alt="Logo Établissement" style="align-items:left;width:150px">
+            <img src="{{ asset('/images/logo.jpeg') }}" alt="Logo Établissement" style="align-items:left;width:110px">
             {{-- <div class="burger-menu" id="mobile-toggle">
                 <i class="fas fa-bars"></i>
             </div> --}}
@@ -119,10 +124,15 @@
                 <span>Evenements</span>
             </a>
             <a href="{{ route('messagerie-etudiant') }}" class="nav-item {{ Route::is('messagerie-etudiant') ? 'active' : '' }}"
-                data-page="messagerie">
-                <i class="fa-solid fa-inbox"></i>
-                <span>Messagerie</span>
-            </a>
+    data-page="messagerie" style="position: relative;">
+    <i class="fa-solid fa-inbox"></i>
+    <span>Messagerie</span>
+    @if(($unreadCount ?? 0) > 0)
+    <span style="position: absolute; top: 8px; right: 10px; background:blue; color: white; border-radius: 9999px; font-size: 10px; padding: 2px 6px; min-width: 16px; text-align: center;">
+        {{ ($unreadCount ?? 0) > 9 ? '9+' : $unreadCount }}
+    </span>
+@endif
+</a>
             <a href="{{ route('notes') }}" class="nav-item {{ Route::is('notes') ? 'active' : '' }}"
                 data-page="notes">
                 <i class="far fa-sticky-note"></i>
@@ -212,11 +222,11 @@
             </div>
 
             <div class="profile-info flex flex-col items-start text-white">
-                <div class="profile-name font-semibold text-lg">
+                <div class="profile-name font-semibold" style="font-size:17px;">
                     {{ $nom_complete }}
                 </div>
                 <div class="profile-class text-sm">
-                    {{ $filiere->nom_filiere }}
+                    {{ Auth::guard('etudiant')->user()->classe->nom_classe }}
                 </div>
             </div>
         </div>

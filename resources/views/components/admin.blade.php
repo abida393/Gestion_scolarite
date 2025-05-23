@@ -12,12 +12,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $page_titre }}</title>
 
-<!-- Select2 CSS -->
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<!-- jQuery (requis pour Select2) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Select2 JS -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <!-- jQuery (requis pour Select2) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <!-- Font Awesome (latest version) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -81,6 +81,7 @@
     </style>
 </head>
 <script src="//unpkg.com/alpinejs" defer></script>
+
 <body>
     <!-- Sidebar -->
     <div class="sidebar" style="height: 100vh; overflow-y: auto; overflow-x: hidden;">
@@ -91,85 +92,127 @@
             </div>
         </div>
         <div class="logo">
-            <img src="{{ asset('/images/logo1.jpg') }}" alt="Logo Établissement" style="align-items:left;width:150px">
+            <img src="{{ asset('/images/logo.jpeg') }}" alt="Logo Établissement" style="align-items:left;width:110px">
             {{-- <div class="burger-menu" id="mobile-toggle">
                 <i class="fas fa-bars"></i>
             </div> --}}
         </div>
         <br>
         <div class="nav-menu">
-            <a href="{{ route('chatbot') }}" class="nav-item {{ Route::is('chatbot') ? 'active' : '' }}" data-page="chatbot">
+            <a href="{{ route('chatbot') }}" class="nav-item {{ Route::is('chatbot') ? 'active' : '' }}"
+                data-page="chatbot">
                 <i class="fas fa-home"></i>
                 <span>chatbot</span>
             </a>
             <a href="{{ route('responsable.absences') }}"
-            class="nav-item {{ Route::is('responsable.absences') ? 'active' : '' }}"
-                data-page="absences">
+                class="nav-item {{ Route::is('responsable.absences') ? 'active' : '' }}" data-page="absences">
                 <i class="fas fa-user-clock"></i>
-                <span>Absence et justif</span>
+                <span>Saisie des absences</span>
             </a>
-            <a href="{{ route('paiements.index') }}"
-                class="nav-item {{ Route::is('paiements.index') ? 'active' : '' }}" data-page="paiements.index">
+            <a href="{{ route('paiements.index') }}" class="nav-item {{ Route::is('paiements.index') ? 'active' : '' }}"
+                data-page="paiements.index">
                 <i class="far fa-calendar-alt"></i>
                 <span>paiement</span>
             </a>
-            <a href="{{ route('notes-admin') }}"
-                class="nav-item {{ Route::is('notes-admin') ? 'active' : '' }}" data-page="notes-admin">
+            <a href="{{ route('notes-admin') }}" class="nav-item {{ Route::is('notes-admin') ? 'active' : '' }}"
+                data-page="notes-admin">
                 <i class="fas fa-file-alt"></i>
                 <span>notes</span>
-            <!-- Ajouter par imad -->
-            <a href="{{ route('responsable.documents.index') }}"
-                class="nav-item {{ Route::is('responsable.documents.index') ? 'active' : '' }}" data-page="demandes">
-                <i class="fas fa-file-alt"></i>
-                <span>Suivi documents</span>
-            </a>
-            <a href="{{ route('responsable.emploi') }}"
-                class="nav-item {{ Route::is('responsable.emploi') ? 'active' : '' }}" data-page="Emploi">
-                <i class="fas fa-calendar-alt"></i>
-                <span>Emplois Du Temps</span>
-            </a>
-            <a href="{{ route('responsable.calendrier') }}"
-                class="nav-item {{ Route::is('responsable.calendrier') ? 'active' : '' }}" data-page="Emploi">
-                <i class="far fa-calendar-alt"></i>
-                <span>Calendrier</span>
-            </a>
-            <a href="{{ route('responsable.events') }}"
-                class="nav-item {{ Route::is('responsable.events') ? 'active' : '' }}" data-page="evenements">
-                <i class="fas fa-briefcase"></i>
-                <span>Événements</span>
-            </a>
-            <!---------------------->
+                <!-- Ajouter par imad -->
+                <a href="{{ route('responsable.documents.index') }}"
+                    class="nav-item {{ Route::is('responsable.documents.index') ? 'active' : '' }}"
+                    data-page="demandes">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Suivi documents</span>
+                </a>
+                <a href="{{ route('responsable.emploi') }}"
+                    class="nav-item {{ Route::is('responsable.emploi') ? 'active' : '' }}" data-page="Emploi">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Emplois Du Temps</span>
+                </a>
+                <a href="{{ route('responsable.calendrier') }}"
+                    class="nav-item {{ Route::is('responsable.calendrier') ? 'active' : '' }}" data-page="Emploi">
+                    <i class="far fa-calendar-alt"></i>
+                    <span>Calendrier</span>
+                </a>
+                <a href="{{ route('responsable.events') }}"
+                    class="nav-item {{ Route::is('responsable.events') ? 'active' : '' }}" data-page="evenements">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Événements</span>
+                </a>
+                <!---------------------->
 
-            <a href="{{ route('messagerie') }}" class="nav-item {{ Route::is('messagerie') ? 'active' : '' }}"
-                data-page="messagerie">
-                <i class="fa-solid fa-inbox"></i>
-                <span>Messagerie</span>
-            </a>
-            <a href="{{ route('ajouter-etudiant') }}"
-                class="nav-item {{ Route::is('ajouter-etudiant') ? 'active' : '' }}" data-page="ajouter-etudiant">
-                <i class="far fa-sticky-note"></i>
-                <span>Ajouter etudiant</span>
-            </a>
-            <a href="{{ route('ajouter-enseignant') }}"
-                class="nav-item {{ Route::is('ajouter-enseignant') ? 'active' : '' }}" data-page="ajouter-enseignant">
-                <i class="far fa-sticky-note"></i>
-                <span>Ajouter enseignant</span>
-            </a>
-
-            <!-- Ajouter par imad -->
-            <a href="{{ route('news.index') }}" class="nav-item {{ Route::is('news.index') ? 'active' : '' }}"
-                data-page="news">
-            {{-- <a href="{{ route('news') }}" class="nav-item {{ Route::is('news') ? 'active' : '' }}" data-page="news"> --}}
-                <i class="fas fa-newspaper"></i>
-                <span>News</span>
-            </a>
-            <!-- Ajouter par imad -->
-            <a href="{{ route('stages-responsable') }}"
-                class="nav-item {{ Route::is('stages-responsable') ? 'active' : '' }}" data-page="stage">
-                <i class="fas fa-briefcase"></i>
-                <span>Stages</span>
-            </a>
-            <!---------------------->
+                <a href="{{ route('messagerie') }}" class="nav-item {{ Route::is('messagerie') ? 'active' : '' }}"
+                    data-page="messagerie" style="position: relative;">
+                    <i class="fa-solid fa-inbox"></i>
+                    <span>Messagerie</span>
+                    @if (($unreadCount ?? 0) > 0)
+                        <span
+                            style="position: absolute; top: 8px; right: 10px; background:blue; color: white; border-radius: 9999px; font-size: 10px; padding: 2px 6px; min-width: 16px; text-align: center;">
+                            {{ ($unreadCount ?? 0) > 9 ? '9+' : $unreadCount }}
+                        </span>
+                    @endif
+                </a>
+                {{-- dropdown menu Etudiant --}}
+                <div class="dropdown">
+                    <button class="nav-item dropbtn">
+                        <i class="fas fa-ellipsis-h"></i>
+                        <span>Gestion Etudiant</span>
+                        <i class="fas fa-caret-down"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="{{ route('ajouter-etudiant') }}"
+                            class="nav-item {{ Route::is('ajouter-etudiant') ? 'active' : '' }} "
+                            data-page="ajouter-etudiant">
+                            <i class="fa-solid fa-user"></i>
+                            <span>Ajouter etudiant</span>
+                        </a>
+                        <a href="{{ route('responsable.afficher_etudiant') }}"
+                            class="nav-item {{ Route::is('responsable.afficher_etudiant') ? 'active' : '' }}"
+                            data-page="Emploi">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                            <span>liste Etudiant</span>
+                        </a>
+                    </div>
+                </div>
+                {{-- dropdown menu Etudiant--}}
+                {{-- dropdown menu Enseignant --}}
+                <div class="dropdown">
+                    <button class="nav-item dropbtn">
+                        <i class="fas fa-ellipsis-h"></i>
+                        <span>Gestion Enseignant</span>
+                        <i class="fas fa-caret-down"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="{{ route('ajouter-enseignant') }}"
+                            class="nav-item {{ Route::is('ajouter-enseignant') ? 'active' : '' }} "
+                            data-page="ajouter-etudiant">
+                            <i class="fa-solid fa-user"></i>
+                            <span>Ajouter Enseignant</span>
+                        </a>
+                        <a href="{{ route('responsable.afficher_enseignant') }}"
+                            class="nav-item {{ Route::is('responsable.afficher_enseignant') ? 'active' : '' }}"
+                            data-page="Emploi">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                            <span>liste Enseignant</span>
+                        </a>
+                    </div>
+                </div>
+                {{-- dropdown menu Enseignant--}}
+                <!-- Ajouter par imad -->
+                <a href="{{ route('news.index') }}" class="nav-item {{ Route::is('news.index') ? 'active' : '' }}"
+                    data-page="news">
+                    {{-- <a href="{{ route('news') }}" class="nav-item {{ Route::is('news') ? 'active' : '' }}" data-page="news"> --}}
+                    <i class="fas fa-newspaper"></i>
+                    <span>News</span>
+                </a>
+                <!-- Ajouter par imad -->
+                <a href="{{ route('stages-responsable') }}"
+                    class="nav-item {{ Route::is('stages-responsable') ? 'active' : '' }}" data-page="stage">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Stages</span>
+                </a>
+                <!---------------------->
 
         </div>
     </div>
@@ -214,7 +257,7 @@
                     </div>
 
                     <div class="py-1">
-                        <a href="{{ route('profile') }}"
+                        <a href="{{ route('responsable.profile') }}"
                             class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                             <svg class="w-4 h-4 mr-3 text-indigo-500" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
@@ -242,10 +285,10 @@
             </div>
 
             <div class="profile-info flex flex-col items-start text-white">
-                <div class="profile-name font-semibold text-lg">
-                    {{ $nom_complete }}
-                </div>
+            <div class="profile-name font-semibold" style="font-size:17px;">
+                {{ $nom_complete }}
             </div>
+        </div>
         </div>
     </header>
 

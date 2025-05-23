@@ -8,6 +8,7 @@ use App\Models\annee;
 use App\Models\annee_formation;
 use App\Models\classe;
 use App\Models\demandes_documents;
+use App\Models\DemandesDocuments;
 use App\Models\document;
 use App\Models\emplois_temps;
 use App\Models\enseignant;
@@ -40,39 +41,39 @@ class DatabaseSeeder extends Seeder
     $this->call(ReponsesTableSeeder::class);
 
 
-        // \App\Models\User::factory(10)->create();
+        \App\Models\User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-        // formation::factory()->create([
-        //     'id' => 1,
-        //     'nom_formation' => 'Informatique',
-        //     'prix' => 1000,
-        // ]);
+        \App\Models\User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+        ]);
+        formation::factory()->create([
+            'id' => 1,
+            'nom_formation' => 'Informatique',
+            'prix' => 1000,
+        ]);
 
-        // filiere::factory(10)->create();
-        // annee::factory(10)->create();
-        // classe::factory(10)->create();
-        // module::factory(10)->create();
-        // profile::factory(2)->create();
-        // enseignant::factory()->count(10)->create();
-        // matiere::factory(10)->create();
-        // examen::factory(10)->create();
+        filiere::factory(10)->create();
+        annee::factory(10)->create();
+        classe::factory(10)->create();
+        module::factory(10)->create();
+        profile::factory(2)->create();
+        enseignant::factory()->count(10)->create();
+        matiere::factory(10)->create();
+        examen::factory(10)->create();
         responsable::factory(1)->create();
-        // etudiant::factory(10)->create();
-        // seance::factory(10)->create();
-        // // etudiant_absence::factory(10)->create();
-        // annee_formation::factory(10)->create();
-        // document::factory(10)->create();
-        // // demandes_documents::factory(10)->create();
-        // periode::factory(10)->create();
-        // // emplois_temps::factory(10)->create();
-        // stage::factory(10)->create();
-        // news::factory(10)->create();
-        // evenement::factory(10)->create();
-        // paiement::factory(10)->create();
-        // note::factory(10)->create();
+        etudiant::factory(10)->create();
+        seance::factory(10)->create();
+        etudiant_absence::factory(10)->create();
+        annee_formation::factory(10)->create();
+        document::factory(10)->create();
+        DemandesDocuments::factory(10)->create();
+        periode::factory(10)->create();
+        emplois_temps::factory(10)->create();
+        stage::factory(10)->create();
+        news::factory(10)->create();
+        evenement::factory(10)->create();
+        paiement::factory(10)->create();
+        note::factory(10)->create();
     }
 }

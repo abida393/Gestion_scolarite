@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Classe;
 use App\Models\emplois_temps;
 use App\Models\EmploiTemps;
+use App\Models\enseignant;
 use App\Models\Etudiant;
 use App\Models\etudiant_absence;
 use App\Models\EtudiantAbsence;
+use App\Models\Matiere;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
@@ -18,21 +20,130 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class AbsenceResponsableController extends Controller
 {
-  public function index($request = null)
+ public function index($request = null)
 {
     $request = $request ?? request();
-    $classes = Classe::all();
-    $query = etudiant_absence::with(['etudiant', 'matiere', 'classe', 'emploiTemps.matiere'])
-        ->orderBy('date_absence', 'desc');
+    $classes = Classe::with('etudiants')->get();
+    $modules = Matiere::all();
+    $professeurs = enseignant::all();
+
+   $query = etudiant_absence::query();
 
     if ($request->filled('classe_id')) {
         $query->whereHas('etudiant', function($q) use ($request) {
             $q->where('classes_id', $request->classe_id);
         });
     }
+    if ($request->filled('etudiant_id')) {
+        $query->where('etudiant_id', $request->etudiant_id);
+    }
+  // AJOUT : filtre par statut
+    if ($request->filled('status')) {
+        if ($request->status == 'justified') {
+            $query->where('Justifier', true);
+        } elseif ($request->status == 'pending') {
+            $query->where('status', 'pending');
+        } elseif ($request->status == 'unjustified') {
+            $query->where('Justifier', false)->where('status', '!=', 'pending');
+        } else {
+            $query->where('status', $request->status);
+        }
+    }
+    // AJOUT : filtre par type
+    if ($request->filled('type')) {
+        $query->where('type', $request->type);
+    }
+    // Statistiques
+    $totalAbsences = (clone $query)->count();
+    $justifiedAbsences = (clone $query)->where('Justifier', true)->count();
+    $pendingAbsences = (clone $query)->where('status', 'pending')->count();
+    $unjustifiedAbsences = (clone $query)->where('Justifier', false)->where('status', '!=', 'pending')->count();
 
     $absences = $query->paginate(20)->appends(request()->query());
-    return view('responsable.absences', compact('absences', 'classes'));
+
+    // Tendance des absences sur 30 jours
+    $startDate = now()->subDays(29)->startOfDay();
+    $endDate = now()->endOfDay();
+    $absencesByDay = (clone $query)
+        ->whereBetween('date_absence', [$startDate, $endDate])
+        ->get()
+        ->groupBy(function($item) {
+            return \Carbon\Carbon::parse($item->date_absence)->format('Y-m-d');
+        });
+       
+
+    $absenceTrends = [];
+    $max = 0;
+    for ($i = 0; $i < 30; $i++) {
+    $date = now()->subDays(29 - $i)->format('Y-m-d');
+    $count = isset($absencesByDay[$date]) ? count($absencesByDay[$date]) : 0;
+    $absenceTrends[] = [
+        'date' => $date,
+        'day' => Carbon::parse($date)->format('d/m'),
+        'count' => $count,
+    ];
+    if ($count > $max) $max = $count;
+}
+
+    foreach ($absenceTrends as &$trend) {
+        $trend['percentage'] = $max > 0 ? ($trend['count'] / $max) * 100 : 0;
+    }
+
+    // Top 5 classes avec le plus d'absences cette semaine
+    $weekStart = now()->startOfWeek();
+    $weekEnd = now()->endOfWeek();
+    $topClasses = Classe::withCount(['etudiants as absences_count' => function($query) use ($weekStart, $weekEnd) {
+        $query->join('etudiant_absences', 'etudiants.id', '=', 'etudiant_absences.etudiant_id')
+              ->whereBetween('etudiant_absences.date_absence', [$weekStart, $weekEnd]);
+    }])
+    ->orderByDesc('absences_count')
+    ->take(5)
+    ->get();
+
+    $maxClassAbsences = $topClasses->max('absences_count') ?: 1; // éviter division par zéro
+
+    return view('responsable.absences', compact(
+        'absences',
+        'classes',
+        'modules',
+        'professeurs',
+        'totalAbsences',
+        'justifiedAbsences',
+        'pendingAbsences',
+        'unjustifiedAbsences',
+        'absenceTrends',
+        'topClasses',
+        'maxClassAbsences'
+    ));
+}
+public function bulkAction(Request $request)
+{
+    $request->validate([
+        'ids' => 'required|array',
+        'ids.*' => 'exists:absences,id',
+        'action' => 'required|in:justify,delete'
+    ]);
+
+    try {
+        switch ($request->action) {
+            case 'justify':
+               etudiant_absence::whereIn('id', $request->ids)
+                    ->where('etudiant_id', auth('etudiant')->id())
+                    ->update(['status' => 'pending']);
+                break;
+                
+            case 'delete':
+                etudiant_absence::whereIn('id', $request->ids)
+                    ->where('etudiant_id', auth('etudiant')->id())
+                    ->delete();
+                break;
+        }
+
+        return response()->json(['success' => true]);
+        
+    } catch (\Exception $e) {
+        return response()->json(['success' => false], 500);
+    }
 }
 
     public function justificationsEnAttente()
@@ -225,6 +336,9 @@ public function exportCSV(Request $request)
                 $q->where('classes_id', $request->classe_id);
             });
         })
+        ->when($request->etudiant_id, function($query) use ($request) {
+            return $query->where('etudiant_id', $request->etudiant_id);
+        })
         ->get();
 
     $headers = [
@@ -260,11 +374,14 @@ public function exportCSV(Request $request)
 
 public function exportPDF(Request $request)
 {
-    $absences = etudiant_absence::with(['etudiant', 'emploiTemps.matiere'])
+     $absences = etudiant_absence::with(['etudiant', 'emploiTemps.matiere'])
         ->when($request->classe_id, function($query) use ($request) {
             return $query->whereHas('etudiant', function($q) use ($request) {
                 $q->where('classes_id', $request->classe_id);
             });
+        })
+        ->when($request->etudiant_id, function($query) use ($request) {
+            return $query->where('etudiant_id', $request->etudiant_id);
         })
         ->get();
 

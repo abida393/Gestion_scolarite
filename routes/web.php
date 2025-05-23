@@ -19,11 +19,14 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\ResponsableProfileController;
 use Illuminate\Http\Request;
 
 //=============Ajouter par imad===============
 use App\Http\Controllers\NewsController;
 // ===========================================
+
+use App\Notifications\DocumentPretNotification;
 
 use App\Exports\AbsencesExport;
 // ==================== AUTHENTICATION ====================
@@ -44,7 +47,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/change-password', [PasswordResetController::class, 'edit'])->name('password.edit');
 Route::put('/update-password', [PasswordResetController::class, 'update'])->name('password.change');
 
-Route::get('/password/forgot', [PasswordController::class, 'showForgotForm'])->name('password.request');
+Route::get('/password/forgot/request', [PasswordController::class, 'showForgotForm'])->name('password.request');
 Route::post('/password/forgot', [PasswordController::class, 'sendResetLink'])->name('password.email');
 Route::get('/password/reset/{token}', [PasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/password/reset', [PasswordController::class, 'reset'])->name('password.update');
@@ -79,7 +82,8 @@ Route::middleware('auth:responsable')->group(function () {
     Route::post('/responsable/messages', [MessageController::class, 'sendResponsableMessage']);
 
 });
-
+Route::post('/messages/{responsable}/mark-as-read', [MessageController::class, 'markAsRead'])->middleware('auth:etudiant');
+Route::post('/responsable/messages/{etudiant}/mark-as-read', [MessageController::class, 'markAsReadByResponsable'])->middleware('auth:responsable');
 // ==================== EMPLOI DU TEMPS ====================
 Route::middleware('auth.multi:etudiant')->prefix('emploi')->group(function () {
     Route::get('/etudiant', [EmploiTempsController::class, 'emploiEtudiant'])->name('emploi.etudiant');
@@ -140,6 +144,7 @@ Route::middleware('auth.multi:etudiant')->prefix('documents')->group(function ()
         return Storage::disk('documents')->download($filename);
     })->name('documents.file');
     Route::get('/{filename}/download', [DocumentController::class, 'downloadFile']);
+
 });
 
 Route::get('/demandes/{id}/download', [DocumentController::class, 'download'])->name('demandes.download');
@@ -159,7 +164,16 @@ Route::middleware('auth.multi:responsable')->prefix('responsable/documents')->gr
     Route::get('/download/{id}', [DocumentController::class, 'downloadFile'])->name('documents.download');
     Route::post('/upload/{id}', [DocumentController::class, 'uploadDocument'])->name('responsable.demande.upload');
     Route::get('/modifier/{id}', [DocumentController::class, 'modifier'])->name('responsable.demande.modifier');
+    Route::post('/terminer/{id}', [DocumentController::class, 'terminerDemande'])->name('responsable.demande.terminer');
 
+    Route::get('/test-notification', function() {
+    $demande = \App\Models\Document::first();
+    $user = $demande->etudiant;
+
+    $user->notify(new DocumentPretNotification($demande));
+
+    return 'Notification envoyée !';
+});
 });
 
 
@@ -196,7 +210,15 @@ Route::middleware('auth.multi:responsable')->group(function(){
     Route::get('/ajouter-etudiant', [ajouterEtudiantController::class, 'index'])->name('ajouter-etudiant');
     Route::post('/ajouter-etudiant/store', [ajouterEtudiantController::class, 'store'])->name('admin.etudiants.store');
     Route::get('/ajouter-enseignant', [ajouterEnseignantController::class, 'index'])->name('ajouter-enseignant');
-    Route::post('/ajouter-enseignant/store', [ajouterEnseignantController::class, 'store'])->name('admin.enseignants.store');
+                           Route::post('/ajouter-enseignant/store', [ajouterEnseignantController::class, 'store'])->name('admin.enseignants.store');
+    Route::get('/afficher-etudiants', [ajouterEtudiantController::class, 'afficherEtudiants'])->name('responsable.afficher_etudiant');
+    Route::get('/edit-etudiants/{etudiant}', [ajouterEtudiantController::class, 'edit'])->name('etudiants.edit');
+    Route::put('/update-etudiants/{etudiant}', [ajouterEtudiantController::class, 'update'])->name('responsable.update_etudiant');
+    Route::get('/afficher-enseignant', [ajouterEtudiantController::class, 'afficherEnseignants'])->name('responsable.afficher_enseignant');
+    Route::get('/edit-enseignant/{enseignant}', [ajouterEtudiantController::class, 'editEnseignant'])->name('enseignants.edit');
+    Route::put('/update-enseignants/{enseignant}', [ajouterEtudiantController::class, 'updateEnseignant'])->name('responsable.update_enseignant');
+    Route::get('/all-enseignant/{enseignant}', [ajouterEtudiantController::class, 'displayAllEnseignant'])->name('responsable.all_enseignant');
+    Route::get('/all-etudiant/{etudiant}', [ajouterEtudiantController::class, 'displayAllEtudiant'])->name('responsable.all_etudiant');
 });
 
 
@@ -212,7 +234,7 @@ use App\Http\Controllers\PaiementController;
 
 
 Route::get('/paiements', [PaiementController::class, 'index'])->name('paiements.index');
-Route::post('/paiements', [PaiementController::class, 'store'])->name('paiements.store');
+Route::post('/paiements/store', [PaiementController::class, 'store'])->name('paiements.store');
 Route::get('/admin/paiements', [PaiementController::class, 'search'])->name('paiements.index');
 Route::post('/admin/paiements/{paiement}/changer-statut', [PaiementController::class, 'changerStatut'])->name('paiements.changer-statut');
 
@@ -255,7 +277,7 @@ Route::prefix('responsable')->middleware(['auth:responsable'])->group(function()
     // Emplois du temps
     Route::get('/emplois', [EmploiTempsController::class, 'affich'])->name('responsable.emploi');
     Route::get('/emplois/create', [EmploiTempsController::class, 'create'])->name('responsable.create');
-    Route::post('/emplois', [EmploiTempsController::class, 'store'])->name('responsable.store');
+    Route::post('/emplois/store', [EmploiTempsController::class, 'store'])->name('responsable.store');
     Route::get('/emploi/{id}/edit', [EmploiTempsController::class, 'edit'])->name('responsable.edit');
 Route::put('/responsable/emploi/{id}', [EmploiTempsController::class, 'update'])->name('responsable.update');
     Route::delete('/emplois/{timetable}', [EmploiTempsController::class, 'destroy'])->name('responsable.destroy');
@@ -265,20 +287,18 @@ Route::put('/responsable/emploi/{id}', [EmploiTempsController::class, 'update'])
     // Emploi complet
     Route::get('/emplois/complet', [EmploiTempsController::class, 'createComplet'])->name('responsable.create_emploi_complet');
     Route::post('/emplois/complet', [EmploiTempsController::class, 'storeMultiple'])->name('responsable.storeMultiple');
-    // API pour les dépendances
-    Route::get('/api/filieres', function(Request $request) {
-        return \App\Models\Filiere::where('formation_id', $request->formation_id)
-            ->orderBy('nom_filiere')
-            ->get();
 
 
-    });
+Route::post('/responsable/emplois/declarer-absence', [EmploiTempsController::class, 'declarerAbsence'])->name('responsable.declarer_absence');
+
+Route::post('/emplois/store', [EmploiTempsController::class, 'store'])->name('responsable.store');
     Route::get('/api/classes', function(Request $request) {
         return \App\Models\Classe::where('filiere_id', $request->filiere_id)
             ->orderBy('nom_classe')
             ->get();
     });
 });
+
 // ==================== absence ====================
 // Routes étudiant
 Route::middleware(['auth:etudiant'])->group(function() {
@@ -286,14 +306,15 @@ Route::middleware(['auth:etudiant'])->group(function() {
          ->name('etudiant.absences.justifier');
              Route::get('/absence_justif', [AbsenceController::class, 'index'])->name('absence_justif');
 
-
+Route::get('/etudiant/absences/details/{id}', [AbsenceController::class, 'details'])
+        ->name('etudiant.absences.details');
     Route::get('/etudiant/absences/download/{id}', [AbsenceController::class, 'downloadJustificatif'])
          ->name('etudiant.absences.download');
+             Route::get('/etudiant/absences', [AbsenceController::class, 'index'])->name('etudiant.absence_justif');
+
 });
 
 // Routes responsable
-
-
 Route::middleware(['auth:responsable'])->prefix('responsable/absences')->group(function () {
     Route::get('/', [AbsenceResponsableController::class, 'index'])->name('responsable.absences');
     Route::get('/justifications', [AbsenceResponsableController::class, 'justificationsEnAttente'])->name('responsable.absences.justifications');
@@ -305,6 +326,9 @@ Route::middleware(['auth:responsable'])->prefix('responsable/absences')->group(f
     Route::put('/update/{absence}', [AbsenceResponsableController::class, 'update'])->name('responsable.absences.update');
     Route::delete('/destroy/{absence}', [AbsenceResponsableController::class, 'destroy'])->name('responsable.absences.destroy');
     Route::get('/export', [AbsenceResponsableController::class, 'export'])->name('responsable.absences.export');
+    Route::post('/absences/bulk-action', [AbsenceController::class, 'bulkAction'])
+    ->name('etudiant.absences.bulk-action')
+    ->middleware('auth:etudiant');
 });
 
 //  pour chargement dynamique
@@ -319,3 +343,16 @@ Route::post('/absences/export/csv', [AbsenceResponsableController::class, 'expor
 Route::post('/absences/export/pdf', [AbsenceResponsableController::class, 'exportPDF'])
     ->name('responsable.absences.export.pdf');
 
+
+    // notification email
+    // Dans routes/web.php (temporairement)
+
+
+//========================== profile responsable ========================================
+//profile responsable
+Route::get('/responsable/profile',[ResponsableProfileController::class,'showProfile'])->name('responsable.profile');
+
+//changement du mot de passe du responsable
+Route::post('/responsable/password/update', [ResponsableProfileController::class, 'updatePassword'])
+    ->middleware('auth:responsable')
+    ->name('password.responsable.update');
