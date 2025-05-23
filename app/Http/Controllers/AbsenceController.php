@@ -85,7 +85,7 @@ public function details($id)
             'justification' => 'required|string',
         ]);
 
-        $absence = etudiant_absence::findOrFail($request->absence_id);
+        $absence = EtudiantAbsence::findOrFail($request->absence_id);
 
         $absence->update([
             'justification' => $request->justification,

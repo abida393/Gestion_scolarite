@@ -7,9 +7,13 @@
                     <div class="p-3 border-b border-gray-200">
                         <div class="relative">
                             <input type="text" id="search-etudiant" placeholder="Rechercher un étudiant..."
-                                   class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute left-3 top-2.5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                                class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="h-5 w-5 absolute left-3 top-2.5 text-gray-400" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                    clip-rule="evenodd" />
                             </svg>
                         </div>
                     </div>
@@ -17,39 +21,42 @@
                     <!-- Conversation List -->
                     <div class="divide-y divide-gray-200" id="conversation-list">
                         @foreach ($etudiants as $etudiant)
-                        <div class="p-3 hover:bg-gray-100 cursor-pointer flex items-center conversation-item"
-                             data-etudiant-id="{{ $etudiant->id }}"
-                             data-search-name="{{ strtolower("{$etudiant->etudiant_nom} {$etudiant->etudiant_prenom}") }}"
-                             data-search-message="{{ $etudiant->last_message ? strtolower($etudiant->last_message->content) : '' }}"
-                             onclick="loadConversation({{ $etudiant->id }}, '{{ $etudiant->etudiant_nom }} {{ $etudiant->etudiant_prenom }}')">
-                            <div class="flex-shrink-0">
-                                <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                                    <span class="text-indigo-600 font-medium">{{ substr($etudiant->etudiant_nom, 0, 1) }}</span>
+                            <div class="p-3 hover:bg-gray-100 cursor-pointer flex items-center conversation-item"
+                                data-etudiant-id="{{ $etudiant->id }}"
+                                data-search-name="{{ strtolower("{$etudiant->etudiant_nom} {$etudiant->etudiant_prenom}") }}"
+                                data-search-message="{{ $etudiant->last_message ? strtolower($etudiant->last_message->content) : '' }}"
+                                onclick="loadConversation({{ $etudiant->id }}, '{{ $etudiant->etudiant_nom }} {{ $etudiant->etudiant_prenom }}')">
+                                <div class="flex-shrink-0">
+                                    <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                                        <span
+                                            class="text-indigo-600 font-medium">{{ substr($etudiant->etudiant_nom, 0, 1) }}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="ml-3 flex-1 overflow-hidden">
-                                <div class="flex justify-between items-baseline">
-                                    <h3 class="text-sm font-medium text-gray-900 truncate">{{ $etudiant->etudiant_nom }} {{ $etudiant->etudiant_prenom }}</h3>
-                                    <span class="text-xs text-gray-500">
-                                        @if($etudiant->last_message)
-                                            {{ $etudiant->last_message->created_at->diffForHumans() }}
+                                <div class="ml-3 flex-1 overflow-hidden">
+                                    <div class="flex justify-between items-baseline">
+                                        <h3 class="text-sm font-medium text-gray-900 truncate">
+                                            {{ $etudiant->etudiant_nom }} {{ $etudiant->etudiant_prenom }}</h3>
+                                        <span class="text-xs text-gray-500">
+                                            @if ($etudiant->last_message)
+                                                {{ $etudiant->last_message->created_at->diffForHumans() }}
+                                            @endif
+                                        </span>
+                                    </div>
+                                    <p class="text-sm text-gray-500 truncate">
+                                        @if ($etudiant->last_message)
+                                            {{ Str::limit($etudiant->last_message->content, 30) }}
                                         @endif
-                                    </span>
+                                    </p>
                                 </div>
-                                <p class="text-sm text-gray-500 truncate">
-                                    @if($etudiant->last_message)
-                                        {{ Str::limit($etudiant->last_message->content, 30) }}
-                                    @endif
-                                </p>
+                                @if ($etudiant->unread_count > 0)
+                                    <div class="ml-2 flex-shrink-0">
+                                        <span
+                                            class="inline-flex items-center justify-center px-2 py-0.5 rounded-full text-xs font-bold bg-blue-600 text-white unread-badge">
+                                            {{ $etudiant->unread_count }}
+                                        </span>
+                                    </div>
+                                @endif
                             </div>
-                            @if($etudiant->unread_count > 0)
-                                <div class="ml-2 flex-shrink-0">
-                                    <span class="inline-flex items-center justify-center px-2 py-0.5 rounded-full text-xs font-bold bg-blue-600 text-white unread-badge">
-                                        {{ $etudiant->unread_count }}
-                                    </span>
-                                </div>
-                            @endif
-                        </div>
                         @endforeach
                     </div>
                 </div>
@@ -64,7 +71,8 @@
                             </div>
                         </div>
                         <div class="ml-3">
-                            <h3 class="text-sm font-medium text-gray-900" id="recipient-name">Sélectionnez un étudiant</h3>
+                            <h3 class="text-sm font-medium text-gray-900" id="recipient-name">Sélectionnez un étudiant
+                            </h3>
                             <p class="text-xs text-gray-500" id="recipient-status">
                                 <span class="flex items-center">
                                     <span class="h-2 w-2 rounded-full bg-gray-500 mr-1"></span> Hors ligne
@@ -87,16 +95,21 @@
                             <input type="hidden" id="etudiant_id" name="etudiant_id" value="">
                             <div class="flex items-center">
                                 <button type="button" class="p-2 text-gray-500 hover:text-gray-700">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                                     </svg>
                                 </button>
                                 <input type="text" id="message-content" name="content"
-                                       class="flex-1 border border-gray-300 rounded-full py-2 px-4 mx-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                       placeholder="Écrivez un message..." disabled>
-                                <button type="submit" class="p-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                    class="flex-1 border border-gray-300 rounded-full py-2 px-4 mx-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                    placeholder="Écrivez un message..." disabled>
+                                <button type="submit"
+                                    class="p-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                                     </svg>
                                 </button>
                             </div>
@@ -141,20 +154,21 @@
                 document.getElementById('etudiant_id').value = etudiantId;
                 document.getElementById('message-content').disabled = false;
                 // Marquer comme lu côté backend
-    fetch(`/responsable/messages/${etudiantId}/mark-as-read`, {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-            'Accept': 'application/json'
-        }
-    }).then(() => {
-        // Masquer le badge côté front
-        const conversationItem = document.querySelector(`.conversation-item[data-etudiant-id="${etudiantId}"]`);
-        if (conversationItem) {
-            const badge = conversationItem.querySelector('.unread-badge');
-            if (badge) badge.style.display = 'none';
-        }
-    });
+                fetch(`/responsable/messages/${etudiantId}/mark-as-read`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    }
+                }).then(() => {
+                    // Masquer le badge côté front
+                    const conversationItem = document.querySelector(
+                        `.conversation-item[data-etudiant-id="${etudiantId}"]`);
+                    if (conversationItem) {
+                        const badge = conversationItem.querySelector('.unread-badge');
+                        if (badge) badge.style.display = 'none';
+                    }
+                });
 
                 // Fetch messages
                 fetch(`/responsable/messages/${etudiantId}`)
@@ -198,44 +212,46 @@
                 }
 
                 fetch('/responsable/messages', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        content: content,
-                        etudiant_id: etudiantId
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            content: content,
+                            etudiant_id: etudiantId
+                        })
                     })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(err => { throw err; });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Add the new message to the UI
-                    const container = document.getElementById('messages-container');
-                    const messageDiv = document.createElement('div');
-                    messageDiv.className = 'flex justify-end mb-4';
-                    messageDiv.innerHTML = `
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(err => {
+                                throw err;
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Add the new message to the UI
+                        const container = document.getElementById('messages-container');
+                        const messageDiv = document.createElement('div');
+                        messageDiv.className = 'flex justify-end mb-4';
+                        messageDiv.innerHTML = `
                         <div class="bg-indigo-100 rounded-lg py-2 px-4 max-w-xs lg:max-w-md shadow">
                             <p class="text-sm text-gray-800">${data.message.content}</p>
                             <p class="text-right text-xs text-gray-500 mt-1">À l'instant</p>
                         </div>
                     `;
-                    container.appendChild(messageDiv);
+                        container.appendChild(messageDiv);
 
-                    // Clear input and scroll to bottom
-                    document.getElementById('message-content').value = '';
-                    container.scrollTop = container.scrollHeight;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert(error.message || 'Échec de l\'envoi du message');
-                });
+                        // Clear input and scroll to bottom
+                        document.getElementById('message-content').value = '';
+                        container.scrollTop = container.scrollHeight;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert(error.message || 'Échec de l\'envoi du message');
+                    });
             });
 
             // Optional: Poll for new messages
@@ -270,8 +286,15 @@
             }
 
             @keyframes fadeIn {
-                from { opacity: 0; transform: translateY(10px); }
-                to { opacity: 1; transform: translateY(0); }
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
 
             .bg-indigo-100 {

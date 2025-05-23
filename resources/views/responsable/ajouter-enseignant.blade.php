@@ -29,7 +29,8 @@
                             <div>
                                 <label for="enseignant_nom" class="block text-sm font-medium text-gray-700 ">Nom</label>
                                 <input type="text" id="enseignant_nom" name="enseignant_nom"
-                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="{{ old('enseignant_nom') }}">
+                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    value="{{ old('enseignant_nom') }}">
                                 @error('enseignant_nom')
                                     <span class="text-red-500 text-sm">{{ $message }}</span>
                                 @enderror
@@ -40,7 +41,8 @@
                                 <label for="enseignant_prenom"
                                     class="block text-sm font-medium text-gray-700 ">Prénom</label>
                                 <input type="text" id="enseignant_prenom" name="enseignant_prenom"
-                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="{{ old('enseignant_prenom') }}">
+                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    value="{{ old('enseignant_prenom') }}">
                                 @error('enseignant_prenom')
                                     <span class="text-red-500 text-sm">{{ $message }}</span>
                                 @enderror
@@ -51,7 +53,8 @@
                                 <label for="enseignant_sexe"
                                     class="block text-sm font-medium text-gray-700 ">Sexe</label>
                                 <select id="enseignant_sexe" name="enseignant_sexe"
-                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="{{ old('enseignant_sexe') }}">
+                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    value="{{ old('enseignant_sexe') }}">
                                     <option value="">Sélectionner</option>
                                     <option value="Masculin">Masculin</option>
                                     <option value="Féminin">Féminin</option>
@@ -69,7 +72,8 @@
                                 <label for="enseignant_nationalite"
                                     class="block text-sm font-medium text-gray-700 ">Nationalité</label>
                                 <input type="text" id="enseignant_nationalite" name="enseignant_nationalite"
-                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="{{ old('enseignant_nationalite') }}">
+                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    value="{{ old('enseignant_nationalite') }}">
                                 @error('enseignant_nationalite')
                                     <span class="text-red-500 text-sm">{{ $message }}</span>
                                 @enderror
@@ -79,7 +83,8 @@
                             <div>
                                 <label for="enseignant_cin" class="block text-sm font-medium text-gray-700 ">CIN</label>
                                 <input type="text" id="enseignant_cin" name="enseignant_cin"
-                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="{{ old('enseignant_cin') }}">
+                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    value="{{ old('enseignant_cin') }}">
                                 @error('enseignant_cin')
                                     <span class="text-red-500 text-sm">{{ $message }}</span>
                                 @enderror
@@ -90,7 +95,8 @@
                                 <label for="enseignant_cnss" class="block text-sm font-medium text-gray-700">Numéro
                                     CNSS</label>
                                 <input type="text" id="enseignant_cnss" name="enseignant_cnss"
-                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="{{ old('enseignant_cnss') }}">
+                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    value="{{ old('enseignant_cnss') }}">
                                 @error('enseignant_cnss')
                                     <span class="text-red-500 text-sm">{{ $message }}</span>
                                 @enderror
@@ -104,7 +110,8 @@
                                 <label for="enseignant_date_naissance"
                                     class="block text-sm font-medium text-gray-700 ">Date de naissance</label>
                                 <input type="date" id="enseignant_date_naissance" name="enseignant_date_naissance"
-                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="{{ old('enseignant_date_naissance') }}">
+                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    value="{{ old('enseignant_date_naissance') }}">
                                 @error('enseignant_date_naissance')
                                     <span class="text-red-500 text-sm">{{ $message }}</span>
                                 @enderror
@@ -115,7 +122,8 @@
                                 <label for="enseignant_lieu_naissance"
                                     class="block text-sm font-medium text-gray-700 ">Lieu de naissance</label>
                                 <input type="text" id="enseignant_lieu_naissance" name="enseignant_lieu_naissance"
-                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="{{ old('enseignant_lieu_naissance') }}">
+                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    value="{{ old('enseignant_lieu_naissance') }}">
                                 @error('enseignant_lieu_naissance')
                                     <span class="text-red-500 text-sm">{{ $message }}</span>
                                 @enderror
@@ -152,7 +160,8 @@
                             <label for="enseignant_specialite"
                                 class="block text-sm font-medium text-gray-700 ">Spécialité</label>
                             <input type="text" id="enseignant_specialite" name="enseignant_specialite"
-                                class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="{{ old('enseignant_specialite') }}">
+                                class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                value="{{ old('enseignant_specialite') }}">
                             @error('enseignant_specialite')
                                 <span class="text-red-500 text-sm">{{ $message }}</span>
                             @enderror
@@ -177,7 +186,8 @@
                             <label for="enseignant_tel"
                                 class="block text-sm font-medium text-gray-700 ">Téléphone</label>
                             <input type="tel" id="enseignant_tel" name="enseignant_tel"
-                                class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="{{ old('enseignant_tel') }}">
+                                class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                value="{{ old('enseignant_tel') }}">
                             @error('enseignant_tel')
                                 <span class="text-red-500 text-sm">{{ $message }}</span>
                             @enderror
@@ -188,7 +198,8 @@
                             <label for="enseignant_adresse_postale"
                                 class="block text-sm font-medium text-gray-700 ">Adresse Postale</label>
                             <input type="text" id="enseignant_adresse_postale" name="enseignant_adresse_postale"
-                                class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="{{ old('enseignant_adresse_postale') }}">
+                                class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                value="{{ old('enseignant_adresse_postale') }}">
                             @error('enseignant_adresse_postale')
                                 <span class="text-red-500 text-sm">{{ $message }}</span>
                             @enderror
@@ -199,7 +210,8 @@
                             <label for="enseignant_email"
                                 class="block text-sm font-medium text-gray-700 ">Email</label>
                             <input type="email" id="enseignant_email" name="enseignant_email"
-                                class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="{{ old('enseignant_email') }}">
+                                class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                value="{{ old('enseignant_email') }}">
                             @error('enseignant_email')
                                 <span class="text-red-500 text-sm">{{ $message }}</span>
                             @enderror
@@ -229,7 +241,8 @@
                                 <label for="enseignant_contrat" class="block text-sm font-medium text-gray-700 ">Type
                                     de Contrat</label>
                                 <select id="enseignant_contrat" name="enseignant_contrat"
-                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="{{ old('enseignant_contrat') }}">
+                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    value="{{ old('enseignant_contrat') }}">
                                     <option value="">Sélectionner</option>
                                     <option value="CDI">CDI</option>
                                     <option value="CDD">CDD</option>
@@ -244,7 +257,8 @@
                                 <label for="enseignant_date_embauche"
                                     class="block text-sm font-medium text-gray-700 ">Date d'embauche</label>
                                 <input type="date" id="enseignant_date_embauche" name="enseignant_date_embauche"
-                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="{{ old('enseignant_date_embauche') }}">
+                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    value="{{ old('enseignant_date_embauche') }}">
                                 @error('enseignant_date_embauche')
                                     <span class="text-red-500 text-sm">{{ $message }}</span>
                                 @enderror
@@ -255,7 +269,8 @@
                                 <label for="enseignant_salaire"
                                     class="block text-sm font-medium text-gray-700 ">Salaire</label>
                                 <input type="text" id="enseignant_salaire" name="enseignant_salaire"
-                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="{{ old('enseignant_salaire') }}">
+                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    value="{{ old('enseignant_salaire') }}">
                                 @error('enseignant_salaire')
                                     <span class="text-red-500 text-sm">{{ $message }}</span>
                                 @enderror
@@ -269,7 +284,8 @@
                                 <label for="enseignant_permanent_vacataire"
                                     class="block text-sm font-medium text-gray-700 ">Statut</label>
                                 <select id="enseignant_permanent_vacataire" name="enseignant_permanent_vacataire"
-                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="{{ old('enseignant_permanent_vacataire') }}">
+                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    value="{{ old('enseignant_permanent_vacataire') }}">
                                     <option value="">Sélectionner</option>
                                     <option value="Permanent">Permanent</option>
                                     <option value="Vacataire">Vacataire</option>
@@ -285,7 +301,8 @@
                                     class="block text-sm font-medium text-gray-700 ">Fonction Principale</label>
                                 <input type="text" id="enseignant_fonction_principale"
                                     name="enseignant_fonction_principale"
-                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="{{ old('enseignant_fonction_principale') }}">
+                                    class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    value="{{ old('enseignant_fonction_principale') }}">
                                 @error('enseignant_fonction_principale')
                                     <span class="text-red-500 text-sm">{{ $message }}</span>
                                 @enderror
@@ -298,7 +315,8 @@
                                 class="block text-sm font-medium text-gray-700">Employeur Principal</label>
                             <input type="text" id="enseignant_employeur_principal"
                                 name="enseignant_employeur_principal"
-                                class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="{{ old('enseignant_employeur_principal') }}">
+                                class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                value="{{ old('enseignant_employeur_principal') }}">
                             @error('enseignant_employeur_principal')
                                 <span class="text-red-500 text-sm">{{ $message }}</span>
                             @enderror
@@ -325,7 +343,8 @@
                             <label for="enseignant_type_paiement" class="block text-sm font-medium text-gray-700">Type
                                 de Paiement</label>
                             <input type="text" id="enseignant_type_paiement" name="enseignant_type_paiement"
-                                class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="{{ old('enseignant_type_paiement') }}">
+                                class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                value="{{ old('enseignant_type_paiement') }}">
                             @error('enseignant_type_paiement')
                                 <span class="text-red-500 text-sm">{{ $message }}</span>
                             @enderror
@@ -336,7 +355,8 @@
                             <label for="enseignant_banque"
                                 class="block text-sm font-medium text-gray-700">Banque</label>
                             <input type="text" id="enseignant_banque" name="enseignant_banque"
-                                class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="{{ old('enseignant_banque') }}">
+                                class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                value="{{ old('enseignant_banque') }}">
                             @error('enseignant_banque')
                                 <span class="text-red-500 text-sm">{{ $message }}</span>
                             @enderror
@@ -346,7 +366,8 @@
                         <div>
                             <label for="enseignant_rib" class="block text-sm font-medium text-gray-700">RIB</label>
                             <input type="text" id="enseignant_rib" name="enseignant_rib"
-                                class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="{{ old('enseignant_rib') }}">
+                                class="mt-1 block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                value="{{ old('enseignant_rib') }}">
                             @error('enseignant_rib')
                                 <span class="text-red-500 text-sm">{{ $message }}</span>
                             @enderror

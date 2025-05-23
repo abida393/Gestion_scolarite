@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Password;
 
 class PasswordController extends Controller
 {
- 
+
     public function showForgotForm()
     {
         return view('authentification.mdpwrong');

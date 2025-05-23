@@ -88,7 +88,7 @@
     </div>
 </div>
         <div class="logo">
-            <img src="{{ asset('/images/logo1.jpg') }}" alt="Logo Établissement" style="align-items:left;width:150px">
+            <img src="{{ asset('/images/logo.jpeg') }}" alt="Logo Établissement" style="align-items:left;width:110px">
             {{-- <div class="burger-menu" id="mobile-toggle">
                 <i class="fas fa-bars"></i>
             </div> --}}
@@ -222,11 +222,11 @@
             </div>
 
             <div class="profile-info flex flex-col items-start text-white">
-                <div class="profile-name font-semibold text-lg">
+                <div class="profile-name font-semibold" style="font-size:17px;">
                     {{ $nom_complete }}
                 </div>
                 <div class="profile-class text-sm">
-                    {{ $filiere->nom_filiere }}
+                    {{ Auth::guard('etudiant')->user()->classe->nom_classe }}
                 </div>
             </div>
         </div>

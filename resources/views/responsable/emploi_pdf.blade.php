@@ -1,19 +1,49 @@
-
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <title>Emploi du Temps - {{ $classe->nom_classe }}</title>
     <style>
-        body { font-family: Arial, sans-serif; font-size: 12px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #000; padding: 6px; text-align: center; }
-        th { background-color: #f4f4f4; font-weight: bold; }
-        h1 { text-align: center; font-size: 18px; margin-bottom: 20px; }
-        .text-left { text-align: left; }
-        .bg-gray { background-color: #f9f9f9; }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 6px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        .bg-gray {
+            background-color: #f9f9f9;
+        }
     </style>
 </head>
+
 <body>
     <h1>Emploi du Temps - {{ $classe->nom_classe }}</h1>
     <table>
@@ -38,10 +68,12 @@
         <tbody>
             @php
                 $joursSemaine = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
-                $grouped = $emploisTemps->map(function($e) {
-                    $e->jour = strtolower(trim($e->jour));
-                    return $e;
-                })->groupBy('jour');
+                $grouped = $emploisTemps
+                    ->map(function ($e) {
+                        $e->jour = strtolower(trim($e->jour));
+                        return $e;
+                    })
+                    ->groupBy('jour');
             @endphp
 
             @foreach ($joursSemaine as $jour)
@@ -50,7 +82,8 @@
                     @foreach ($horaires as $h)
                         @php
                             $cours = $grouped->get($jour, collect())->first(function ($e) use ($h) {
-                                return \Carbon\Carbon::parse($e->heure_debut)->format('H:i') == $h[0] && \Carbon\Carbon::parse($e->heure_fin)->format('H:i') == $h[1];
+                                return \Carbon\Carbon::parse($e->heure_debut)->format('H:i') == $h[0] &&
+                                    \Carbon\Carbon::parse($e->heure_fin)->format('H:i') == $h[1];
                             });
                         @endphp
                         <td>
@@ -69,4 +102,5 @@
         </tbody>
     </table>
 </body>
+
 </html>

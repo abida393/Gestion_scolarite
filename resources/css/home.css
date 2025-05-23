@@ -53,9 +53,61 @@
     /* Chrome, Safari, Edge */
 }
 
+/* .dropdown {
+    position: relative;
+    display: inline-block;
+} */
+/* Dropdown container */
 .dropdown {
     position: relative;
     display: inline-block;
+    width: 100%;
+}
+
+/* Dropdown button */
+.dropbtn {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding:14px 20px;
+    cursor: pointer;
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+    display: none;
+    position: relative;
+    background-color: #f9f9f9;
+    min-width: 100%;
+    box-shadow: none;
+    z-index: 1;
+    padding-left: 20px;
+    border-left: 2px solid #ddd;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Style for dropdown items */
+.dropdown-content .nav-item {
+    padding: 10px 15px;
+}
+
+/* Unread count style */
+.unread-count {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background: blue;
+    color: white;
+    border-radius: 9999px;
+    font-size: 10px;
+    padding: 2px 6px;
+    min-width: 16px;
+    text-align: center;
 }
 
 .dropdown-content {
