@@ -9,8 +9,8 @@
 
 <head>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script src="//unpkg.com/alpinejs" defer></script>
     <meta charset="UTF-8">
@@ -72,21 +72,23 @@
         .logo {
             display: flex;
             margin: auto;
-            padding:0 30px 10px;
+            padding: 0 30px 10px;
 
         }
     </style>
 </head>
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="//unpkg.com/alpinejs" defer></script>
+
 <body>
     <!-- Sidebar -->
     <div class="sidebar" style="height: 100vh; overflow-y: auto; overflow-x: hidden;">
-       <div class="flex justify-end p-3">
-    <div class="burger-menu p-2 bg-[#4270f4]/10 hover:bg-[#4270f4]/20 text-[#4270f4] hover:text-[#4270f4]/90 cursor-pointer transition-all duration-200" id="mobile-toggle">
-        <i class="fas fa-bars text-xl"></i>
-    </div>
-</div>
+        <div class="flex justify-end p-3">
+            <div class="burger-menu p-2 bg-[#4270f4]/10 hover:bg-[#4270f4]/20 text-[#4270f4] hover:text-[#4270f4]/90 cursor-pointer transition-all duration-200"
+                id="mobile-toggle">
+                <i class="fas fa-bars text-xl"></i>
+            </div>
+        </div>
         <div class="logo">
             <img src="{{ asset('/images/logo.jpeg') }}" alt="Logo Établissement" style="align-items:left;width:110px">
             {{-- <div class="burger-menu" id="mobile-toggle">
@@ -99,7 +101,8 @@
                 <i class="fas fa-home"></i>
                 <span>Accueil</span>
             </a>
-            <a href="{{ route("absence_justif") }}" class="nav-item {{ Route::is("absence_justif")  ? 'active' : ''  }}" data-page="absences">
+            <a href="{{ route('absence_justif') }}" class="nav-item {{ Route::is('absence_justif') ? 'active' : '' }}"
+                data-page="absences">
                 <i class="fas fa-user-clock"></i>
                 <span>Absence et justif</span>
             </a>
@@ -123,20 +126,21 @@
                 <i class="fas fa-briefcase"></i>
                 <span>Evenements</span>
             </a>
-            <a href="{{ route('messagerie-etudiant') }}" class="nav-item {{ Route::is('messagerie-etudiant') ? 'active' : '' }}"
-    data-page="messagerie" style="position: relative;">
-    <i class="fa-solid fa-inbox"></i>
-    <span>Messagerie</span>
-    @if(($unreadCount ?? 0) > 0)
-    <span style="position: absolute; top: 8px; right: 10px; background:blue; color: white; border-radius: 9999px; font-size: 10px; padding: 2px 6px; min-width: 16px; text-align: center;">
-        {{ ($unreadCount ?? 0) > 9 ? '9+' : $unreadCount }}
-    </span>
-@endif
-</a>
+            <a href="{{ route('messagerie-etudiant') }}"
+                class="nav-item {{ Route::is('messagerie-etudiant') ? 'active' : '' }}" data-page="messagerie"
+                style="position: relative;">
+                <i class="fa-solid fa-inbox"></i>
+                <span>Messagerie</span>
+                @if (($unreadCount ?? 0) > 0)
+                    <span
+                        style="position: absolute; top: 8px; right: 10px; background:blue; color: white; border-radius: 9999px; font-size: 10px; padding: 2px 6px; min-width: 16px; text-align: center;">
+                        {{ ($unreadCount ?? 0) > 9 ? '9+' : $unreadCount }}
+                    </span>
+                @endif
+            </a>
             <a href="{{ route('notes') }}" class="nav-item {{ Route::is('notes') ? 'active' : '' }}"
                 data-page="notes">
-                <i class="far fa-sticky-note"></i>
-                <span>Notes</span>
+                <i class="fa-solid fa-chalkboard-user"></i> <span>Notes</span>
             </a>
             <a href="{{ route('news') }}" class="nav-item {{ Route::is('news') ? 'active' : '' }}" data-page="news">
                 <i class="fas fa-newspaper"></i>
@@ -147,7 +151,8 @@
                 <i class="fas fa-money-bill-wave"></i>
                 <span>Paiement</span>
             </a>
-            <a href="{{ route('stages.index') }}" class="nav-item {{ Route::is('stages.index') ? 'active' : '' }}" data-page="stage">
+            <a href="{{ route('stages.index') }}" class="nav-item {{ Route::is('stages.index') ? 'active' : '' }}"
+                data-page="stage">
                 <i class="fas fa-briefcase"></i>
                 <span>Stages</span>
             </a>

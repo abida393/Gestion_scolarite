@@ -210,7 +210,7 @@ Route::middleware('auth.multi:responsable')->group(function(){
     Route::get('/ajouter-etudiant', [ajouterEtudiantController::class, 'index'])->name('ajouter-etudiant');
     Route::post('/ajouter-etudiant/store', [ajouterEtudiantController::class, 'store'])->name('admin.etudiants.store');
     Route::get('/ajouter-enseignant', [ajouterEnseignantController::class, 'index'])->name('ajouter-enseignant');
-                           Route::post('/ajouter-enseignant/store', [ajouterEnseignantController::class, 'store'])->name('admin.enseignants.store');
+    Route::post('/ajouter-enseignant/store', [ajouterEnseignantController::class, 'store'])->name('admin.enseignants.store');
     Route::get('/afficher-etudiants', [ajouterEtudiantController::class, 'afficherEtudiants'])->name('responsable.afficher_etudiant');
     Route::get('/edit-etudiants/{etudiant}', [ajouterEtudiantController::class, 'edit'])->name('etudiants.edit');
     Route::put('/update-etudiants/{etudiant}', [ajouterEtudiantController::class, 'update'])->name('responsable.update_etudiant');
