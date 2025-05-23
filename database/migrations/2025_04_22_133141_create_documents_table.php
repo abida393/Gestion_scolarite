@@ -13,8 +13,14 @@ return new class extends Migration
     {
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
-            $table->string('nom_document');
-            $table->timestamps();
+        $table->string('nom_document');
+        $table->string('type')->unique();
+        $table->string('template_path')->nullable();
+        $table->boolean('generable')->default(false);
+      
+    
+
+        $table->timestamps();
         });
     }
 

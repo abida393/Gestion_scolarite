@@ -9,6 +9,47 @@
         </h1>
         <p class="text-lg text-gray-600 max-w-2xl mx-auto">Organisez et mettez les demandes des etudiants en toute simplicité</p>
     </div>
+    <button type="button"
+    class="mb-6 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white font-medium py-2 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+    onclick="document.getElementById('addDocumentModal').classList.remove('hidden')">
+    <i class="fas fa-plus mr-2"></i> Ajouter un document
+</button>
+
+<!-- Modal d'ajout de document -->
+<div id="addDocumentModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg p-8 relative">
+        <button type="button" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl"
+            onclick="document.getElementById('addDocumentModal').classList.add('hidden')">
+            &times;
+        </button>
+        <h3 class="text-xl font-semibold mb-6 flex items-center">
+            <i class="fas fa-file-medical text-blue-500 mr-2"></i> Nouveau document
+        </h3>
+        <form action="{{ route('documents.add') }}" method="POST" enctype="multipart/form-data" id="addDocumentForm" class="space-y-4">
+            @csrf
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Nom du document</label>
+                <input type="text" name="nom_document" required class="w-full border px-3 py-2 rounded-lg">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Type (unique)</label>
+                <input type="text" name="type" required class="w-full border px-3 py-2 rounded-lg">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Template (optionnel)</label>
+                <input type="text" name="template_path" class="w-full border px-3 py-2 rounded-lg">
+            </div>
+            <div class="flex items-center">
+                <input type="checkbox" name="generable" id="generable" class="mr-2">
+                <label for="generable" class="text-sm text-gray-700">Générable automatiquement</label>
+            </div>
+            <div class="flex justify-end gap-2 pt-4">
+                <button type="button" onclick="document.getElementById('addDocumentModal').classList.add('hidden')" class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300">Annuler</button>
+                <button type="submit" class="px-6 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Enregistrer</button>
+            </div>
+        </form>
+    </div>
+</div>
 
     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
         <!-- Filter Section - Single Row -->
@@ -99,16 +140,7 @@
                             </svg>
                         </button>
                         
-                        <!-- @if($demande->etat_demande == 'document-pret')
-    <form action="{{ route('responsable.demande.terminer', $demande->id) }}" method="POST" class="inline">
-        @csrf
-        <button type="submit" 
-                class="p-2 bg-white hover:bg-green-100 text-green-600 rounded-full transition-colors shadow border border-slate-200" 
-                title="Terminer la demande">
-            <i class="fas fa-check-circle"></i>
-        </button>
-    </form>
-    @endif -->
+                       
     
     @if($demande->etat_demande == 'termine')
     <form action="{{ route('responsable.demande.supprimer', $demande->id) }}" method="POST" class="inline">
@@ -188,18 +220,36 @@
                                         placeholder="Veuillez indiquer la raison du refus...">{{ old('justif_refus', $demande->justif_refus) }}</textarea>
                                 </div>
                                 
-                                <!-- Upload de document -->
-                                <div id="upload-container-{{ $demande->id }}" class="{{ $demande->etat_demande == 'termine' ? 'block' : 'hidden' }}">
-                                    <label class="block text-sm font-medium text-slate-600 mb-1">Joindre le document</label>
-                                    <input type="file" name="document" id="document-{{ $demande->id }}" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200" {{ $demande->etat_demande == 'termine' && !$demande->fichier ? 'required' : '' }}>
-                                    
-                                    @if($demande->fichier)
-                                    <div class="mt-2">
-                                        <p class="text-sm text-slate-500">Fichier existant :</p>
-                                        <a href="{{ asset('storage/documents/' . $demande->fichier) }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm underline">Télécharger</a>
-                                    </div>
-                                    @endif
-                                </div>
+                                <!-- Upload de document pour "Document prêt" -->
+<div id="document-pret-container-{{ $demande->id }}" class="{{ $demande->etat_demande == 'en-preparation' ? 'block' : 'hidden' }}">
+    {{-- Debug temporaire --}}
+{{-- <p>generable = {{ $demande->document->generable ? 'oui' : 'non' }}</p> --}}
+    @if($demande->document->generable)
+        <div id="methode-container-{{ $demande->id }}">
+            <label class="block text-sm font-medium text-slate-600 mb-1">Méthode de fourniture du document</label>
+            <div class="flex gap-4 mb-2">
+                <label>
+                    <input type="radio" name="fichier_option_{{ $demande->id }}" value="import" checked class="fichier-option" data-id="{{ $demande->id }}">
+                    Importer un fichier
+                </label>
+                <label>
+                    <input type="radio" name="fichier_option_{{ $demande->id }}" value="generer" class="fichier-option" data-id="{{ $demande->id }}">
+                    Générer automatiquement
+                </label>
+            </div>
+        </div>
+    @endif
+
+    <div id="import-file-{{ $demande->id }}">
+        <label class="block text-sm font-medium text-slate-600 mb-1">Joindre le document</label>
+        <input type="file" name="document" id="document-{{ $demande->id }}" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200">
+    </div>
+</div>
+
+<!-- Container pour "Terminé" (plus de choix de méthode, juste notif) -->
+<div id="upload-container-{{ $demande->id }}" class="{{ $demande->etat_demande == 'termine' ? 'block' : 'hidden' }}">
+    <p class="text-green-600 text-sm">Le document a été traité. L'étudiant sera notifié.</p>
+</div>
                                 
                                 <button type="submit" class="w-full md:w-auto px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2 update-btn" data-id="{{ $demande->id }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -352,41 +402,74 @@
             });
             
             // Show/hide file upload or justification based on status
-            document.querySelectorAll('.status-select').forEach(select => {
-                select.addEventListener('change', function() {
-                    const id = this.getAttribute('data-id');
-                    const uploadContainer = document.getElementById(`upload-container-${id}`);
-                    const justifContainer = document.getElementById(`justif-refus-container-${id}`);
-                    
-                    if (this.value === 'termine') {
-                        uploadContainer.classList.remove('hidden');
-                        justifContainer.classList.add('hidden');
-                    } else if (this.value === 'refus') {
-                        justifContainer.classList.remove('hidden');
-                        uploadContainer.classList.add('hidden');
-                    } else {
-                        uploadContainer.classList.add('hidden');
-                        justifContainer.classList.add('hidden');
-                    }
-                });
+             select.addEventListener('change', function() {
+            const id = this.getAttribute('data-id');
+            const pretContainer = document.getElementById(`document-pret-container-${id}`);
+            const termineContainer = document.getElementById(`upload-container-${id}`);
+            const justifContainer = document.getElementById(`justif-refus-container-${id}`);
+            const methodeContainer = document.getElementById(`methode-container-${id}`);
+            const importDiv = document.getElementById(`import-file-${id}`);
+
+           if (this.value === 'en-preparation') {
+    pretContainer.classList.remove('hidden');
+    termineContainer.classList.add('hidden');
+    if (methodeContainer) methodeContainer.classList.remove('hidden');
+    const importRadio = document.querySelector(`input[name="fichier_option_${id}"][value="import"]`);
+    if (importRadio && importRadio.checked) {
+        importDiv.classList.remove('hidden');
+    } else {
+        importDiv.classList.add('hidden');
+    }
+    justifContainer.classList.add('hidden');
+} else if (this.value === 'termine') {
+                pretContainer.classList.add('hidden');
+                termineContainer.classList.remove('hidden');
+                justifContainer.classList.add('hidden');
+            } else if (this.value === 'refus') {
+                pretContainer.classList.add('hidden');
+                termineContainer.classList.add('hidden');
+                justifContainer.classList.remove('hidden');
+            } else {
+                pretContainer.classList.add('hidden');
+                termineContainer.classList.add('hidden');
+                justifContainer.classList.add('hidden');
+            }
+        });
                 
                 // Initialize visibility on page load
-                const id = select.getAttribute('data-id');
-                const currentValue = select.value;
-                const uploadContainer = document.getElementById(`upload-container-${id}`);
-                const justifContainer = document.getElementById(`justif-refus-container-${id}`);
-                
-                if (currentValue === 'termine') {
-                    uploadContainer.classList.remove('hidden');
-                    justifContainer.classList.add('hidden');
-                } else if (currentValue === 'refus') {
-                    justifContainer.classList.remove('hidden');
-                    uploadContainer.classList.add('hidden');
-                } else {
-                    uploadContainer.classList.add('hidden');
-                    justifContainer.classList.add('hidden');
-                }
-            });
+             const id = select.getAttribute('data-id');
+        const currentValue = select.value;
+        const pretContainer = document.getElementById(`document-pret-container-${id}`);
+        const termineContainer = document.getElementById(`upload-container-${id}`);
+        const justifContainer = document.getElementById(`justif-refus-container-${id}`);
+        const methodeContainer = document.getElementById(`methode-container-${id}`);
+        const importDiv = document.getElementById(`import-file-${id}`);
+
+        if (currentValue === 'en-preparation') {
+    pretContainer.classList.remove('hidden');
+    termineContainer.classList.add('hidden');
+    if (methodeContainer) methodeContainer.classList.remove('hidden');
+    const importRadio = document.querySelector(`input[name="fichier_option_${id}"][value="import"]`);
+    if (importRadio && importRadio.checked) {
+        importDiv.classList.remove('hidden');
+    } else {
+        importDiv.classList.add('hidden');
+    }
+    justifContainer.classList.add('hidden');
+} else if (currentValue === 'termine') {
+            pretContainer.classList.add('hidden');
+            termineContainer.classList.remove('hidden');
+            justifContainer.classList.add('hidden');
+        } else if (currentValue === 'refus') {
+            pretContainer.classList.add('hidden');
+            termineContainer.classList.add('hidden');
+            justifContainer.classList.remove('hidden');
+        } else {
+            pretContainer.classList.add('hidden');
+            termineContainer.classList.add('hidden');
+            justifContainer.classList.add('hidden');
+        }
+    });
             
             // Status filter
             document.querySelectorAll('.status-filter-btn').forEach(btn => {
@@ -498,6 +581,23 @@
                 // Hide no requests message
                 document.getElementById('no-requests-message').classList.add('hidden');
             });
+        
+          document.querySelectorAll('.fichier-option').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const id = this.getAttribute('data-id');
+            const importDiv = document.getElementById(`import-file-${id}`);
+            if (this.value === 'import') {
+                importDiv.classList.remove('hidden');
+            } else {
+                importDiv.classList.add('hidden');
+            }
         });
+    });
+
+document.getElementById('addDocumentForm').addEventListener('submit', function() {
+    setTimeout(() => {
+        document.getElementById('addDocumentModal').classList.add('hidden');
+    }, 500);
+});
     </script>
 </x-admin>

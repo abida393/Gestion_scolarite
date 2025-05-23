@@ -155,4 +155,15 @@ public function markAsReadByResponsable($etudiantId)
 
     return response()->json(['success' => true]);
 }
+public function sendMessageAutomatique($data)
+{
+    return Message::create([
+        'content' => $data['content'],
+        'sender_id' => $data['sender_id'],
+        'sender_type' => 'responsable',
+        'receiver_id' => $data['receiver_id'],
+        'receiver_type' => 'etudiant',
+        'is_read' => false,
+    ]);
+}
 }

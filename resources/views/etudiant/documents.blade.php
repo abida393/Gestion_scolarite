@@ -109,17 +109,12 @@
                         </div>
 
                         <!-- Année académique -->
-                        <div class="space-y-2">
-                            <label for="annee_academique" class="block text-sm font-medium text-gray-700 flex items-center">
-                                <i class="fas fa-calendar-alt mr-2 text-blue-500"></i> Année Académique
-                            </label>
-                            <select name="annee_academique" id="annee_academique" required class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200 appearance-none bg-white bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"%3e%3cpolyline points=\"6 9 12 15 18 9\"%3e%3c/polyline%3e%3c/svg%3e')] bg-no-repeat bg-right-3">
-                                <option value="" disabled selected class="text-gray-400">Sélectionnez une année</option>
-                                @for ($i = now()->year; $i >= 2000; $i--)
-                                    <option value="{{ $i }}-{{ $i+1 }}" class="text-gray-800">{{ $i }}-{{ $i+1 }}</option>
-                                @endfor
-                            </select>
-                        </div>
+                       <div class="space-y-2">
+    <label for="annee_academique" class="block text-sm font-medium text-gray-700 flex items-center">
+        <i class="fas fa-calendar-alt mr-2 text-blue-500"></i> Année Académique
+    </label>
+    <input type="text" readonly class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-800" value="{{ $anneeInscription }}">
+</div>
                         
                         <!-- Confirmation -->
                         <div class="flex items-start bg-blue-50 p-4 rounded-lg border border-blue-100">
