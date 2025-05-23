@@ -92,7 +92,7 @@
             </div>
         </div>
         <div class="logo">
-            <img src="{{ asset('/images/logo1.jpg') }}" alt="Logo Établissement" style="align-items:left;width:150px">
+            <img src="{{ asset('/images/logo.jpeg') }}" alt="Logo Établissement" style="align-items:left;width:110px">
             {{-- <div class="burger-menu" id="mobile-toggle">
                 <i class="fas fa-bars"></i>
             </div> --}}
@@ -107,7 +107,7 @@
             <a href="{{ route('responsable.absences') }}"
                 class="nav-item {{ Route::is('responsable.absences') ? 'active' : '' }}" data-page="absences">
                 <i class="fas fa-user-clock"></i>
-                <span>Absence et justif</span>
+                <span>Saisie des absences</span>
             </a>
             <a href="{{ route('paiements.index') }}" class="nav-item {{ Route::is('paiements.index') ? 'active' : '' }}"
                 data-page="paiements.index">
@@ -199,13 +199,6 @@
                     </div>
                 </div>
                 {{-- dropdown menu Enseignant--}}
-                <a href="{{ route('ajouter-enseignant') }}"
-                    class="nav-item {{ Route::is('ajouter-enseignant') ? 'active' : '' }}"
-                    data-page="ajouter-enseignant">
-                    <i class="far fa-sticky-note"></i>
-                    <span>Ajouter enseignant</span>
-                </a>
-
                 <!-- Ajouter par imad -->
                 <a href="{{ route('news.index') }}" class="nav-item {{ Route::is('news.index') ? 'active' : '' }}"
                     data-page="news">
@@ -264,7 +257,7 @@
                     </div>
 
                     <div class="py-1">
-                        <a href="{{ route('profile') }}"
+                        <a href="{{ route('responsable.profile') }}"
                             class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                             <svg class="w-4 h-4 mr-3 text-indigo-500" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
@@ -292,10 +285,10 @@
             </div>
 
             <div class="profile-info flex flex-col items-start text-white">
-                <div class="profile-name font-semibold text-lg">
-                    {{ $nom_complete }}
-                </div>
+            <div class="profile-name font-semibold" style="font-size:17px;">
+                {{ $nom_complete }}
             </div>
+        </div>
         </div>
     </header>
 

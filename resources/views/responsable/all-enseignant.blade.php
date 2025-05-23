@@ -1,5 +1,4 @@
-<x-admin titre="ajouter-etudiant" page_titre="ajouter-etudiant"
-    :nom_complete="Auth::guard('responsable')->user()->respo_nom . ', ' . Auth::guard('responsable')->user()->respo_prenom">
+<x-admin titre="ajouter-etudiant" page_titre="ajouter-etudiant" :nom_complete="Auth::guard('responsable')->user()->respo_nom . ', ' . Auth::guard('responsable')->user()->respo_prenom">
 
     <div class="container py-10">
         <!-- Header -->

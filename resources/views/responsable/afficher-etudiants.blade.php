@@ -76,6 +76,7 @@
                                 {{ $etudiant->etudiant_tel }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <a href="{{ route('responsable.all_etudiant',$etudiant->id) }}" class="text-blue-600 hover:text-blue-900 mr-3">Voir</a>
                                 <a href="{{ route('etudiants.edit', $etudiant->id) }}" class="text-blue-600 hover:text-blue-900 mr-3">Modifier</a>
                             </td>
                         </tr>

@@ -390,4 +390,9 @@ class ajouterEtudiantController extends Controller
         return view('responsable.all-enseignant', compact('enseignant'));
 
     }
+    public function displayAllEtudiant(Etudiant $etudiant)
+    {
+        return view('responsable.all-etudiant', compact('etudiant'));
+
+    }
 }

@@ -19,6 +19,7 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\ResponsableProfileController;
 use Illuminate\Http\Request;
 
 //=============Ajouter par imad===============
@@ -46,7 +47,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/change-password', [PasswordResetController::class, 'edit'])->name('password.edit');
 Route::put('/update-password', [PasswordResetController::class, 'update'])->name('password.change');
 
-Route::get('/password/forgot', [PasswordController::class, 'showForgotForm'])->name('password.request');
+Route::get('/password/forgot/request', [PasswordController::class, 'showForgotForm'])->name('password.request');
 Route::post('/password/forgot', [PasswordController::class, 'sendResetLink'])->name('password.email');
 Route::get('/password/reset/{token}', [PasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/password/reset', [PasswordController::class, 'reset'])->name('password.update');
@@ -209,7 +210,7 @@ Route::middleware('auth.multi:responsable')->group(function(){
     Route::get('/ajouter-etudiant', [ajouterEtudiantController::class, 'index'])->name('ajouter-etudiant');
     Route::post('/ajouter-etudiant/store', [ajouterEtudiantController::class, 'store'])->name('admin.etudiants.store');
     Route::get('/ajouter-enseignant', [ajouterEnseignantController::class, 'index'])->name('ajouter-enseignant');
-    Route::post('/ajouter-enseignant/store', [ajouterEnseignantController::class, 'store'])->name('admin.enseignants.store');
+                           Route::post('/ajouter-enseignant/store', [ajouterEnseignantController::class, 'store'])->name('admin.enseignants.store');
     Route::get('/afficher-etudiants', [ajouterEtudiantController::class, 'afficherEtudiants'])->name('responsable.afficher_etudiant');
     Route::get('/edit-etudiants/{etudiant}', [ajouterEtudiantController::class, 'edit'])->name('etudiants.edit');
     Route::put('/update-etudiants/{etudiant}', [ajouterEtudiantController::class, 'update'])->name('responsable.update_etudiant');
@@ -217,6 +218,7 @@ Route::middleware('auth.multi:responsable')->group(function(){
     Route::get('/edit-enseignant/{enseignant}', [ajouterEtudiantController::class, 'editEnseignant'])->name('enseignants.edit');
     Route::put('/update-enseignants/{enseignant}', [ajouterEtudiantController::class, 'updateEnseignant'])->name('responsable.update_enseignant');
     Route::get('/all-enseignant/{enseignant}', [ajouterEtudiantController::class, 'displayAllEnseignant'])->name('responsable.all_enseignant');
+    Route::get('/all-etudiant/{etudiant}', [ajouterEtudiantController::class, 'displayAllEtudiant'])->name('responsable.all_etudiant');
 });
 
 
@@ -296,6 +298,7 @@ Route::post('/emplois/store', [EmploiTempsController::class, 'store'])->name('re
             ->get();
     });
 });
+
 // ==================== absence ====================
 // Routes étudiant
 Route::middleware(['auth:etudiant'])->group(function() {
@@ -312,8 +315,6 @@ Route::get('/etudiant/absences/details/{id}', [AbsenceController::class, 'detail
 });
 
 // Routes responsable
-
-
 Route::middleware(['auth:responsable'])->prefix('responsable/absences')->group(function () {
     Route::get('/', [AbsenceResponsableController::class, 'index'])->name('responsable.absences');
     Route::get('/justifications', [AbsenceResponsableController::class, 'justificationsEnAttente'])->name('responsable.absences.justifications');
@@ -347,3 +348,11 @@ Route::post('/absences/export/pdf', [AbsenceResponsableController::class, 'expor
     // Dans routes/web.php (temporairement)
 
 
+//========================== profile responsable ========================================
+//profile responsable
+Route::get('/responsable/profile',[ResponsableProfileController::class,'showProfile'])->name('responsable.profile');
+
+//changement du mot de passe du responsable
+Route::post('/responsable/password/update', [ResponsableProfileController::class, 'updatePassword'])
+    ->middleware('auth:responsable')
+    ->name('password.responsable.update');
