@@ -1,5 +1,5 @@
 <x-home titre="Page messagerie" page_titre="Page messagerie" :nom_complete="Auth::guard('etudiant')->user()->etudiant_nom . ',' . Auth::guard('etudiant')->user()->etudiant_prenom">
-    <div class="p-4">
+    <div class="p-3">
         <div class="messaging-container bg-white rounded-lg shadow-lg overflow-hidden w-full">
             <div class="flex h-[500px]">
                 <!-- Sidebar - Conversation List -->
@@ -17,11 +17,10 @@
                             </svg>
                         </div>
                     </div>
-
                     <!-- Conversation List -->
                     <div class="divide-y divide-gray-200" id="conversation-list">
                         @foreach ($responsables as $responsable)
-                            <div class="p-3 hover:bg-gray-100 cursor-pointer flex items-center conversation-item {{ $responsable->unread_count > 0 ? 'bg-indigo-50' : '' }}"
+                            <div class="p-3 hover:bg-gray-100 cursor-pointer flex items-center conversation-item"
                                 data-responsable-id="{{ $responsable->id }}"
                                 data-search-name="{{ strtolower($responsable->respo_nom . ' ' . $responsable->respo_prenom) }}"
                                 data-search-message="{{ $responsable->last_message ? strtolower($responsable->last_message->content) : '' }}"
@@ -70,11 +69,6 @@
                         <div class="ml-3">
                             <h3 class="text-sm font-medium text-gray-900" id="recipient-name">Sélectionnez une
                                 conversation</h3>
-                            <p class="text-xs text-gray-500" id="recipient-status">
-                                <span class="flex items-center">
-                                    <span class="h-2 w-2 rounded-full bg-gray-500 mr-1"></span> Hors ligne
-                                </span>
-                            </p>
                         </div>
                     </div>
 

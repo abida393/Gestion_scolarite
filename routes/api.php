@@ -22,8 +22,3 @@ use App\Http\Controllers\ChatbotController;
 
 Route::get('/chatbot/messages', [ChatbotController::class, 'messages']);
 
-use App\Models\Etudiant;
-
-Route::get('/etudiants', function (Request $request) {
-    return Etudiant::where('classes_id', $request->classe_id)->get(['id', 'etudiant_nom', 'etudiant_prenom']);
-});

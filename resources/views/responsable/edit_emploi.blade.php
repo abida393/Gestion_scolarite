@@ -1,10 +1,10 @@
 <!-- resources/views/responsable/edit.blade.php -->
-<x-admin titre="Modifier un Cours" page_titre="Modifier un Cours">
+<x-admin titre="Modifier un Cours" page_titre="Modifier un Cours" :nom_complete="Auth::guard('responsable')->user()->respo_nom . ',' . Auth::guard('responsable')->user()->respo_prenom">
 
 <div class="max-w-4xl mx-auto py-8 px-4">
     <div class="bg-white rounded-lg shadow-md p-6 border border-gray-200">
         <h2 class="text-2xl font-bold text-gray-800 mb-6">Modifier le cours</h2>
-        
+
 <form action="{{ route('responsable.update', $emploiTemps->id) }}" method="POST">
     @csrf
     @method('PUT')
@@ -17,7 +17,7 @@
                     <input type="text" value="{{ $emploiTemps->classe->nom_classe }}" class="w-full border-gray-300 rounded-md shadow-sm bg-gray-100" readonly>
                     <input type="hidden" name="classe_id" value="{{ $emploiTemps->classe_id }}">
                 </div>
-                
+
                 <!-- Jour -->
                 <div>
                     <label for="jour" class="block text-sm font-medium text-gray-700 mb-1">Jour</label>
@@ -36,13 +36,13 @@
                     <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
 
 <input type="date" name="date" id="date" value="{{ \Carbon\Carbon::parse($emploiTemps->date)->format('Y-m-d') }}" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
-                
+
                 <!-- Heure début -->
                 <div>
                     <label for="heure_debut" class="block text-sm font-medium text-gray-700 mb-1">Heure début</label>
                     <input type="time" name="heure_debut" id="heure_debut" value="{{ $emploiTemps->heure_debut }}" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
                 </div>
-                
+
                 <!-- Heure fin -->
                 <div>
                     <label for="heure_fin" class="block text-sm font-medium text-gray-700 mb-1">Heure fin</label>
@@ -64,7 +64,7 @@
                         @endforeach
                     </select>
                 </div>
-                
+
                 <!-- Enseignant -->
                 <div>
                     <label for="enseignant_id" class="block text-sm font-medium text-gray-700 mb-1">Enseignant</label>
@@ -128,7 +128,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.querySelector('form');
         const inputs = form.querySelectorAll('input, select');
-        
+
         inputs.forEach(input => {
             input.addEventListener('change', checkConflits);
         });
@@ -138,7 +138,7 @@
         const form = document.querySelector('form');
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
-        
+
         // On envoie les données au serveur pour vérification
         const response = await fetch('{{ route("responsable.checkConflits") }}', {
             method: 'POST',
@@ -151,10 +151,10 @@
                 emploi_id: '{{ $emploiTemps->id }}' // On exclut l'emploi actuel de la vérification
             })
         });
-        
+
         const result = await response.json();
         const conflitsContainer = document.getElementById('conflits-container');
-        
+
         if (result.conflit) {
             conflitsContainer.classList.remove('hidden');
             document.getElementById('conflit-titre').textContent = 'Conflit détecté !';

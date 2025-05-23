@@ -20,7 +20,7 @@
     ❌supprimer (action irréversible) .
 </p>
             <div class="flex justify-end space-x-4">
-                <button type="button" onclick="closeDeleteModal()" 
+                <button type="button" onclick="closeDeleteModal()"
                         class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-300">
                     Annuler
                 </button>
@@ -28,7 +28,7 @@
                         class="px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg transition-colors duration-300">
                     Modifier
                 </button>
-                <button id="confirmDeleteButton" type="button" 
+                <button id="confirmDeleteButton" type="button"
                         class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-300">
                     Supprimer
                 </button>
@@ -106,12 +106,12 @@
                     <label class="block text-sm font-medium text-gray-700">Type d'événement</label>
                     <div class="grid grid-cols-2 gap-4">
                         <label class="inline-flex items-center p-3 border rounded-lg cursor-pointer hover:bg-blue-50 transition-colors duration-200">
-                            <input type="radio" name="event_type" value="existing" checked 
+                            <input type="radio" name="event_type" value="existing" checked
                                    class="form-radio h-5 w-5 text-blue-600" onchange="toggleEventType()">
                             <span class="ml-3 text-gray-700">Événement existant</span>
                         </label>
                         <label class="inline-flex items-center p-3 border rounded-lg cursor-pointer hover:bg-blue-50 transition-colors duration-200">
-                            <input type="radio" name="event_type" value="new" 
+                            <input type="radio" name="event_type" value="new"
                                    class="form-radio h-5 w-5 text-blue-600" onchange="toggleEventType()">
                             <span class="ml-3 text-gray-700">Nouvel événement</span>
                         </label>
@@ -120,7 +120,7 @@
                 <!-- SECTION ÉVÉNEMENT EXISTANT -->
                 <div id="existingEventSection" class="space-y-2">
                     <label for="calendar_event_id" class="block text-sm font-medium text-gray-700">Sélectionner</label>
-                    <select name="calendar_event_id" id="calendar_event_id" 
+                    <select name="calendar_event_id" id="calendar_event_id"
                             class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
                         @foreach($events as $event)
                             <option value="{{ $event->id }}">{{ $event->title }}</option>
@@ -131,8 +131,8 @@
                 <div id="newEventSection" class="hidden space-y-4">
                     <div class="space-y-2">
                         <label for="new_event_title" class="block text-sm font-medium text-gray-700">Titre</label>
-                        <input type="text" name="title" id="new_event_title" 
-                               class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" 
+                        <input type="text" name="title" id="new_event_title"
+                               class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
                                placeholder="Nom de l'événement">
                     </div>
                     <div class="flex items-center space-x-3">
@@ -145,22 +145,22 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-2">
                         <label for="start_date" class="block text-sm font-medium text-gray-700">Date de début</label>
-                        <input type="date" name="start_date" id="start_date" 
+                        <input type="date" name="start_date" id="start_date"
                                class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" required>
                     </div>
                     <div class="space-y-2">
                         <label for="end_date" class="block text-sm font-medium text-gray-700">Date de fin</label>
-                        <input type="date" name="end_date" id="end_date" 
+                        <input type="date" name="end_date" id="end_date"
                                class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" required>
                     </div>
                 </div>
                 <!-- BOUTONS -->
                 <div class="flex justify-end space-x-4 pt-4">
-                    <button type="button" onclick="closeEventForm()" 
+                    <button type="button" onclick="closeEventForm()"
                             class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-300">
                         Annuler
                     </button>
-                    <button type="submit" 
+                    <button type="submit"
                             class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-300 flex items-center space-x-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -213,7 +213,7 @@
                 openEventForm();
             },
             eventClick: function(info) {
-                openDeleteModal(info.event.id); 
+                openDeleteModal(info.event.id);
             },
             events: "{{ route('responsable.calendar.events') }}",
             eventDisplay: 'block',
