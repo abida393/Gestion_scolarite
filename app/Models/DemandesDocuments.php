@@ -27,6 +27,10 @@ class DemandesDocuments extends Model
     {
         return $this->belongsTo(Etudiant::class, 'id_etudiant');
     }
+    public function responsable()
+{
+    return $this->belongsTo(responsable::class, 'id_responsable');
+}
 
     // public function demande()
     // {

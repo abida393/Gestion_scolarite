@@ -12,6 +12,47 @@
         <p class="text-lg text-gray-600 max-w-2xl mx-auto">Organisez et mettez les demandes des etudiants en toute
             simplicité</p>
     </div>
+    <button type="button"
+    class="mb-6 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white font-medium py-2 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+    onclick="document.getElementById('addDocumentModal').classList.remove('hidden')">
+    <i class="fas fa-plus mr-2"></i> Ajouter un document
+</button>
+
+<!-- Modal d'ajout de document -->
+<div id="addDocumentModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg p-8 relative">
+        <button type="button" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl"
+            onclick="document.getElementById('addDocumentModal').classList.add('hidden')">
+            &times;
+        </button>
+        <h3 class="text-xl font-semibold mb-6 flex items-center">
+            <i class="fas fa-file-medical text-blue-500 mr-2"></i> Nouveau document
+        </h3>
+        <form action="{{ route('documents.add') }}" method="POST" enctype="multipart/form-data" id="addDocumentForm" class="space-y-4">
+            @csrf
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Nom du document</label>
+                <input type="text" name="nom_document" required class="w-full border px-3 py-2 rounded-lg">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Type (unique)</label>
+                <input type="text" name="type" required class="w-full border px-3 py-2 rounded-lg">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Template (optionnel)</label>
+                <input type="text" name="template_path" class="w-full border px-3 py-2 rounded-lg">
+            </div>
+            <div class="flex items-center">
+                <input type="checkbox" name="generable" id="generable" class="mr-2">
+                <label for="generable" class="text-sm text-gray-700">Générable automatiquement</label>
+            </div>
+            <div class="flex justify-end gap-2 pt-4">
+                <button type="button" onclick="document.getElementById('addDocumentModal').classList.add('hidden')" class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300">Annuler</button>
+                <button type="submit" class="px-6 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Enregistrer</button>
+            </div>
+        </form>
+    </div>
+</div>
 
     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
         <!-- Filter Section - Single Row -->
@@ -114,29 +155,88 @@
                                 {{ $demande->etudiant->formation->nom_formation }}
                             </div>
                         </div>
-
-                        <!-- Actions - Boutons icônes circulaires -->
-                        <div class="flex items-center gap-2">
-                            <button
-                                class="edit-btn p-2 bg-white hover:bg-slate-100 text-slate-600 rounded-full transition-colors shadow border border-slate-200"
-                                data-id="{{ $demande->id }}" title="Modifier">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                </svg>
-                            </button>
-
-                            <!-- @if ($demande->etat_demande == 'document-pret')
-<form action="{{ route('responsable.demande.terminer', $demande->id) }}" method="POST" class="inline">
+                        
+                        <div class="text-sm text-slate-600 mb-1">
+                            <span class="font-medium text-slate-800">{{ $demande->etudiant->etudiant_nom }} {{ $demande->etudiant->etudiant_prenom }}</span> • 
+                            {{ $demande->etudiant->email_ecole }}
+                        </div>
+                        
+                        <div class="text-sm text-slate-500">
+                            {{ $demande->document->nom_document }} • {{ $demande->etudiant->formation->nom_formation }}
+                        </div>
+                    </div>
+                    
+                    <!-- Actions - Boutons icônes circulaires -->
+                    <div class="flex items-center gap-2">
+                        <button class="edit-btn p-2 bg-white hover:bg-slate-100 text-slate-600 rounded-full transition-colors shadow border border-slate-200" data-id="{{ $demande->id }}" title="Modifier">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                        </button>
+                        
+                       
+    
+    @if($demande->etat_demande == 'termine')
+    <form action="{{ route('responsable.demande.supprimer', $demande->id) }}" method="POST" class="inline">
         @csrf
-        <button type="submit"
-                class="p-2 bg-white hover:bg-green-100 text-green-600 rounded-full transition-colors shadow border border-slate-200"
-                title="Terminer la demande">
-            <i class="fas fa-check-circle"></i>
+        @method('DELETE')
+        <button type="submit" 
+                class="p-2 bg-white hover:bg-slate-100 text-rose-500 rounded-full transition-colors shadow border border-slate-200" 
+                title="Supprimer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
         </button>
     </form>
-@endif -->
+    @endif
+</div>
+                </div>
+                
+                <!-- Expanded Details (hidden by default) -->
+                <div class="request-details mt-6 pt-6 border-t border-slate-100 hidden" id="details-{{ $demande->id }}">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Student Info -->
+                        <div>
+                            <h3 class="text-sm font-medium text-slate-500 mb-2">Informations étudiant</h3>
+                            <div class="space-y-1">
+                                <p class="text-sm text-slate-800"><span class="font-medium">Nom:</span> {{ $demande->etudiant->etudiant_nom }} {{ $demande->etudiant->etudiant_prenom }}</p>
+                                <p class="text-sm text-slate-800"><span class="font-medium">Email:</span> {{ $demande->etudiant->email_ecole }}</p>
+                                <p class="text-sm text-slate-800"><span class="font-medium">Filière:</span> {{ $demande->etudiant->filiere->nom_filiere }}</p>
+                                <p class="text-sm text-slate-800"><span class="font-medium">Classe:</span> {{ $demande->etudiant->classe->nom_classe }}</p>
+                                <p class="text-sm text-slate-800"><span class="font-medium">Numero telephone:</span> {{ $demande->etudiant->etudiant_tel }}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Request Info -->
+                        <div>
+                            <h3 class="text-sm font-medium text-slate-500 mb-2">Détails de la demande</h3>
+                            <div class="space-y-1">
+                                <p class="text-sm text-slate-800"><span class="font-medium">Document:</span> {{ $demande->document->nom_document }}</p>
+                                <p class="text-sm text-slate-800"><span class="font-medium">Formation:</span> {{ $demande->etudiant->formation->nom_formation }}</p>
+                                <p class="text-sm text-slate-800"><span class="font-medium">Année académique:</span> {{ $demande->annee_academique }}</p>
+                                @if($demande->etat_demande == 'refus')
+                                <p class="text-sm text-slate-800"><span class="font-medium">Justification du refus:</span> {{ $demande->justif_refus }}</p>
+                                @endif
+                            </div>
+                        </div>
+                        
+                        <!-- Status Update Form -->
+                        <div>
+                            <h3 class="text-sm font-medium text-slate-500 mb-2">Mise à jour du statut</h3>
+                            <form action="{{ route('responsable.demande.updateEtat', $demande->id) }}" method="POST" enctype="multipart/form-data" class="space-y-4" id="update-form-{{ $demande->id }}">
+                                @csrf
+                                @method('PUT')
+                                
+                                <div class="relative w-full">
+                                    <select name="etat_demande" id="etat_demande-{{ $demande->id }}"
+                                        class="status-select w-full appearance-none rounded-lg border border-slate-300 bg-white px-4 py-2 pr-10 text-sm text-slate-700 shadow-sm transition duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                                        data-id="{{ $demande->id }}">
+                                        <option value="demande-recue" {{ $demande->etat_demande == 'demande-recue' ? 'selected' : '' }}>Demande reçue</option>
+                                        <option value="en-preparation" {{ $demande->etat_demande == 'en-preparation' ? 'selected' : '' }}>En préparation</option>
+                                        <option value="document-pret" {{ $demande->etat_demande == 'document-pret' ? 'selected' : '' }}>Document prêt</option>
+                                        <option value="termine" {{ $demande->etat_demande == 'termine' ? 'selected' : '' }}>Terminé</option>
+                                        <option value="refus" {{ $demande->etat_demande == 'refus' ? 'selected' : '' }}>Refusé</option>
+                                    </select>
 
                             @if ($demande->etat_demande == 'termine')
                                 <form action="{{ route('responsable.demande.supprimer', $demande->id) }}"
@@ -177,108 +277,45 @@
                                     <p class="text-sm text-slate-800"><span class="font-medium">Numero
                                             telephone:</span> {{ $demande->etudiant->etudiant_tel }}</p>
                                 </div>
-                            </div>
+                                
+                                <!-- Upload de document pour "Document prêt" -->
+<div id="document-pret-container-{{ $demande->id }}" class="{{ $demande->etat_demande == 'en-preparation' ? 'block' : 'hidden' }}">
+    {{-- Debug temporaire --}}
+{{-- <p>generable = {{ $demande->document->generable ? 'oui' : 'non' }}</p> --}}
+    @if($demande->document->generable)
+        <div id="methode-container-{{ $demande->id }}">
+            <label class="block text-sm font-medium text-slate-600 mb-1">Méthode de fourniture du document</label>
+            <div class="flex gap-4 mb-2">
+                <label>
+                    <input type="radio" name="fichier_option_{{ $demande->id }}" value="import" checked class="fichier-option" data-id="{{ $demande->id }}">
+                    Importer un fichier
+                </label>
+                <label>
+                    <input type="radio" name="fichier_option_{{ $demande->id }}" value="generer" class="fichier-option" data-id="{{ $demande->id }}">
+                    Générer automatiquement
+                </label>
+            </div>
+        </div>
+    @endif
 
-                            <!-- Request Info -->
-                            <div>
-                                <h3 class="text-sm font-medium text-slate-500 mb-2">Détails de la demande</h3>
-                                <div class="space-y-1">
-                                    <p class="text-sm text-slate-800"><span class="font-medium">Document:</span>
-                                        {{ $demande->document->nom_document }}</p>
-                                    <p class="text-sm text-slate-800"><span class="font-medium">Formation:</span>
-                                        {{ $demande->etudiant->formation->nom_formation }}</p>
-                                    <p class="text-sm text-slate-800"><span class="font-medium">Année
-                                            académique:</span> {{ $demande->annee_academique }}</p>
-                                    @if ($demande->etat_demande == 'refus')
-                                        <p class="text-sm text-slate-800"><span class="font-medium">Justification du
-                                                refus:</span> {{ $demande->justif_refus }}</p>
-                                    @endif
-                                </div>
-                            </div>
+    <div id="import-file-{{ $demande->id }}">
+        <label class="block text-sm font-medium text-slate-600 mb-1">Joindre le document</label>
+        <input type="file" name="document" id="document-{{ $demande->id }}" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200">
+    </div>
+</div>
 
-                            <!-- Status Update Form -->
-                            <div>
-                                <h3 class="text-sm font-medium text-slate-500 mb-2">Mise à jour du statut</h3>
-                                <form action="{{ route('responsable.demande.updateEtat', $demande->id) }}"
-                                    method="POST" enctype="multipart/form-data" class="space-y-4"
-                                    id="update-form-{{ $demande->id }}">
-                                    @csrf
-                                    @method('PUT')
-
-                                    <div class="relative w-full">
-                                        <select name="etat_demande" id="etat_demande-{{ $demande->id }}"
-                                            class="status-select w-full appearance-none rounded-lg border border-slate-300 bg-white px-4 py-2 pr-10 text-sm text-slate-700 shadow-sm transition duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
-                                            data-id="{{ $demande->id }}">
-                                            <option value="demande-recue"
-                                                {{ $demande->etat_demande == 'demande-recue' ? 'selected' : '' }}>
-                                                Demande reçue</option>
-                                            <option value="en-preparation"
-                                                {{ $demande->etat_demande == 'en-preparation' ? 'selected' : '' }}>En
-                                                préparation</option>
-                                            <option value="document-pret"
-                                                {{ $demande->etat_demande == 'document-pret' ? 'selected' : '' }}>
-                                                Document prêt</option>
-                                            <option value="termine"
-                                                {{ $demande->etat_demande == 'termine' ? 'selected' : '' }}>Terminé
-                                            </option>
-                                            <option value="refus"
-                                                {{ $demande->etat_demande == 'refus' ? 'selected' : '' }}>Refusé
-                                            </option>
-                                        </select>
-
-                                        <!-- Icône flèche (chevron) -->
-                                        <div
-                                            class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-500">
-                                            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd"
-                                                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.292l3.71-4.06a.75.75 0 111.08 1.04l-4.25 4.656a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                        </div>
-                                    </div>
-
-                                    <!-- Justification de refus -->
-                                    <div id="justif-refus-container-{{ $demande->id }}"
-                                        class="{{ $demande->etat_demande == 'refus' ? 'block' : 'hidden' }}">
-                                        <label for="justif_refus-{{ $demande->id }}"
-                                            class="block text-sm font-medium text-slate-600 mb-1">Justification du
-                                            refus</label>
-                                        <textarea name="justif_refus" id="justif_refus-{{ $demande->id }}" rows="3"
-                                            class="block w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm transition duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
-                                            placeholder="Veuillez indiquer la raison du refus...">{{ old('justif_refus', $demande->justif_refus) }}</textarea>
-                                    </div>
-
-                                    <!-- Upload de document -->
-                                    <div id="upload-container-{{ $demande->id }}"
-                                        class="{{ $demande->etat_demande == 'termine' ? 'block' : 'hidden' }}">
-                                        <label class="block text-sm font-medium text-slate-600 mb-1">Joindre le
-                                            document</label>
-                                        <input type="file" name="document" id="document-{{ $demande->id }}"
-                                            class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200"
-                                            {{ $demande->etat_demande == 'termine' && !$demande->fichier ? 'required' : '' }}>
-
-                                        @if ($demande->fichier)
-                                            <div class="mt-2">
-                                                <p class="text-sm text-slate-500">Fichier existant :</p>
-                                                <a href="{{ asset('storage/documents/' . $demande->fichier) }}"
-                                                    target="_blank"
-                                                    class="text-blue-600 hover:text-blue-800 text-sm underline">Télécharger</a>
-                                            </div>
-                                        @endif
-                                    </div>
-
-                                    <button type="submit"
-                                        class="w-full md:w-auto px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2 update-btn"
-                                        data-id="{{ $demande->id }}">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M5 13l4 4L19 7l-1.5-1.5L9 15l-2-2-1.5 1.5z" />
-                                        </svg>
-                                        Mettre à jour
-                                    </button>
-                                </form>
-                            </div>
+<!-- Container pour "Terminé" (plus de choix de méthode, juste notif) -->
+<div id="upload-container-{{ $demande->id }}" class="{{ $demande->etat_demande == 'termine' ? 'block' : 'hidden' }}">
+    <p class="text-green-600 text-sm">Le document a été traité. L'étudiant sera notifié.</p>
+</div>
+                                
+                                <button type="submit" class="w-full md:w-auto px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2 update-btn" data-id="{{ $demande->id }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7l-1.5-1.5L9 15l-2-2-1.5 1.5z" />
+                                    </svg>
+                                    Mettre à jour
+                                </button>
+                            </form>
                         </div>
 
                         <!-- Status Timeline -->
@@ -462,42 +499,75 @@
             });
 
             // Show/hide file upload or justification based on status
-            document.querySelectorAll('.status-select').forEach(select => {
-                select.addEventListener('change', function() {
-                    const id = this.getAttribute('data-id');
-                    const uploadContainer = document.getElementById(`upload-container-${id}`);
-                    const justifContainer = document.getElementById(`justif-refus-container-${id}`);
+             select.addEventListener('change', function() {
+            const id = this.getAttribute('data-id');
+            const pretContainer = document.getElementById(`document-pret-container-${id}`);
+            const termineContainer = document.getElementById(`upload-container-${id}`);
+            const justifContainer = document.getElementById(`justif-refus-container-${id}`);
+            const methodeContainer = document.getElementById(`methode-container-${id}`);
+            const importDiv = document.getElementById(`import-file-${id}`);
 
-                    if (this.value === 'termine') {
-                        uploadContainer.classList.remove('hidden');
-                        justifContainer.classList.add('hidden');
-                    } else if (this.value === 'refus') {
-                        justifContainer.classList.remove('hidden');
-                        uploadContainer.classList.add('hidden');
-                    } else {
-                        uploadContainer.classList.add('hidden');
-                        justifContainer.classList.add('hidden');
-                    }
-                });
-
+           if (this.value === 'en-preparation') {
+    pretContainer.classList.remove('hidden');
+    termineContainer.classList.add('hidden');
+    if (methodeContainer) methodeContainer.classList.remove('hidden');
+    const importRadio = document.querySelector(`input[name="fichier_option_${id}"][value="import"]`);
+    if (importRadio && importRadio.checked) {
+        importDiv.classList.remove('hidden');
+    } else {
+        importDiv.classList.add('hidden');
+    }
+    justifContainer.classList.add('hidden');
+} else if (this.value === 'termine') {
+                pretContainer.classList.add('hidden');
+                termineContainer.classList.remove('hidden');
+                justifContainer.classList.add('hidden');
+            } else if (this.value === 'refus') {
+                pretContainer.classList.add('hidden');
+                termineContainer.classList.add('hidden');
+                justifContainer.classList.remove('hidden');
+            } else {
+                pretContainer.classList.add('hidden');
+                termineContainer.classList.add('hidden');
+                justifContainer.classList.add('hidden');
+            }
+        });
+                
                 // Initialize visibility on page load
-                const id = select.getAttribute('data-id');
-                const currentValue = select.value;
-                const uploadContainer = document.getElementById(`upload-container-${id}`);
-                const justifContainer = document.getElementById(`justif-refus-container-${id}`);
+             const id = select.getAttribute('data-id');
+        const currentValue = select.value;
+        const pretContainer = document.getElementById(`document-pret-container-${id}`);
+        const termineContainer = document.getElementById(`upload-container-${id}`);
+        const justifContainer = document.getElementById(`justif-refus-container-${id}`);
+        const methodeContainer = document.getElementById(`methode-container-${id}`);
+        const importDiv = document.getElementById(`import-file-${id}`);
 
-                if (currentValue === 'termine') {
-                    uploadContainer.classList.remove('hidden');
-                    justifContainer.classList.add('hidden');
-                } else if (currentValue === 'refus') {
-                    justifContainer.classList.remove('hidden');
-                    uploadContainer.classList.add('hidden');
-                } else {
-                    uploadContainer.classList.add('hidden');
-                    justifContainer.classList.add('hidden');
-                }
-            });
-
+        if (currentValue === 'en-preparation') {
+    pretContainer.classList.remove('hidden');
+    termineContainer.classList.add('hidden');
+    if (methodeContainer) methodeContainer.classList.remove('hidden');
+    const importRadio = document.querySelector(`input[name="fichier_option_${id}"][value="import"]`);
+    if (importRadio && importRadio.checked) {
+        importDiv.classList.remove('hidden');
+    } else {
+        importDiv.classList.add('hidden');
+    }
+    justifContainer.classList.add('hidden');
+} else if (currentValue === 'termine') {
+            pretContainer.classList.add('hidden');
+            termineContainer.classList.remove('hidden');
+            justifContainer.classList.add('hidden');
+        } else if (currentValue === 'refus') {
+            pretContainer.classList.add('hidden');
+            termineContainer.classList.add('hidden');
+            justifContainer.classList.remove('hidden');
+        } else {
+            pretContainer.classList.add('hidden');
+            termineContainer.classList.add('hidden');
+            justifContainer.classList.add('hidden');
+        }
+    });
+            
             // Status filter
             document.querySelectorAll('.status-filter-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -615,6 +685,23 @@
                 // Hide no requests message
                 document.getElementById('no-requests-message').classList.add('hidden');
             });
+        
+          document.querySelectorAll('.fichier-option').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const id = this.getAttribute('data-id');
+            const importDiv = document.getElementById(`import-file-${id}`);
+            if (this.value === 'import') {
+                importDiv.classList.remove('hidden');
+            } else {
+                importDiv.classList.add('hidden');
+            }
         });
+    });
+
+document.getElementById('addDocumentForm').addEventListener('submit', function() {
+    setTimeout(() => {
+        document.getElementById('addDocumentModal').classList.add('hidden');
+    }, 500);
+});
     </script>
 </x-admin>

@@ -144,6 +144,7 @@ Route::middleware('auth.multi:etudiant')->prefix('documents')->group(function ()
         return Storage::disk('documents')->download($filename);
     })->name('documents.file');
     Route::get('/{filename}/download', [DocumentController::class, 'downloadFile']);
+Route::get('/messages/{responsableId}', [DocumentController::class, 'getMessages']);
 
 });
 
@@ -158,10 +159,10 @@ Route::middleware('auth.multi:responsable')->prefix('responsable/documents')->gr
 
     // Supprimer une demande
     Route::delete('/delete/{id}', [DocumentController::class, 'destroy'])->name('responsable.demande.supprimer');
-
+Route::post('/documents/add', [DocumentController::class, 'storeDocument'])->name('documents.add');
     // Autres routes pour télécharger, ajouter un fichier, etc.
-    Route::put('/update-etat/{id}', [DocumentController::class, 'updateEtat'])->name('responsable.demande.updateEtat');
-    Route::get('/download/{id}', [DocumentController::class, 'downloadFile'])->name('documents.download');
+Route::put('/update-etat/{id}', [DocumentController::class, 'updateEtat'])->name('responsable.demande.updateEtat');  
+  Route::get('/download/{id}', [DocumentController::class, 'downloadFile'])->name('documents.download');
     Route::post('/upload/{id}', [DocumentController::class, 'uploadDocument'])->name('responsable.demande.upload');
     Route::get('/modifier/{id}', [DocumentController::class, 'modifier'])->name('responsable.demande.modifier');
     Route::post('/terminer/{id}', [DocumentController::class, 'terminerDemande'])->name('responsable.demande.terminer');

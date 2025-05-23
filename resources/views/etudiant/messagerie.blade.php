@@ -190,55 +190,57 @@
 
                 // Fetch messages
                 fetch(`/messages/${responsableId}`)
-                    .then(response => response.json())
-                    .then(messages => {
-                        const container = document.getElementById('messages-container');
-                        container.innerHTML = '';
+    .then(response => response.json())
+    .then(messages => {
+        console.log(messages);
+        const container = document.getElementById('messages-container');
+        container.innerHTML = '';
 
-                        const currentUserId = {{ Auth::guard('etudiant')->user()->id }};
+        const currentUserId = {{ Auth::guard('etudiant')->user()->id }};
 
-                        if (messages.length === 0) {
-                            container.innerHTML = `
-                                <div class="flex flex-col justify-center items-center h-full text-gray-400/80">
-                                    <div class="bg-white/50 p-6 rounded-xl shadow-inner border border-gray-200/30 backdrop-blur-sm">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-pink-300/70 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                        </svg>
-                                        <h3 class="text-lg font-medium text-gray-500 text-center">Pas de messages encore</h3>
-                                        <p class="text-sm text-gray-400 mt-1 text-center">Envoyez le premier message à ${responsableName}</p>
-                                    </div>
-                                </div>
-                            `;
-                            return;
-                        }
+        if (!messages || messages.length === 0) {
+            container.innerHTML = `
+                <div class="flex flex-col justify-center items-center h-full text-gray-400/80">
+                    <div class="bg-white/50 p-6 rounded-xl shadow-inner border border-gray-200/30 backdrop-blur-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-pink-300/70 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        <h3 class="text-lg font-medium text-gray-500 text-center">Pas de messages encore</h3>
+                        <p class="text-sm text-gray-400 mt-1 text-center">Envoyez le premier message à ${responsableName}</p>
+                    </div>
+                </div>
+            `;
+            return;
+        }
 
-                        messages.forEach(message => {
-                            const isCurrentUser = (message.sender_type === 'etudiant' && message.sender_id == currentUserId);
-                            const messageDiv = document.createElement('div');
-                            messageDiv.className = `flex ${isCurrentUser ? 'justify-end' : 'justify-start'} mb-4 animate-fade-in`;
+        messages.forEach(message => {
+            const isCurrentUser = (message.sender_type === 'etudiant' && message.sender_id == currentUserId);
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex ${isCurrentUser ? 'justify-end' : 'justify-start'} mb-4 animate-fade-in`;
 
-                            const timeString = new Date(message.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                            
-                            messageDiv.innerHTML = `
-                                <div class="flex ${isCurrentUser ? 'flex-row-reverse' : 'flex-row'} items-end space-x-2 max-w-xs lg:max-w-md">
-                                    ${!isCurrentUser ? `
-                                    <div class="flex-shrink-0 h-8 w-8 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center shadow">
-                                        <span class="text-white text-xs font-medium">${responsableName.charAt(0)}</span>
-                                    </div>
-                                    ` : ''}
-                                    <div class="${isCurrentUser ? 'bg-gradient-to-br from-pink-500 to-purple-500 text-white' : 'bg-white shadow'} rounded-2xl ${isCurrentUser ? 'rounded-br-none' : 'rounded-bl-none'} py-2 px-4">
-                                        <p class="text-sm ${isCurrentUser ? 'text-white' : 'text-gray-800'}">${message.content}</p>
-                                        <p class="text-xs ${isCurrentUser ? 'text-pink-100' : 'text-gray-500'} mt-1 text-right">${timeString}</p>
-                                    </div>
-                                </div>
-                            `;
+            const timeString = new Date(message.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
-                            container.appendChild(messageDiv);
-                        });
+            // Utilise innerHTML pour afficher le HTML du message (ex: lien de téléchargement)
+            const messageHtml = `
+                <div class="flex ${isCurrentUser ? 'flex-row-reverse' : 'flex-row'} items-end space-x-2 max-w-xs lg:max-w-md">
+                    ${!isCurrentUser ? `
+                    <div class="flex-shrink-0 h-8 w-8 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center shadow">
+                        <span class="text-white text-xs font-medium">${responsableName.charAt(0)}</span>
+                    </div>
+                    ` : ''}
+                    <div class="${isCurrentUser ? 'bg-gradient-to-br from-pink-500 to-purple-500 text-white' : 'bg-white shadow'} rounded-2xl ${isCurrentUser ? 'rounded-br-none' : 'rounded-bl-none'} py-2 px-4">
+                        <p class="text-sm ${isCurrentUser ? 'text-white' : 'text-gray-800'}" style="word-break:break-word;">${message.content}</p>
+                        <p class="text-xs ${isCurrentUser ? 'text-pink-100' : 'text-gray-500'} mt-1 text-right">${timeString}</p>
+                    </div>
+                </div>
+            `;
+            messageDiv.innerHTML = messageHtml;
+            container.appendChild(messageDiv);
+        });
 
-                        // Scroll to bottom
-                        container.scrollTop = container.scrollHeight;
-                    });
+        // Scroll to bottom
+        container.scrollTop = container.scrollHeight;
+    });
             }
 
             // Handle form submission
