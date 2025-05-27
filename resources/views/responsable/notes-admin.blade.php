@@ -1,5 +1,8 @@
 <x-admin titre="notes" page_titre="Saisie des Notes" :nom_complete="Auth::guard('responsable')->user()->respo_nom . ',' . Auth::guard('responsable')->user()->respo_prenom">
-    <div class="p-6 bg-white rounded-lg shadow-md">
+
+
+
+<div class="p-6 bg-white rounded-lg shadow-md">
         <div class="flex gap-4 mb-6">
             <button id="btn-saisie" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Saisie Note</button>
             <button id="btn-affiche" class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">Affiche Note</button>
@@ -239,8 +242,7 @@
                                 <td class="px-4 py-2 border">${note.note2 ?? '-'}</td>
                                 <td class="px-4 py-2 border font-semibold">${note.note_finale ?? '-'}</td>
                                 <td class="px-4 py-2 border">
-                                    <button onclick="openEditModal('${note.nom}', '${note.prenom}', ${note.note1 ?? 'null'}, ${note.note2 ?? 'null'}, ${matiereId}, ${note.etudiant_id})" 
-                                            class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">
+<button onclick="openEditModal('${note.nom}', '${note.prenom}', ${note.note1 ?? 'null'}, ${note.note2 ?? 'null'}, ${matiereId}, ${note.etudiant_id})"                                            class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">
                                         Modifier
                                     </button>
                                 </td>
@@ -275,35 +277,35 @@
 
         // Gestion de la soumission du formulaire
         document.addEventListener('DOMContentLoaded', function() {
-            document.body.addEventListener('submit', function(e) {
-                if (e.target && e.target.id === 'editNoteForm') {
-                    e.preventDefault();
-                    
-                    const formData = new FormData(e.target);
-                    const data = Object.fromEntries(formData.entries());
-                    
-                    fetch('/notes/update', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                        },
-                        body: JSON.stringify(data)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert(data.success);
-                            closeEditModal();
-                            loadNotesAffiche(); // Recharger les notes
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Une erreur est survenue lors de la mise à jour');
-                    });
-                }
+    document.body.addEventListener('submit', function(e) {
+        if (e.target && e.target.id === 'editNoteForm') {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+
+            fetch('/notes/update', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: formData
+            })
+            .then(response => response.json())
+.then(data => {
+    if (data.success) {
+        alert(data.success);
+        closeEditModal();
+        loadNotesAffiche();
+    } else if (data.error) {
+        alert(data.error);
+    }
+})
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Une erreur est survenue lors de la mise à jour');
             });
+        }
+    });
         });
     </script>
 

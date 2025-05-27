@@ -79,6 +79,9 @@
 
         }
     </style>
+   
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
 </head>
 <script src="//unpkg.com/alpinejs" defer></script>
 <body>
@@ -113,8 +116,7 @@
                 <i class="far fa-calendar-alt"></i>
                 <span>paiement</span>
             </a>
-            <a href="{{ route('notes.admin') }}"
-                class="nav-item {{ Route::is('notes.admin') ? 'active' : '' }}" data-page="notes.admin">
+            <a href="{{ route('notes-admin') }}" class="nav-item {{ Route::is('notes-admin') ? 'active' : '' }}" data-page="notes-admin">
                 <i class="fas fa-file-alt"></i>
                 <span>notes</span>
             </a>
