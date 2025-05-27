@@ -179,6 +179,7 @@ Route::middleware('auth.multi:responsable')->prefix('responsable/documents')->gr
 
 
 
+
 // ==================== CALENDRIER ====================
 Route::prefix('calendrier')->name('calendar.')->group(function () {
     Route::get('/', [CalendarController::class, 'index'])->name('calendrier');
@@ -241,12 +242,22 @@ Route::post('/admin/paiements/{paiement}/changer-statut', [PaiementController::c
 //paiement administrateur
 use App\Http\Controllers\NoteSaisieController;
 
+// Puis le groupe existant (peut rester inchangé)
 
+// Routes accessibles uniquement aux responsables
+Route::middleware('auth:responsable')->group(function () {
+    Route::prefix('/notes')->group(function () {
+        Route::get('/saisie', [NoteSaisieController::class, 'notesAdmin'])->name('notes.admin'); // Déclaré ici
+        
+        Route::post('/store', [NoteSaisieController::class, 'store'])->name('notes.store');
+    });
+});
 
-Route::get('/notes-admin', [NoteSaisieController::class, 'notesAdmin'])->name('notes-admin');
-Route::post('/note', [NoteSaisieController::class, 'store'])->name('notes.store');
-Route::get('/affiche-notes/{classe_id}/{matiere_id}', [NoteSaisieController::class, 'afficheNotes']);
-
+// Routes AJAX sans middleware (si nécessaire)
+Route::prefix('get')->group(function () {
+    Route::get('/classes/{filiere_id}', [NoteSaisieController::class, 'getClasses']);
+    // ...
+});
 
 Route::get('/get-classes/{filiere_id}', [NoteSaisieController::class, 'getClasses']);
 Route::get('/get-modules/{classe_id}', [NoteSaisieController::class, 'getModules']);

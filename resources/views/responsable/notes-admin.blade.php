@@ -58,6 +58,46 @@
         </div>
     </div>
 
+    {{-- Modal d'édition --}}
+    <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg w-full max-w-md">
+            <h3 class="text-xl font-bold mb-4">Modifier les notes</h3>
+            <form id="editNoteForm">
+                @csrf
+                <input type="hidden" id="edit_etudiant_id" name="etudiant_id">
+                <input type="hidden" id="edit_matiere_id" name="matiere_id">
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Étudiant</label>
+                    <p id="edit_etudiant_name" class="font-semibold"></p>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="edit_note1" class="block text-gray-700 mb-2">Note 1</label>
+                    <input type="number" step="0.01" min="0" max="20" id="edit_note1" name="note1" 
+                           class="w-full px-3 py-2 border rounded">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="edit_note2" class="block text-gray-700 mb-2">Note 2</label>
+                    <input type="number" step="0.01" min="0" max="20" id="edit_note2" name="note2" 
+                           class="w-full px-3 py-2 border rounded">
+                </div>
+                
+                <div class="flex justify-end gap-3">
+                    <button type="button" onclick="closeEditModal()" 
+                            class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                        Annuler
+                    </button>
+                    <button type="submit" 
+                            class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                        Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         const filiereSelect = document.getElementById('filiere');
         const classeSelect = document.getElementById('classe');
@@ -186,6 +226,7 @@
                                     <th class="px-4 py-2 border">Note 1</th>
                                     <th class="px-4 py-2 border">Note 2</th>
                                     <th class="px-4 py-2 border">Note Finale</th>
+                                    <th class="px-4 py-2 border">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>`;
@@ -197,6 +238,12 @@
                                 <td class="px-4 py-2 border">${note.note1 ?? '-'}</td>
                                 <td class="px-4 py-2 border">${note.note2 ?? '-'}</td>
                                 <td class="px-4 py-2 border font-semibold">${note.note_finale ?? '-'}</td>
+                                <td class="px-4 py-2 border">
+                                    <button onclick="openEditModal('${note.nom}', '${note.prenom}', ${note.note1 ?? 'null'}, ${note.note2 ?? 'null'}, ${matiereId}, ${note.etudiant_id})" 
+                                            class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">
+                                        Modifier
+                                    </button>
+                                </td>
                             </tr>`;
                     });
                     html += '</tbody></table>';
@@ -206,6 +253,58 @@
                     notesAfficheDiv.innerHTML = `<p class="text-red-600">Erreur lors du chargement des notes.</p>`;
                 });
         }
+
+        // Fonctions pour gérer le modal d'édition
+        function openEditModal(nom, prenom, note1, note2, matiereId, etudiantId) {
+            const modal = document.getElementById('editModal');
+            document.getElementById('edit_etudiant_name').textContent = `${nom} ${prenom}`;
+            document.getElementById('edit_note1').value = note1 !== null ? note1 : '';
+            document.getElementById('edit_note2').value = note2 !== null ? note2 : '';
+            document.getElementById('edit_matiere_id').value = matiereId;
+            document.getElementById('edit_etudiant_id').value = etudiantId;
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeEditModal() {
+            const modal = document.getElementById('editModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Gestion de la soumission du formulaire
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.addEventListener('submit', function(e) {
+                if (e.target && e.target.id === 'editNoteForm') {
+                    e.preventDefault();
+                    
+                    const formData = new FormData(e.target);
+                    const data = Object.fromEntries(formData.entries());
+                    
+                    fetch('/notes/update', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.success);
+                            closeEditModal();
+                            loadNotesAffiche(); // Recharger les notes
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Une erreur est survenue lors de la mise à jour');
+                    });
+                }
+            });
+        });
     </script>
 
     <style>

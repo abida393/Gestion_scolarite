@@ -95,6 +95,39 @@ public function afficheNotes($classe_id, $matiere_id)
     return response()->json($resultats);
 }
 
+// Ajoutez ces méthodes à votre NoteSaisieController
 
+public function edit($etudiant_id, $matiere_id)
+{
+    $note = Note::where('etudiant_id', $etudiant_id)
+                ->where('matiere_id', $matiere_id)
+                ->firstOrFail();
+    
+    return response()->json($note);
+}
+
+public function update(Request $request)
+{
+    $request->validate([
+        'note1' => 'nullable|numeric|between:0,20',
+        'note2' => 'nullable|numeric|between:0,20'
+    ]);
+
+    $note = Note::where('etudiant_id', $request->etudiant_id)
+                ->where('matiere_id', $request->matiere_id)
+                ->firstOrFail();
+
+    if ($request->has('note1')) {
+        $note->note1 = $request->note1;
+    }
+
+    if ($request->has('note2')) {
+        $note->note2 = $request->note2;
+    }
+
+    $note->save();
+
+    return response()->json(['success' => 'Note mise à jour avec succès']);
+}
      
 }
