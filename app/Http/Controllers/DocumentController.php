@@ -11,6 +11,7 @@ use App\Models\Formation;
 use App\Models\Classe;
 use Illuminate\Support\Facades\Response;
 use App\Notifications\DocumentPretNotification;
+use Illuminate\Support\Facades\DB;
 
 
 class DocumentController extends Controller
@@ -24,7 +25,7 @@ class DocumentController extends Controller
     }
 
     public function store(Request $request)
-    {
+    {        
         $request->validate([
             'id_document' => 'required|exists:documents,id',
             'annee_academique' => 'required|string',
@@ -37,40 +38,75 @@ class DocumentController extends Controller
             'id_document' => $request->id_document,
             'annee_academique' => $request->annee_academique,
         ]);
-        
+
         return redirect()->back()->with('success', 'Demande envoyée avec succès.');
     }
+    public function storeDocument(Request $request)
+{
+
+    $request->validate([
+        'nom_document'   => 'required|string|max:255',
+        'type'           => 'required|string|max:255',
+        'template_path'  => 'nullable|string|max:255',
+        'generable'      => 'nullable',
+    ]);
+
+    Document::create([
+        'nom_document'  => $request->nom_document,
+        'type'          => $request->type,
+        'template_path' => "/public/temmplate/".$request->template_path,
+        'generable'     => $request->has('generable'),
+    ]);
+
+    return redirect()->back()->with('success', 'Document ajouté avec succès.');
+}
 
     public function mesDemandes()
     {
         $etudiant = Auth::guard('etudiant')->user();
-       
+
         $demandes = DemandesDocuments::where('id_etudiant', $etudiant->id)
             ->with('document')
             ->orderBy('created_at', 'desc')
             ->get();
-       
+
         return view('etudiant.mes_demandes', compact('demandes'));
     }
 
-    public function documents()
-    {
-        $etudiant = Auth::guard('etudiant')->user();
-        $documents = Document::all();
-        $classes = Classe::all(); // Ajout des classes
+public function documents()
+{
+    $etudiant = Auth::guard('etudiant')->user();
+    $documents = Document::all();
+    $classes = Classe::all();
 
-        $demandes = DemandesDocuments::where('id_etudiant', $etudiant->id)
-            ->with('document')
-            ->latest()
-            ->get();
-        
-        return view('etudiant.documents', compact('documents', 'demandes', 'classes'));
+    // Récupérer l'année académique via la formation de l'étudiant
+    $anneeInscription = '';
+    if ($etudiant->formation_id) {
+        $anneeFormation = DB::table('annee_formations')
+            ->join('annee', 'annee_formations.annee_id', '=', 'annee.id')
+            ->where('annee_formations.formation_id', $etudiant->formation_id)
+            ->orderByDesc('annee.id') // Prend la plus récente
+            ->select('annee.annee_debut', 'annee.annee_fin','annee_id')
+            ->first();
+            // dd($etudiant->formation_id);
+        if ($anneeFormation) {
+            $anneeInscription = $anneeFormation->annee_debut . '-' . $anneeFormation->annee_fin;
+            $annee_id = $anneeFormation->annee_id;
+        }
     }
+
+    $demandes = DemandesDocuments::where('id_etudiant', $etudiant->id)
+        ->with('document')
+        ->latest()
+        ->get();
+
+    return view('etudiant.documents', compact('documents', 'demandes', 'classes', 'anneeInscription'));
+}
 
     public function download($id)
     {
         $document = DemandesDocuments::findOrFail($id);
-        
+
         if ($document->etat_demande !== 'termine' || !$document->fichier) {
             return abort(404, 'Document non disponible');
         }
@@ -87,7 +123,7 @@ class DocumentController extends Controller
     public function downloadFile($filename)
     {
         $filePath = storage_path('app/public/documents/' . $filename);
-        
+
         if (file_exists($filePath)) {
             return Response::download($filePath, $filename);
         }
@@ -95,26 +131,23 @@ class DocumentController extends Controller
         abort(404);
     }
 
-    public function indexResponsable()
-    {
-        $demandes = DemandesDocuments::with(['etudiant.filiere', 'etudiant.formation', 'etudiant.classe', 'document'])
-            ->get();
-        
-        $filieres = Filiere::all();
-        $classes = Classe::all(); // Ajout des classes
-        
-        return view('responsable.document', compact('demandes', 'filieres', 'classes'));
-    }
-
+   public function indexResponsable()
+{
+    $demandes = DemandesDocuments::with(['etudiant.filiere', 'etudiant.formation', 'etudiant.classe', 'document'])->get();
+    $filieres = Filiere::all();
+    $classes = Classe::all();
+$documents = Document::all();
+return view('responsable.document', compact('demandes', 'filieres', 'classes', 'documents'));
+}
     public function modifier($id)
     {
         $demande = DemandesDocuments::with(['etudiant', 'document'])->findOrFail($id);
         $classes = Classe::all(); // Ajout des classes
-        
+
         return view('responsable.modifier_demande', compact('demande', 'classes'));
     }
 
-   public function updateEtat(Request $request, $id)
+  public function updateEtat(Request $request, $id)
 {
     $demande = DemandesDocuments::findOrFail($id);
 
@@ -122,8 +155,8 @@ class DocumentController extends Controller
         'etat_demande' => 'required|in:demande-recue,en-preparation,document-pret,termine,refus',
     ];
 
-    // Plus besoin de forcer "termine" pour le fichier, on gère ça automatiquement
-    if ($request->hasFile('document')) {
+    // Si "import", le fichier est requis
+    if ($request->input('fichier_option_'.$id, 'import') === 'import' && $request->hasFile('document')) {
         $rules['document'] = 'required|file|mimes:pdf,docx,jpeg,png|max:10240';
     }
 
@@ -133,9 +166,14 @@ class DocumentController extends Controller
 
     $request->validate($rules);
 
-    // Si un document est uploadé, on passe automatiquement à "termine"
-    if ($request->hasFile('document')) {
+    // Gestion des fichiers et génération
+    if ($request->input('fichier_option_'.$id) === 'import' && $request->hasFile('document')) {
         $path = $request->file('document')->store('documents', 'public');
+        $demande->fichier = basename($path);
+        $demande->etat_demande = 'termine';
+    } elseif ($request->input('fichier_option_'.$id) === 'generer' && $demande->document->generable) {
+        $generator = new \App\Services\DocumentGenerator();
+        $path = $generator->generate($demande);
         $demande->fichier = basename($path);
         $demande->etat_demande = 'termine';
     } else {
@@ -152,21 +190,22 @@ class DocumentController extends Controller
     $demande->save();
 
     // Notification automatique si terminé
-    if ($demande->etat_demande === 'termine') {
-        // Message dans la messagerie
-        Message::create([
-            'content' => 'Votre document "' . $demande->document->nom_document . '" est prêt. Vous pouvez le télécharger.',
-            'sender_id' => Auth::guard('responsable')->id(),
-            'sender_type' => 'responsable',
-            'receiver_id' => $demande->id_etudiant,
-            'receiver_type' => 'etudiant',
-            'is_read' => false,
-        ]);
-        // Notification
-        $fichierUrl = $demande->fichier ? asset('storage/documents/' . $demande->fichier) : null;
-        $demande->etudiant->notify(new DocumentPretNotification($demande, $fichierUrl));
+   if ($demande->etat_demande === 'termine') {
+    $demande->refresh();
+    $fichierUrl = $demande->fichier ? asset('storage/documents/' . $demande->fichier) : null;
+    $content = 'Votre document "' . $demande->document->nom_document . '" est prêt. ';
+    if ($fichierUrl) {
+        $content .= 'Vous pouvez le <a href="' . $fichierUrl . '" target="_blank" style="color:#2563eb;text-decoration:underline;">télécharger ici</a>.';
+    } else {
+        $content .= 'Vous pouvez le télécharger.';
     }
-
+    app(\App\Http\Controllers\MessageController::class)->sendMessageAutomatique([
+        'content' => $content,
+        'sender_id' => Auth::guard('responsable')->id(),
+        'receiver_id' => $demande->id_etudiant,
+    ]);
+    $demande->etudiant->notify(new DocumentPretNotification($demande, $fichierUrl));
+}
     return redirect()->route('responsable.documents.index')->with('success', 'État de la demande mis à jour.');
 }
 
@@ -205,29 +244,55 @@ class DocumentController extends Controller
 
         return view('document', compact('formations', 'filieres', 'classes'));
     }
-  public function terminerDemande(Request $request, $id)
+ public function terminerDemande(Request $request, $id)
 {
     $demande = DemandesDocuments::findOrFail($id);
 
     // Mettre à jour le statut
     $demande->etat_demande = 'termine';
     $demande->save();
-     // Envoyer un message dans la messagerie
-    Message::create([
-        'content' => 'Votre document "' . $demande->document->nom_document . '" est prêt. Vous pouvez le telecharger.',
-        'sender_id' => Auth::guard('responsable')->id(),
-        'sender_type' => 'responsable',
-        'receiver_id' => $demande->id_etudiant,
-        'receiver_type' => 'etudiant',
-        'is_read' => false,
-    ]);
 
     // Générer l'URL du fichier s'il existe
     $fichierUrl = $demande->fichier ? asset('storage/documents/' . $demande->fichier) : null;
+
+    // Préparer le contenu du message
+    $content = 'Votre document "' . $demande->document->nom_document . '" est prêt. ';
+    if ($fichierUrl) {
+        $content .= 'Vous pouvez le <a href="' . $fichierUrl . '" target="_blank" style="color:#2563eb;text-decoration:underline;">télécharger ici</a>.';
+    } else {
+        $content .= 'Vous pouvez le télécharger.';
+    }
+
+    // Envoyer un message dans la messagerie via MessageController
+    app(MessageController::class)->sendMessageAutomatique([
+        'content' => $content,
+        'sender_id' => Auth::guard('responsable')->id(),
+        'receiver_id' => $demande->id_etudiant,
+    ]);
 
     // Envoyer la notification avec le lien du fichier
     $demande->etudiant->notify(new DocumentPretNotification($demande, $fichierUrl));
 
     return redirect()->back()->with('success', 'Demande terminée et étudiant notifié.');
+}
+public function getMessages($responsableId)
+{
+    $etudiantId = Auth::guard('etudiant')->id();
+    $messages = Message::where(function($q) use ($etudiantId, $responsableId) {
+            $q->where('sender_id', $etudiantId)
+              ->where('sender_type', 'etudiant')
+              ->where('receiver_id', $responsableId)
+              ->where('receiver_type', 'responsable');
+        })
+        ->orWhere(function($q) use ($etudiantId, $responsableId) {
+            $q->where('sender_id', $responsableId)
+              ->where('sender_type', 'responsable')
+              ->where('receiver_id', $etudiantId)
+              ->where('receiver_type', 'etudiant');
+        })
+        ->orderBy('created_at')
+        ->get();
+
+    return response()->json($messages);
 }
 }

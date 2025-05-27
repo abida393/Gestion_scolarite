@@ -138,12 +138,13 @@ Route::get('/notes/{etudiantId}', [NoteController::class, 'afficherNotes'])->mid
 // ==================== DOCUMENTS ====================
 Route::middleware('auth.multi:etudiant')->prefix('documents')->group(function () {
     Route::get('/', [DocumentController::class, 'documents'])->name('documents.index');
-    Route::post('/', [DocumentController::class, 'store'])->name('documents.store');
+    Route::post('/store', [DocumentController::class, 'store'])->name('documents.store');
     Route::get('/download/{id}', [DocumentController::class, 'download'])->name('documents.download');
     Route::get('/{filename}', function ($filename) {
         return Storage::disk('documents')->download($filename);
     })->name('documents.file');
     Route::get('/{filename}/download', [DocumentController::class, 'downloadFile']);
+Route::get('/messages/{responsableId}', [DocumentController::class, 'getMessages']);
 
 });
 
@@ -158,10 +159,10 @@ Route::middleware('auth.multi:responsable')->prefix('responsable/documents')->gr
 
     // Supprimer une demande
     Route::delete('/delete/{id}', [DocumentController::class, 'destroy'])->name('responsable.demande.supprimer');
-
+Route::post('/documents/add', [DocumentController::class, 'storeDocument'])->name('documents.add');
     // Autres routes pour télécharger, ajouter un fichier, etc.
-    Route::put('/update-etat/{id}', [DocumentController::class, 'updateEtat'])->name('responsable.demande.updateEtat');
-    Route::get('/download/{id}', [DocumentController::class, 'downloadFile'])->name('documents.download');
+Route::put('/update-etat/{id}', [DocumentController::class, 'updateEtat'])->name('responsable.demande.updateEtat');
+  Route::get('/download/{id}', [DocumentController::class, 'downloadFile'])->name('documents.download');
     Route::post('/upload/{id}', [DocumentController::class, 'uploadDocument'])->name('responsable.demande.upload');
     Route::get('/modifier/{id}', [DocumentController::class, 'modifier'])->name('responsable.demande.modifier');
     Route::post('/terminer/{id}', [DocumentController::class, 'terminerDemande'])->name('responsable.demande.terminer');
@@ -211,7 +212,7 @@ Route::middleware('auth.multi:responsable')->group(function(){
     Route::get('/ajouter-etudiant', [ajouterEtudiantController::class, 'index'])->name('ajouter-etudiant');
     Route::post('/ajouter-etudiant/store', [ajouterEtudiantController::class, 'store'])->name('admin.etudiants.store');
     Route::get('/ajouter-enseignant', [ajouterEnseignantController::class, 'index'])->name('ajouter-enseignant');
-                           Route::post('/ajouter-enseignant/store', [ajouterEnseignantController::class, 'store'])->name('admin.enseignants.store');
+    Route::post('/ajouter-enseignant/store', [ajouterEnseignantController::class, 'store'])->name('admin.enseignants.store');
     Route::get('/afficher-etudiants', [ajouterEtudiantController::class, 'afficherEtudiants'])->name('responsable.afficher_etudiant');
     Route::get('/edit-etudiants/{etudiant}', [ajouterEtudiantController::class, 'edit'])->name('etudiants.edit');
     Route::put('/update-etudiants/{etudiant}', [ajouterEtudiantController::class, 'update'])->name('responsable.update_etudiant');
@@ -347,11 +348,11 @@ Route::get('/absences/etudiants-par-classe/{classeId}', [AbsenceResponsableContr
 Route::get('/absences/seances-par-classe/{classeId}', [AbsenceResponsableController::class, 'getSeancesParClasse']);
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/absences/export/csv', [AbsenceResponsableController::class, 'exportCSV'])
+Route::get('/absences/export/csv', [AbsenceResponsableController::class, 'exportCSV'])
     ->name('responsable.absences.export.csv');
 
 
-Route::post('/absences/export/pdf', [AbsenceResponsableController::class, 'exportPDF'])
+Route::get('/absences/export/pdf', [AbsenceResponsableController::class, 'exportPDF'])
     ->name('responsable.absences.export.pdf');
 
 

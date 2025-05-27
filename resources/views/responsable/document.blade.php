@@ -13,8 +13,56 @@
             simplicité</p>
     </div>
 
+    <!-- Add Document Button -->
+    <button type="button"
+        class="mb-6 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white font-medium py-2 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+        onclick="document.getElementById('addDocumentModal').classList.remove('hidden')">
+        <i class="fas fa-plus mr-2"></i> Ajouter un document
+    </button>
+
+    <!-- Add Document Modal -->
+    <div id="addDocumentModal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg p-8 relative">
+            <button type="button" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl"
+                onclick="document.getElementById('addDocumentModal').classList.add('hidden')">
+                &times;
+            </button>
+            <h3 class="text-xl font-semibold mb-6 flex items-center">
+                <i class="fas fa-file-medical text-blue-500 mr-2"></i> Nouveau document
+            </h3>
+            <form action="{{ route('documents.add') }}" method="POST" enctype="multipart/form-data"
+                id="addDocumentForm" class="space-y-4">
+                @csrf
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nom du document</label>
+                    <input type="text" name="nom_document" required class="w-full border px-3 py-2 rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Type (unique)</label>
+                    <input type="text" name="type" required class="w-full border px-3 py-2 rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Template (optionnel)</label>
+                    <input type="text" name="template_path" class="w-full border px-3 py-2 rounded-lg">
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" name="generable" id="generable" class="mr-2">
+                    <label for="generable" class="text-sm text-gray-700">Générable automatiquement</label>
+                </div>
+                <div class="flex justify-end gap-2 pt-4">
+                    <button type="button" onclick="document.getElementById('addDocumentModal').classList.add('hidden')"
+                        class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300">Annuler</button>
+                    <button type="submit"
+                        class="px-6 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content -->
     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-        <!-- Filter Section - Single Row -->
+        <!-- Filter Section -->
         <div class="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-slate-200">
             <div class="flex flex-col gap-6">
                 <h2 class="text-2xl font-bold text-slate-800">Toutes les Demandes</h2>
@@ -94,11 +142,11 @@
                                 <span class="text-lg font-semibold text-slate-800">#{{ $demande->id }}</span>
                                 <span
                                     class="status-badge px-3 py-1 rounded-full text-xs font-medium
-                                @if ($demande->etat_demande == 'demande-recue') bg-amber-100 text-amber-800 ring-1 ring-amber-300
-                                @elseif($demande->etat_demande == 'en-preparation') bg-blue-100 text-blue-800 ring-1 ring-blue-300
-                                @elseif($demande->etat_demande == 'document-pret') bg-purple-100 text-purple-800 ring-1 ring-purple-300
-                                @elseif($demande->etat_demande == 'termine') bg-emerald-100 text-emerald-800 ring-1 ring-emerald-300
-                                @elseif($demande->etat_demande == 'refus') bg-red-100 text-red-800 ring-1 ring-red-300 @endif">
+                                    @if ($demande->etat_demande == 'demande-recue') bg-amber-100 text-amber-800 ring-1 ring-amber-300
+                                    @elseif($demande->etat_demande == 'en-preparation') bg-blue-100 text-blue-800 ring-1 ring-blue-300
+                                    @elseif($demande->etat_demande == 'document-pret') bg-purple-100 text-purple-800 ring-1 ring-purple-300
+                                    @elseif($demande->etat_demande == 'termine') bg-emerald-100 text-emerald-800 ring-1 ring-emerald-300
+                                    @elseif($demande->etat_demande == 'refus') bg-red-100 text-red-800 ring-1 ring-red-300 @endif">
                                     {{ ucfirst(str_replace('-', ' ', $demande->etat_demande)) }}
                                 </span>
                             </div>
@@ -115,7 +163,7 @@
                             </div>
                         </div>
 
-                        <!-- Actions - Boutons icônes circulaires -->
+                        <!-- Actions -->
                         <div class="flex items-center gap-2">
                             <button
                                 class="edit-btn p-2 bg-white hover:bg-slate-100 text-slate-600 rounded-full transition-colors shadow border border-slate-200"
@@ -126,17 +174,6 @@
                                         d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
                             </button>
-
-                            <!-- @if ($demande->etat_demande == 'document-pret')
-<form action="{{ route('responsable.demande.terminer', $demande->id) }}" method="POST" class="inline">
-        @csrf
-        <button type="submit"
-                class="p-2 bg-white hover:bg-green-100 text-green-600 rounded-full transition-colors shadow border border-slate-200"
-                title="Terminer la demande">
-            <i class="fas fa-check-circle"></i>
-        </button>
-    </form>
-@endif -->
 
                             @if ($demande->etat_demande == 'termine')
                                 <form action="{{ route('responsable.demande.supprimer', $demande->id) }}"
@@ -157,7 +194,7 @@
                         </div>
                     </div>
 
-                    <!-- Expanded Details (hidden by default) -->
+                    <!-- Expanded Details -->
                     <div class="request-details mt-6 pt-6 border-t border-slate-100 hidden"
                         id="details-{{ $demande->id }}">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -225,46 +262,46 @@
                                                 {{ $demande->etat_demande == 'refus' ? 'selected' : '' }}>Refusé
                                             </option>
                                         </select>
+                                    </div>
 
-                                        <!-- Icône flèche (chevron) -->
-                                        <div
-                                            class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-500">
-                                            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd"
-                                                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.292l3.71-4.06a.75.75 0 111.08 1.04l-4.25 4.656a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
+                                    <!-- Upload de document pour "Document prêt" -->
+                                    <div id="document-pret-container-{{ $demande->id }}"
+                                        class="{{ $demande->etat_demande == 'en-preparation' ? 'block' : 'hidden' }}">
+                                        @if ($demande->document->generable)
+                                            <div id="methode-container-{{ $demande->id }}">
+                                                <label class="block text-sm font-medium text-slate-600 mb-1">Méthode de
+                                                    fourniture du document</label>
+                                                <div class="flex gap-4 mb-2">
+                                                    <label>
+                                                        <input type="radio"
+                                                            name="fichier_option_{{ $demande->id }}" value="import"
+                                                            checked class="fichier-option"
+                                                            data-id="{{ $demande->id }}">
+                                                        Importer un fichier
+                                                    </label>
+                                                    <label>
+                                                        <input type="radio"
+                                                            name="fichier_option_{{ $demande->id }}" value="generer"
+                                                            class="fichier-option" data-id="{{ $demande->id }}">
+                                                        Générer automatiquement
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                        <div id="import-file-{{ $demande->id }}">
+                                            <label class="block text-sm font-medium text-slate-600 mb-1">Joindre le
+                                                document</label>
+                                            <input type="file" name="document" id="document-{{ $demande->id }}"
+                                                class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200">
                                         </div>
                                     </div>
 
-                                    <!-- Justification de refus -->
-                                    <div id="justif-refus-container-{{ $demande->id }}"
-                                        class="{{ $demande->etat_demande == 'refus' ? 'block' : 'hidden' }}">
-                                        <label for="justif_refus-{{ $demande->id }}"
-                                            class="block text-sm font-medium text-slate-600 mb-1">Justification du
-                                            refus</label>
-                                        <textarea name="justif_refus" id="justif_refus-{{ $demande->id }}" rows="3"
-                                            class="block w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm transition duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
-                                            placeholder="Veuillez indiquer la raison du refus...">{{ old('justif_refus', $demande->justif_refus) }}</textarea>
-                                    </div>
-
-                                    <!-- Upload de document -->
+                                    <!-- Container pour "Terminé" -->
                                     <div id="upload-container-{{ $demande->id }}"
                                         class="{{ $demande->etat_demande == 'termine' ? 'block' : 'hidden' }}">
-                                        <label class="block text-sm font-medium text-slate-600 mb-1">Joindre le
-                                            document</label>
-                                        <input type="file" name="document" id="document-{{ $demande->id }}"
-                                            class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200"
-                                            {{ $demande->etat_demande == 'termine' && !$demande->fichier ? 'required' : '' }}>
-
-                                        @if ($demande->fichier)
-                                            <div class="mt-2">
-                                                <p class="text-sm text-slate-500">Fichier existant :</p>
-                                                <a href="{{ asset('storage/documents/' . $demande->fichier) }}"
-                                                    target="_blank"
-                                                    class="text-blue-600 hover:text-blue-800 text-sm underline">Télécharger</a>
-                                            </div>
-                                        @endif
+                                        <p class="text-green-600 text-sm">Le document a été traité. L'étudiant sera
+                                            notifié.</p>
                                     </div>
 
                                     <button type="submit"
@@ -419,7 +456,7 @@
                 </div>
             @endforeach
 
-            <!-- Empty State (hidden by default) -->
+            <!-- Empty State -->
             <div id="no-requests-message" class="hidden p-12 text-center">
                 <div class="mx-auto max-w-md">
                     <svg class="mx-auto h-12 w-12 text-slate-400" fill="none" viewBox="0 0 24 24"
@@ -465,37 +502,68 @@
             document.querySelectorAll('.status-select').forEach(select => {
                 select.addEventListener('change', function() {
                     const id = this.getAttribute('data-id');
-                    const uploadContainer = document.getElementById(`upload-container-${id}`);
-                    const justifContainer = document.getElementById(`justif-refus-container-${id}`);
+                    const pretContainer = document.getElementById(`document-pret-container-${id}`);
+                    const termineContainer = document.getElementById(`upload-container-${id}`);
+                    const methodeContainer = document.getElementById(`methode-container-${id}`);
+                    const importDiv = document.getElementById(`import-file-${id}`);
 
-                    if (this.value === 'termine') {
-                        uploadContainer.classList.remove('hidden');
-                        justifContainer.classList.add('hidden');
-                    } else if (this.value === 'refus') {
-                        justifContainer.classList.remove('hidden');
-                        uploadContainer.classList.add('hidden');
+                    if (this.value === 'en-preparation') {
+                        pretContainer.classList.remove('hidden');
+                        termineContainer.classList.add('hidden');
+                        if (methodeContainer) methodeContainer.classList.remove('hidden');
+                        const importRadio = document.querySelector(`input[name="fichier_option_${id}"][value="import"]`);
+                        if (importRadio && importRadio.checked) {
+                            importDiv.classList.remove('hidden');
+                        } else {
+                            importDiv.classList.add('hidden');
+                        }
+                    } else if (this.value === 'termine') {
+                        pretContainer.classList.add('hidden');
+                        termineContainer.classList.remove('hidden');
                     } else {
-                        uploadContainer.classList.add('hidden');
-                        justifContainer.classList.add('hidden');
+                        pretContainer.classList.add('hidden');
+                        termineContainer.classList.add('hidden');
                     }
                 });
 
                 // Initialize visibility on page load
                 const id = select.getAttribute('data-id');
                 const currentValue = select.value;
-                const uploadContainer = document.getElementById(`upload-container-${id}`);
-                const justifContainer = document.getElementById(`justif-refus-container-${id}`);
+                const pretContainer = document.getElementById(`document-pret-container-${id}`);
+                const termineContainer = document.getElementById(`upload-container-${id}`);
+                const methodeContainer = document.getElementById(`methode-container-${id}`);
+                const importDiv = document.getElementById(`import-file-${id}`);
 
-                if (currentValue === 'termine') {
-                    uploadContainer.classList.remove('hidden');
-                    justifContainer.classList.add('hidden');
-                } else if (currentValue === 'refus') {
-                    justifContainer.classList.remove('hidden');
-                    uploadContainer.classList.add('hidden');
+                if (currentValue === 'en-preparation') {
+                    pretContainer.classList.remove('hidden');
+                    termineContainer.classList.add('hidden');
+                    if (methodeContainer) methodeContainer.classList.remove('hidden');
+                    const importRadio = document.querySelector(`input[name="fichier_option_${id}"][value="import"]`);
+                    if (importRadio && importRadio.checked) {
+                        importDiv.classList.remove('hidden');
+                    } else {
+                        importDiv.classList.add('hidden');
+                    }
+                } else if (currentValue === 'termine') {
+                    pretContainer.classList.add('hidden');
+                    termineContainer.classList.remove('hidden');
                 } else {
-                    uploadContainer.classList.add('hidden');
-                    justifContainer.classList.add('hidden');
+                    pretContainer.classList.add('hidden');
+                    termineContainer.classList.add('hidden');
                 }
+            });
+
+            // File option radio buttons
+            document.querySelectorAll('.fichier-option').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const id = this.getAttribute('data-id');
+                    const importDiv = document.getElementById(`import-file-${id}`);
+                    if (this.value === 'import') {
+                        importDiv.classList.remove('hidden');
+                    } else {
+                        importDiv.classList.add('hidden');
+                    }
+                });
             });
 
             // Status filter
@@ -505,9 +573,7 @@
 
                     // Update active button
                     document.querySelectorAll('.status-filter-btn').forEach(b => {
-                        b.classList.remove('bg-blue-500', 'text-white',
-                            'border-transparent', 'bg-amber-500', 'bg-purple-500',
-                            'bg-emerald-500', 'bg-red-500');
+                        b.classList.remove('bg-blue-500', 'text-white', 'border-transparent', 'bg-amber-500', 'bg-purple-500', 'bg-emerald-500', 'bg-red-500');
                         b.classList.add('bg-white', 'border');
                     });
 
@@ -522,13 +588,15 @@
                         const color = colorMap[status];
                         this.classList.add(`bg-${color}-500`, 'text-white', 'border-transparent');
                         this.classList.remove('bg-white', 'border');
+                    } else {
+                        this.classList.add('bg-blue-500', 'text-white', 'border-transparent');
+                        this.classList.remove('bg-white', 'border');
                     }
 
                     // Filter requests
                     let visibleItems = 0;
                     document.querySelectorAll('.request-item').forEach(item => {
-                        if (status === 'all' || item.getAttribute('data-status') ===
-                            status) {
+                        if (status === 'all' || item.getAttribute('data-status') === status) {
                             item.classList.remove('hidden');
                             visibleItems++;
                         } else {
@@ -549,9 +617,7 @@
             // Student search functionality
             document.getElementById('student-search').addEventListener('input', function() {
                 const searchTerm = this.value.toLowerCase();
-                const activeStatus = document.querySelector(
-                    '.status-filter-btn.bg-blue-500, .status-filter-btn.bg-amber-500, .status-filter-btn.bg-purple-500, .status-filter-btn.bg-emerald-500, .status-filter-btn.bg-red-500'
-                    )?.getAttribute('data-status') || 'all';
+                const activeStatus = document.querySelector('.status-filter-btn.bg-blue-500, .status-filter-btn.bg-amber-500, .status-filter-btn.bg-purple-500, .status-filter-btn.bg-emerald-500, .status-filter-btn.bg-red-500')?.getAttribute('data-status') || 'all';
 
                 // Show/hide clear button
                 const clearSearchBtn = document.getElementById('clear-search');
@@ -564,17 +630,14 @@
                 let visibleItems = 0;
 
                 document.querySelectorAll('.request-item').forEach(item => {
-                    const studentName = item.querySelector('.text-slate-800').textContent
-                        .toLowerCase();
-                    const studentEmail = item.querySelector('.text-slate-600').textContent
-                        .toLowerCase();
+                    const studentName = item.querySelector('.text-slate-800').textContent.toLowerCase();
+                    const studentEmail = item.querySelector('.text-slate-600').textContent.toLowerCase();
                     const itemStatus = item.getAttribute('data-status');
-
-                    const nameMatch = studentName.includes(searchTerm);
-                    const emailMatch = studentEmail.includes(searchTerm);
-                    const statusMatch = activeStatus === 'all' || itemStatus === activeStatus;
-
-                    if ((nameMatch || emailMatch) && statusMatch) {
+                    // Vérifie si le nom ou l'email correspond à la recherche et si le statut correspond au filtre actif
+                    if (
+                        (studentName.includes(searchTerm) || studentEmail.includes(searchTerm)) &&
+                        (activeStatus === 'all' || itemStatus === activeStatus)
+                    ) {
                         item.classList.remove('hidden');
                         visibleItems++;
                     } else {
@@ -582,7 +645,7 @@
                     }
                 });
 
-                // Show/hide no requests message
+                // Affiche ou masque le message "aucune demande"
                 const noRequestsMessage = document.getElementById('no-requests-message');
                 if (visibleItems === 0) {
                     noRequestsMessage.classList.remove('hidden');
@@ -591,30 +654,38 @@
                 }
             });
 
-            // Clear search
+            // Bouton pour effacer la recherche
             document.getElementById('clear-search').addEventListener('click', function() {
-                document.getElementById('student-search').value = '';
-                this.classList.add('hidden');
-                document.getElementById('student-search').dispatchEvent(new Event('input'));
+                const searchInput = document.getElementById('student-search');
+                searchInput.value = '';
+                searchInput.dispatchEvent(new Event('input'));
             });
 
-            // Reset filters
+            // Réinitialiser les filtres
             document.getElementById('reset-filters').addEventListener('click', function() {
-                // Reset status filter
-                document.querySelector('.status-filter-btn[data-status="all"]').click();
+                // Réinitialise le filtre de statut
+                document.querySelectorAll('.status-filter-btn').forEach(btn => {
+                    btn.classList.remove('bg-blue-500', 'text-white', 'border-transparent', 'bg-amber-500', 'bg-purple-500', 'bg-emerald-500', 'bg-red-500');
+                    btn.classList.add('bg-white', 'border');
+                });
+                // Active le bouton "Tous"
+                document.querySelector('.status-filter-btn[data-status="all"]').classList.add('bg-blue-500', 'text-white', 'border-transparent');
+                document.querySelector('.status-filter-btn[data-status="all"]').classList.remove('bg-white', 'border');
 
-                // Reset search
+                // Vide la recherche
                 document.getElementById('student-search').value = '';
                 document.getElementById('clear-search').classList.add('hidden');
 
-                // Show all requests
+                // Affiche toutes les demandes
+                let visibleItems = 0;
                 document.querySelectorAll('.request-item').forEach(item => {
                     item.classList.remove('hidden');
+                    visibleItems++;
                 });
 
-                // Hide no requests message
+                // Masque le message "aucune demande"
                 document.getElementById('no-requests-message').classList.add('hidden');
             });
         });
-    </script>
+        </script>
 </x-admin>

@@ -33,10 +33,10 @@
                     </div>
                     <h2 class="text-2xl font-semibold text-gray-800">Sélection du Document</h2>
                 </div>
-                
+
                 <!-- Nouveau Combobox historique amélioré -->
                 <div class="relative w-full sm:w-72">
-                    <button type="button" 
+                    <button type="button"
                             class="w-full flex items-center justify-between gap-3 px-4 py-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:border-blue-400 transition-all duration-200 text-left"
                             onclick="toggleCombobox('history')"
                             aria-haspopup="listbox"
@@ -91,10 +91,10 @@
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-300 mb-8 animate-fade-in-up" id="form-container">
                 <div class="relative p-8">
                     <div id="alertContainer"></div>
-                    
+
                     <form action="{{ route('documents.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                         @csrf
-                        
+
                         <!-- Sélection du document -->
                         <div class="space-y-2">
                             <label for="id_document" class="block text-sm font-medium text-gray-700 flex items-center">
@@ -109,18 +109,13 @@
                         </div>
 
                         <!-- Année académique -->
-                        <div class="space-y-2">
-                            <label for="annee_academique" class="block text-sm font-medium text-gray-700 flex items-center">
-                                <i class="fas fa-calendar-alt mr-2 text-blue-500"></i> Année Académique
-                            </label>
-                            <select name="annee_academique" id="annee_academique" required class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200 appearance-none bg-white bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"%3e%3cpolyline points=\"6 9 12 15 18 9\"%3e%3c/polyline%3e%3c/svg%3e')] bg-no-repeat bg-right-3">
-                                <option value="" disabled selected class="text-gray-400">Sélectionnez une année</option>
-                                @for ($i = now()->year; $i >= 2000; $i--)
-                                    <option value="{{ $i }}-{{ $i+1 }}" class="text-gray-800">{{ $i }}-{{ $i+1 }}</option>
-                                @endfor
-                            </select>
-                        </div>
-                        
+                       <div class="space-y-2">
+    <label for="annee_academique" class="block text-sm font-medium text-gray-700 flex items-center">
+        <i class="fas fa-calendar-alt mr-2 text-blue-500"></i> Année Académique
+    </label>
+    <input type="text" name="annee_academique" readonly class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100 text-gray-800" value="{{ $anneeInscription}}">
+</div>
+
                         <!-- Confirmation -->
                         <div class="flex items-start bg-blue-50 p-4 rounded-lg border border-blue-100">
                             <div class="flex items-center h-5">
@@ -130,7 +125,7 @@
                                 Je confirme ma demande de documents.
                             </label>
                         </div>
-                        
+
                         <!-- Boutons -->
                         <div class="flex flex-col sm:flex-row gap-4 pt-4">
                             <button type="submit" class="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center transform hover:-translate-y-1">
@@ -152,11 +147,11 @@
                         <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
                             <i class="fas fa-tasks mr-3 text-blue-500"></i> État d'avancement de votre demande
                         </h3>
-                        
+
                         <div class="relative h-2 bg-gray-200 rounded-full mb-10">
                             <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full transition-all duration-500" id="progress-bar"></div>
                         </div>
-                        
+
                         <div class="grid grid-cols-4 gap-4">
                             <!-- Étape 1 -->
                             <div class="flex flex-col items-center" id="step1">
@@ -165,7 +160,7 @@
                                 </div>
                                 <span class="text-sm text-center text-gray-500" id="step1-label">Demande reçue</span>
                             </div>
-                            
+
                             <!-- Étape 2 -->
                             <div class="flex flex-col items-center" id="step2">
                                 <div class="w-12 h-12 rounded-full border-4 border-gray-200 bg-white flex items-center justify-center mb-2 transition-all duration-300" id="step2-icon">
@@ -173,7 +168,7 @@
                                 </div>
                                 <span class="text-sm text-center text-gray-500" id="step2-label">En préparation</span>
                             </div>
-                            
+
                             <!-- Étape 3 -->
                             <div class="flex flex-col items-center" id="step3">
                                 <div class="w-12 h-12 rounded-full border-4 border-gray-200 bg-white flex items-center justify-center mb-2 transition-all duration-300" id="step3-icon">
@@ -181,7 +176,7 @@
                                 </div>
                                 <span class="text-sm text-center text-gray-500" id="step3-label">Document prêt</span>
                             </div>
-                            
+
                             <!-- Étape 4 -->
                             <div class="flex flex-col items-center" id="step4">
                                 <div class="w-12 h-12 rounded-full border-4 border-gray-200 bg-white flex items-center justify-center mb-2 transition-all duration-300" id="step4-icon">
@@ -191,34 +186,34 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Détails de la demande -->
                     <div class="bg-gray-50 p-6 rounded-xl border border-gray-100 mb-8">
                         <h4 class="text-lg font-medium text-gray-800 mb-4 flex items-center">
                             <i class="fas fa-info-circle mr-2 text-blue-500"></i> Détails de la demande
                         </h4>
-                        
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="space-y-1">
                                 <span class="block text-sm font-medium text-gray-700">Document demandé:</span>
                                 <span class="block text-gray-900" id="detail-document"></span>
                             </div>
-                            
+
                             <div class="space-y-1">
                                 <span class="block text-sm font-medium text-gray-700">Année académique:</span>
                                 <span class="block text-gray-900" id="detail-annee"></span>
                             </div>
-                            
+
                             <div class="space-y-1">
                                 <span class="block text-sm font-medium text-gray-700">Statut actuel:</span>
                                 <span class="block text-gray-900" id="detail-status"></span>
                             </div>
-                            
+
                             <div class="space-y-1">
                                 <span class="block text-sm font-medium text-gray-700">Date de demande:</span>
                                 <span class="block text-gray-900" id="detail-date-demande"></span>
                             </div>
-                            
+
                             <div class="space-y-1">
                                 <span class="block text-sm font-medium text-gray-700">Dernière mise à jour:</span>
                                 <span class="block text-gray-900" id="detail-date-update"></span>
@@ -233,19 +228,19 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Section Téléchargement -->
                     <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hidden" id="download-section">
                         <!-- Icône PDF -->
                         <div class="inline-flex items-center justify-center bg-blue-50 p-4 rounded-full mb-4 shadow-inner">
                             <i class="fas fa-file-pdf text-4xl text-red-500"></i>
                         </div>
-                        
+
                         <!-- Métadonnées -->
                         <div class="space-y-3 mb-6">
                             <div>
                                 <p class="font-medium text-gray-800">
-                                    <span class="font-semibold text-gray-900">État :</span> 
+                                    <span class="font-semibold text-gray-900">État :</span>
                                     <span id="detail-status-text" class="text-blue-600"></span>
                                 </p>
                                 <p class="text-sm text-gray-500 mt-1" id="detail-date-text"></p>
@@ -253,7 +248,7 @@
                         </div>
 
                         <!-- Bouton de téléchargement -->
-                        <a href="#" 
+                        <a href="#"
                            id="download-btn"
                            class="inline-flex items-center justify-center bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white font-medium py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 mb-6"
                            target="_blank"
@@ -278,7 +273,7 @@
                             <p class="text-sm mt-1 text-amber-600" id="status-message">Statut: En traitement</p>
                         </div>
                     </div>
-                    
+
                     <!-- Bouton retour -->
                     <button onclick="showForm()" class="mt-6 bg-white border border-gray-300 text-gray-700 font-medium py-2 px-6 rounded-lg shadow-sm hover:bg-gray-50 transition-all duration-300 flex items-center justify-center">
                         <i class="fas fa-arrow-left mr-2"></i> Retour au formulaire
@@ -295,26 +290,26 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        
+
         @keyframes fade-in-up {
-            from { 
+            from {
                 opacity: 0;
                 transform: translateY(20px);
             }
-            to { 
+            to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
+
         .animate-fade-in {
             animation: fade-in 0.6s ease-out forwards;
         }
-        
+
         .animate-fade-in-up {
             animation: fade-in-up 0.6s ease-out forwards;
         }
-        
+
         /* Styles pour le combobox */
         #history-options {
             max-height: 300px;
@@ -322,31 +317,31 @@
             scrollbar-width: thin;
             scrollbar-color: #cbd5e0 #f7fafc;
         }
-        
+
         #history-options::-webkit-scrollbar {
             width: 8px;
         }
-        
+
         #history-options::-webkit-scrollbar-track {
             background: #f7fafc;
             border-radius: 0 0 8px 8px;
         }
-        
+
         #history-options::-webkit-scrollbar-thumb {
             background-color: #cbd5e0;
             border-radius: 4px;
         }
-        
+
         /* Rotation de la flèche */
         .rotate-180 {
             transform: rotate(180deg);
         }
-        
+
         /* Styles pour la timeline */
         .completed .fa {
             color: white !important;
         }
-        
+
         .active .fa {
             color: #3b82f6 !important;
         }
@@ -358,29 +353,29 @@
         function showRequestDetails(id, documentName, anneeAcademique, status, dateDemande, dateUpdate, fileName, justifRefus) {
             document.getElementById('form-container').classList.add('hidden');
             document.getElementById('request-details-container').classList.remove('hidden');
-            
+
             document.getElementById('detail-document').textContent = documentName;
             document.getElementById('detail-annee').textContent = anneeAcademique;
             document.getElementById('detail-status').textContent = formatStatus(status);
             document.getElementById('detail-date-demande').textContent = formatDate(dateDemande);
             document.getElementById('detail-date-update').textContent = formatDate(dateUpdate);
-            
+
             const downloadSection = document.getElementById('download-section');
             downloadSection.classList.remove('hidden');
-            
+
             const downloadBtn = document.getElementById('download-btn');
             const unavailableMsg = document.getElementById('unavailable-message');
             const statusText = document.getElementById('detail-status-text');
             const dateText = document.getElementById('detail-date-text');
             const qrWrapper = document.getElementById('qr-code-wrapper');
-            
+
             statusText.textContent = formatStatus(status);
             dateText.textContent = `Dernière mise à jour: ${formatDate(dateUpdate)}`;
-            
+
             // Gestion du motif de refus
             const refusSection = document.getElementById('refus-section');
             const motifRefus = document.getElementById('detail-motif-refus');
-            
+
             if (status === 'refus') {
                 refusSection.classList.remove('hidden');
                 motifRefus.textContent = justifRefus || 'Aucun motif spécifié';
@@ -390,22 +385,22 @@
                 document.getElementById('status-message').textContent = `Statut: ${formatStatus(status)}`;
                 unavailableMsg.classList.remove('bg-amber-50', 'border-amber-100', 'text-amber-700');
                 unavailableMsg.classList.add('bg-red-50', 'border-red-100', 'text-red-700');
-            } 
+            }
             else if (status === 'termine' && fileName) {
                 refusSection.classList.add('hidden');
                 downloadBtn.classList.remove('hidden');
                 unavailableMsg.classList.add('hidden');
                 qrWrapper.classList.remove('hidden');
-                
+
                 downloadBtn.href = `/storage/documents/${fileName}`;
                 downloadBtn.setAttribute('download', fileName);
                 document.getElementById('file-name').textContent = fileName;
-                
+
                 // Générer le QR code
                 const qrContainer = document.getElementById('qr-code-container');
                 qrContainer.innerHTML = '';
                 const fileUrl = `${window.location.origin}/storage/documents/${fileName}`;
-                
+
                 // QRCode.toCanvas(qrContainer, fileUrl, { width: 150 }, function (error) {
                 //     if (error) console.error(error);
                 // });
@@ -418,17 +413,17 @@
                 unavailableMsg.classList.remove('bg-red-50', 'border-red-100', 'text-red-700');
                 unavailableMsg.classList.add('bg-amber-50', 'border-amber-100', 'text-amber-700');
             }
-            
+
             updateTimeline(status);
         }
 
         function toggleCombobox(id) {
             const options = document.getElementById(`${id}-options`);
             const chevron = document.getElementById(`${id}-chevron`);
-            
+
             options.classList.toggle('hidden');
             chevron.classList.toggle('rotate-180');
-            
+
             // Fermer les autres combobox ouverts
             document.querySelectorAll('.combobox-options').forEach(box => {
                 if (box.id !== `${id}-options` && !box.classList.contains('hidden')) {
@@ -447,13 +442,13 @@
                 'termine': 'Terminé',
                 'refus': 'Refusé'
             };
-            
+
             return statusMap[status] || status.charAt(0).toUpperCase() + status.slice(1).replace('-', ' ');
         }
-        
+
         function formatDate(dateString) {
             if (!dateString) return 'N/A';
-            
+
             const date = new Date(dateString);
             return date.toLocaleDateString('fr-FR', {
                 day: '2-digit',
@@ -463,17 +458,17 @@
                 minute: '2-digit'
             });
         }
-        
+
         function updateTimeline(status) {
     // Réinitialiser toutes les étapes
     for (let i = 1; i <= 4; i++) {
         const icon = document.getElementById(`step${i}-icon`);
         const label = document.getElementById(`step${i}-label`);
-        
+
         // Réinitialiser les classes
         icon.className = 'w-12 h-12 rounded-full border-4 border-gray-200 bg-white flex items-center justify-center mb-2 transition-all duration-300';
         label.className = 'text-sm text-center text-gray-500';
-        
+
         // Réinitialiser le contenu de l'icône (important pour l'étape 4 qui pourrait avoir un X)
         if (i === 4) {
             icon.innerHTML = '<i class="fas fa-check-circle text-gray-400"></i>';
@@ -493,37 +488,37 @@
     let currentStep = 1;
     let progressWidth = '0%';
     let isRefused = status === 'refus';
-    
+
     if (isRefused) {
         // Configuration pour le cas refusé
         document.getElementById('progress-bar').style.width = '100%';
         document.getElementById('progress-bar').style.background = 'linear-gradient(to right, #ef4444, #dc2626)';
-        
+
         // Étapes 1 à 3 en rouge
         for (let i = 1; i <= 3; i++) {
             const icon = document.getElementById(`step${i}-icon`);
             const label = document.getElementById(`step${i}-label`);
-            
+
             icon.classList.add('border-red-500', 'bg-red-500');
             icon.querySelector('i').classList.add('text-white');
             label.classList.add('text-red-600', 'font-medium');
         }
-        
+
         // Configuration spéciale pour l'étape 4 (refus)
         const lastStepIcon = document.getElementById('step4-icon');
         const lastStepLabel = document.getElementById('step4-label');
-        
+
         lastStepIcon.innerHTML = '<i class="fas fa-times text-white"></i>';
         lastStepIcon.classList.add('border-red-500', 'bg-red-500');
         lastStepLabel.textContent = 'Refusé';
         lastStepLabel.classList.add('text-red-600', 'font-medium');
-        
+
         return;
     }
-    
+
     // Configuration pour les autres états
     document.getElementById('progress-bar').style.background = 'linear-gradient(to right, #3b82f6, #6366f1)';
-    
+
     switch(status) {
         case 'demande-recue':
             currentStep = 1;
@@ -542,14 +537,14 @@
             progressWidth = '100%';
             break;
     }
-    
+
     document.getElementById('progress-bar').style.width = progressWidth;
-    
+
     // Appliquer les styles pour l'état actuel
     for (let i = 1; i <= 4; i++) {
         const icon = document.getElementById(`step${i}-icon`);
         const label = document.getElementById(`step${i}-label`);
-        
+
         if (i < currentStep) {
             icon.classList.add('border-blue-500', 'bg-blue-500');
             icon.querySelector('i').classList.add('text-white');
@@ -561,7 +556,7 @@
         }
     }
 }
-        
+
         function showForm() {
             document.getElementById('request-details-container').classList.add('hidden');
             document.getElementById('form-container').classList.remove('hidden');
@@ -595,7 +590,7 @@
                         className: 'bg-red-100 border-red-400 text-red-700'
                     }
                 };
-                
+
                 const alert = document.createElement('div');
                 alert.className = `border-l-4 ${alertTypes[type].className} p-4 mb-4 rounded-lg flex items-start`;
                 alert.innerHTML = `
@@ -605,13 +600,13 @@
                         <span class="block sm:inline">${message}</span>
                     </div>
                 `;
-                
+
                 while (alertContainer.firstChild) {
                     alertContainer.removeChild(alertContainer.firstChild);
                 }
-                
+
                 alertContainer.appendChild(alert);
-                
+
                 setTimeout(() => {
                     alert.style.opacity = '0';
                     setTimeout(() => {

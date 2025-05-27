@@ -48,4 +48,5 @@ class responsable extends Authenticatable
     {
         return $this->morphMany(Message::class, 'receiver');
     }
+    
 }
