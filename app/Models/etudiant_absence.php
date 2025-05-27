@@ -23,7 +23,6 @@ class etudiant_absence extends Model
     'justification',
     'justification_file',
     'status', // Ajouté
-     
 ];
 
     public function seance()
@@ -51,9 +50,9 @@ class etudiant_absence extends Model
 
     // Uncomment if you need to define a relationship with the Etudiant model
 
-// public function etudiants()
-// {
-//     return $this->hasMany(Etudiant::class);
-// }
+public function etudiants()
+{
+    return $this->hasMany(Etudiant::class);
+}
 
 }

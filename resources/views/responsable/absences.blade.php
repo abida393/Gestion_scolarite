@@ -1,6 +1,6 @@
-<x-admin 
-    titre="Gestion des Absences" 
-    page_titre="Tableau de Bord des Absences" 
+<x-admin
+    titre="Gestion des Absences"
+    page_titre="Tableau de Bord des Absences"
     :nom_complete="Auth::guard('responsable')->user()->respo_nom . ' ' . Auth::guard('responsable')->user()->respo_prenom"
 >
 <div class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
@@ -19,7 +19,7 @@
                         <p class="mt-1 text-gray-600">Suivi analytique des présences étudiantes</p>
                     </div>
                 </div>
-                
+
                 <!-- Quick Stats -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 w-full md:w-auto">
                     <div class="bg-white rounded-lg p-3 shadow-sm border border-gray-100">
@@ -69,7 +69,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        
+
                         <!-- Student Filter -->
                         <div>
                             <label for="etudiant_id" class="block text-sm font-medium text-gray-700 mb-1 flex items-center">
@@ -87,7 +87,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        
+
                         <!-- Status Filter -->
                         <div>
                             <label for="status" class="block text-sm font-medium text-gray-700 mb-1 flex items-center">
@@ -101,7 +101,7 @@
                                 <option value="unjustified" {{ request('status') == 'unjustified' ? 'selected' : '' }}>Non justifiées</option>
                             </select>
                         </div>
-                        
+
                         <!-- Type Filter -->
                         <div>
                             <label for="type" class="block text-sm font-medium text-gray-700 mb-1 flex items-center">
@@ -115,7 +115,7 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <!-- Action Buttons -->
                     <div class="flex justify-end gap-3 mt-6">
     <button type="reset"
@@ -149,8 +149,8 @@
     <div class="flex items-end h-full space-x-1">
         @foreach($absenceTrends as $day)
             <div class="flex-1 flex flex-col items-center">
-                <div 
-                    class="w-full bg-gradient-to-t from-blue-500 to-blue-300 rounded-t-sm" 
+                <div
+                    class="w-full bg-gradient-to-t from-blue-500 to-blue-300 rounded-t-sm"
                     style="height: {{ $day['percentage'] }}%"
                     title="{{ $day['count'] }} absences le {{ $day['date'] }}"
                 ></div>
@@ -161,7 +161,7 @@
 </div>
                 </div>
             </div>
-            
+
             <!-- Top Classes Card -->
             <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
                 <div class="p-5">
@@ -179,12 +179,12 @@
                         <div>
                             <div class="flex justify-between text-xs mb-1">
                                 <span class="font-medium">Classe {{ $class->nom_classe }}</span>
-                                <span class="text-gray-600">{{ $class->absences_count }} absences</span>
+                                <span class="text-gray-600">{{ $class->absences_count ?? 0 }} absences</span>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-1.5">
-                                <div 
-                                    class="bg-red-500 h-1.5 rounded-full" 
-                                    style="width: {{ ($class->absences_count / $maxClassAbsences) * 100 }}%"
+                                <div
+                                    class="bg-red-500 h-1.5 rounded-full"
+                                    style="width: {{ ($maxClassAbsences > 0) ? (($class->absences_count ?? 0) / $maxClassAbsences) * 100 : 0 }}%"
                                 ></div>
                             </div>
                         </div>
@@ -192,7 +192,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Quick Actions Card -->
             <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
     <div class="p-5">
@@ -237,13 +237,13 @@
                         Détail des Absences
                     </h2>
                     <p class="text-xs text-gray-500 mt-1">
-                        {{ $absences->total() }} absences trouvées • 
-                        <span class="text-green-600">{{ $justifiedAbsences }} justifiées</span> • 
-                        <span class="text-yellow-600">{{ $pendingAbsences }} en attente</span> • 
+                        {{ $absences->total() }} absences trouvées •
+                        <span class="text-green-600">{{ $justifiedAbsences }} justifiées</span> •
+                        <span class="text-yellow-600">{{ $pendingAbsences }} en attente</span> •
                         <span class="text-red-600">{{ $unjustifiedAbsences }} non justifiées</span>
                     </p>
                 </div>
-                
+
                 <!-- View Toggle -->
                 <div class="inline-flex rounded-md shadow-sm space-x-2">
     <button type="button" class="view-toggle-btn active" data-view="list">
@@ -276,7 +276,7 @@
                             <td class="px-5 py-4 whitespace-nowrap">
                                 <input type="checkbox" class="item-checkbox" value="{{ $absence->id }}">
                             </td>
-                            
+
                             <!-- Student Column -->
                             <td class="px-5 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
@@ -294,7 +294,7 @@
                                     </div>
                                 </div>
                             </td>
-                            
+
                             <!-- Details Column -->
                             <td class="px-5 py-4">
                                 <div class="flex flex-col space-y-2">
@@ -318,7 +318,7 @@
                                     </div>
                                 </div>
                             </td>
-                            
+
                             <!-- Status Column -->
                             <td class="px-5 py-4 whitespace-nowrap">
                                 <div class="flex flex-col space-y-2">
@@ -342,31 +342,31 @@
                                     @endif
                                 </div>
                             </td>
-                            
+
                             <!-- Actions Column -->
                             <td class="px-5 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex justify-end space-x-2">
-                                    <a href="{{ route('responsable.absences.edit', $absence->id) }}" 
+                                    <a href="{{ route('responsable.absences.edit', $absence->id) }}"
                                        class="action-btn bg-blue-50 text-blue-600 hover:bg-blue-100"
                                        title="Modifier">
                                         <i class="fas fa-pencil-alt text-sm"></i>
                                     </a>
-                                    
+
                                     @if($absence->justification_file)
-                                    <a href="{{ route('responsable.absences.download', $absence->id) }}" 
+                                    <a href="{{ route('responsable.absences.download', $absence->id) }}"
                                        class="action-btn bg-indigo-50 text-indigo-600 hover:bg-indigo-100"
                                        title="Télécharger">
                                         <i class="fas fa-download text-sm"></i>
                                     </a>
                                     @endif
-                                    
-                                    <form action="{{ route('responsable.absences.destroy', $absence->id) }}" 
-                                          method="POST" 
+
+                                    <form action="{{ route('responsable.absences.destroy', $absence->id) }}"
+                                          method="POST"
                                           class="inline"
                                           onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette absence?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" 
+                                        <button type="submit"
                                                 class="action-btn bg-red-50 text-red-600 hover:bg-red-100"
                                                 title="Supprimer">
                                             <i class="fas fa-trash-alt text-sm"></i>
@@ -414,7 +414,7 @@
                                 </p>
                             </div>
                         </div>
-                        
+
                         <!-- Absence Details -->
                         <div class="mt-3">
                             <div class="flex justify-between items-start">
@@ -431,7 +431,7 @@
                                     </p>
                                 </div>
                             </div>
-                            
+
                             <div class="mt-3">
                                 <h4 class="text-xs font-medium text-gray-500">Horaire</h4>
                                 <p class="text-sm font-medium text-gray-900 mt-1">
@@ -442,7 +442,7 @@
                                     @endif
                                 </p>
                             </div>
-                            
+
                             @if($absence->type === 'retard')
                             <div class="mt-2">
                                 <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
@@ -452,7 +452,7 @@
                             </div>
                             @endif
                         </div>
-                        
+
                         <!-- Status & Actions -->
                         <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between items-center">
                             <div>
@@ -470,7 +470,7 @@
                                     </span>
                                 @endif
                             </div>
-                            
+
                             <div class="flex space-x-1">
                                 <a href="{{ route('responsable.absences.edit', $absence->id) }}" class="text-blue-600 hover:text-blue-800 p-1">
                                     <i class="fas fa-pencil-alt text-sm"></i>
@@ -510,7 +510,7 @@
             @if($absences->hasPages())
             <div class="bg-gray-50 px-5 py-3 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-3">
                 <div class="text-xs text-gray-500">
-                    Affichage <span class="font-medium">{{ $absences->firstItem() }}</span> à <span class="font-medium">{{ $absences->lastItem() }}</span> 
+                    Affichage <span class="font-medium">{{ $absences->firstItem() }}</span> à <span class="font-medium">{{ $absences->lastItem() }}</span>
                     sur <span class="font-medium">{{ $absences->total() }}</span> résultats
                 </div>
                 <div class="flex">
@@ -532,51 +532,51 @@
         background-size: 1.5em 1.5em;
         padding-right: 2.5rem;
     }
-    
+
     .filter-input {
         @apply w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm;
     }
-    
+
     .apply-btn {
         @apply inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500;
     }
-    
+
     .reset-btn {
         @apply inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500;
     }
-    
+
     .status-badge {
         @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium;
     }
-    
+
     .view-toggle-btn {
         @apply px-3 py-2 -ml-px text-sm font-medium text-gray-500 bg-white border border-gray-300 hover:bg-gray-50 focus:z-10 focus:outline-none;
     }
-    
+
     .view-toggle-btn:first-child {
         @apply rounded-l-md;
     }
-    
+
     .view-toggle-btn:last-child {
         @apply rounded-r-md;
     }
-    
+
     .view-toggle-btn.active {
         @apply bg-blue-500 text-white border-blue-500;
     }
-    
+
     .action-btn {
         @apply inline-flex items-center justify-center p-1.5 rounded-md hover:bg-gray-100;
     }
-    
+
     .quick-action-btn {
         @apply flex flex-col items-center justify-center p-2 rounded-lg hover:shadow-sm text-center;
     }
-    
+
     .quick-action-btn i {
         @apply text-lg mb-1;
     }
-    
+
     .bulk-checkbox, .item-checkbox {
         @apply h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500;
     }
@@ -593,19 +593,19 @@
             'grid': document.getElementById('grid-view'),
             'calendar': document.getElementById('calendar-view')
         };
-        
+
         viewToggleButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const view = this.getAttribute('data-view');
-                
+
                 // Update active button
                 viewToggleButtons.forEach(btn => btn.classList.remove('active', 'bg-blue-500', 'text-white', 'border-blue-500'));
                 this.classList.add('active', 'bg-blue-500', 'text-white', 'border-blue-500');
-                
+
                 // Show selected view
                 Object.values(views).forEach(viewEl => viewEl.classList.add('hidden'));
                 views[view].classList.remove('hidden');
-                
+
                 // Initialize calendar if needed
                 if (view === 'calendar' && !window.calendarInitialized) {
                     initAbsenceCalendar();
@@ -613,7 +613,7 @@
                 }
             });
         });
-        
+
         // Initialize calendar
         function initAbsenceCalendar() {
             const calendarEl = document.getElementById('absence-calendar');
@@ -641,7 +641,7 @@
             });
             calendar.render();
         }
-        
+
         // Bulk select/deselect
         document.querySelector('.bulk-checkbox').addEventListener('change', function() {
             const checkboxes = document.querySelectorAll('.item-checkbox');
@@ -681,6 +681,6 @@
         if (selected) etudiantSelect.value = selected;
     }
 });
-   
+
 </script>
 </x-admin>

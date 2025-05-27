@@ -25,7 +25,7 @@ class DocumentController extends Controller
     }
 
     public function store(Request $request)
-    {
+    {        
         $request->validate([
             'id_document' => 'required|exists:documents,id',
             'annee_academique' => 'required|string',
@@ -38,7 +38,7 @@ class DocumentController extends Controller
             'id_document' => $request->id_document,
             'annee_academique' => $request->annee_academique,
         ]);
-        
+
         return redirect()->back()->with('success', 'Demande envoyée avec succès.');
     }
     public function storeDocument(Request $request)
@@ -64,12 +64,12 @@ class DocumentController extends Controller
     public function mesDemandes()
     {
         $etudiant = Auth::guard('etudiant')->user();
-       
+
         $demandes = DemandesDocuments::where('id_etudiant', $etudiant->id)
             ->with('document')
             ->orderBy('created_at', 'desc')
             ->get();
-       
+
         return view('etudiant.mes_demandes', compact('demandes'));
     }
 
@@ -86,11 +86,12 @@ public function documents()
             ->join('annee', 'annee_formations.annee_id', '=', 'annee.id')
             ->where('annee_formations.formation_id', $etudiant->formation_id)
             ->orderByDesc('annee.id') // Prend la plus récente
-            ->select('annee.annee_debut', 'annee.annee_fin')
+            ->select('annee.annee_debut', 'annee.annee_fin','annee_id')
             ->first();
             // dd($etudiant->formation_id);
         if ($anneeFormation) {
             $anneeInscription = $anneeFormation->annee_debut . '-' . $anneeFormation->annee_fin;
+            $annee_id = $anneeFormation->annee_id;
         }
     }
 
@@ -105,7 +106,7 @@ public function documents()
     public function download($id)
     {
         $document = DemandesDocuments::findOrFail($id);
-        
+
         if ($document->etat_demande !== 'termine' || !$document->fichier) {
             return abort(404, 'Document non disponible');
         }
@@ -122,7 +123,7 @@ public function documents()
     public function downloadFile($filename)
     {
         $filePath = storage_path('app/public/documents/' . $filename);
-        
+
         if (file_exists($filePath)) {
             return Response::download($filePath, $filename);
         }
@@ -142,14 +143,14 @@ return view('responsable.document', compact('demandes', 'filieres', 'classes', '
     {
         $demande = DemandesDocuments::with(['etudiant', 'document'])->findOrFail($id);
         $classes = Classe::all(); // Ajout des classes
-        
+
         return view('responsable.modifier_demande', compact('demande', 'classes'));
     }
 
   public function updateEtat(Request $request, $id)
 {
     $demande = DemandesDocuments::findOrFail($id);
- 
+
     $rules = [
         'etat_demande' => 'required|in:demande-recue,en-preparation,document-pret,termine,refus',
     ];

@@ -138,7 +138,7 @@ Route::get('/notes/{etudiantId}', [NoteController::class, 'afficherNotes'])->mid
 // ==================== DOCUMENTS ====================
 Route::middleware('auth.multi:etudiant')->prefix('documents')->group(function () {
     Route::get('/', [DocumentController::class, 'documents'])->name('documents.index');
-    Route::post('/', [DocumentController::class, 'store'])->name('documents.store');
+    Route::post('/store', [DocumentController::class, 'store'])->name('documents.store');
     Route::get('/download/{id}', [DocumentController::class, 'download'])->name('documents.download');
     Route::get('/{filename}', function ($filename) {
         return Storage::disk('documents')->download($filename);
@@ -161,7 +161,7 @@ Route::middleware('auth.multi:responsable')->prefix('responsable/documents')->gr
     Route::delete('/delete/{id}', [DocumentController::class, 'destroy'])->name('responsable.demande.supprimer');
 Route::post('/documents/add', [DocumentController::class, 'storeDocument'])->name('documents.add');
     // Autres routes pour télécharger, ajouter un fichier, etc.
-Route::put('/update-etat/{id}', [DocumentController::class, 'updateEtat'])->name('responsable.demande.updateEtat');  
+Route::put('/update-etat/{id}', [DocumentController::class, 'updateEtat'])->name('responsable.demande.updateEtat');
   Route::get('/download/{id}', [DocumentController::class, 'downloadFile'])->name('documents.download');
     Route::post('/upload/{id}', [DocumentController::class, 'uploadDocument'])->name('responsable.demande.upload');
     Route::get('/modifier/{id}', [DocumentController::class, 'modifier'])->name('responsable.demande.modifier');
@@ -337,11 +337,11 @@ Route::get('/absences/etudiants-par-classe/{classeId}', [AbsenceResponsableContr
 Route::get('/absences/seances-par-classe/{classeId}', [AbsenceResponsableController::class, 'getSeancesParClasse']);
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/absences/export/csv', [AbsenceResponsableController::class, 'exportCSV'])
+Route::get('/absences/export/csv', [AbsenceResponsableController::class, 'exportCSV'])
     ->name('responsable.absences.export.csv');
 
 
-Route::post('/absences/export/pdf', [AbsenceResponsableController::class, 'exportPDF'])
+Route::get('/absences/export/pdf', [AbsenceResponsableController::class, 'exportPDF'])
     ->name('responsable.absences.export.pdf');
 
 

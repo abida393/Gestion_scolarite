@@ -20,10 +20,10 @@ return new class extends Migration
     $table->enum('type', ['absence', 'retard'])->default('absence');
     $table->integer('duree_minutes')->nullable(); // Pour retard/sortie
     $table->boolean('Justifier')->default(false);
-    $table->text('justification');
+    $table->text('justification')->nullable();
     $table->string('justification_file')->nullable();  // Type MIME (pdf, jpg, etc.)
     $table->timestamps();
-$table->enum('status', ['pending', 'approved', 'rejected','non_justifier'])->default('pending'); // Ajoute cette ligne
+    $table->enum('status', ['pending', 'approved', 'rejected','non_justifier'])->default('pending'); // Ajoute cette ligne
     $table->index(['etudiant_id', 'date_absence']);
     $table->index(['emploi_temps_id', 'date_absence']);
     });

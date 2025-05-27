@@ -20,102 +20,99 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class AbsenceResponsableController extends Controller
 {
- public function index($request = null)
-{
-    $request = $request ?? request();
-    $classes = Classe::with('etudiants')->get();
-    $modules = Matiere::all();
-    $professeurs = enseignant::all();
+    public function index($request = null)
+    {
+        $request = $request ?? request();
+        $classes = Classe::with('etudiants')->get();
+        $modules = Matiere::all();
+        $professeurs = enseignant::all();
 
-   $query = etudiant_absence::query();
-
-    if ($request->filled('classe_id')) {
-        $query->whereHas('etudiant', function($q) use ($request) {
-            $q->where('classes_id', $request->classe_id);
-        });
-    }
-    if ($request->filled('etudiant_id')) {
-        $query->where('etudiant_id', $request->etudiant_id);
-    }
-  // AJOUT : filtre par statut
-    if ($request->filled('status')) {
-        if ($request->status == 'justified') {
-            $query->where('Justifier', true);
-        } elseif ($request->status == 'pending') {
-            $query->where('status', 'pending');
-        } elseif ($request->status == 'unjustified') {
-            $query->where('Justifier', false)->where('status', '!=', 'pending');
-        } else {
-            $query->where('status', $request->status);
+       $query = etudiant_absence::query();
+        if ($request->filled('classe_id')) {
+            $query->whereHas('etudiant', function($q) use ($request) {
+                $q->where('classes_id', $request->classe_id);
+            });
         }
+        if ($request->filled('etudiant_id')) {
+            $query->where('etudiant_id', $request->etudiant_id);
+        }
+      // AJOUT : filtre par statut
+        if ($request->filled('status')) {
+            if ($request->status == 'justified') {
+                $query->where('Justifier', true);
+            } elseif ($request->status == 'pending') {
+                $query->where('status', 'pending');
+            } elseif ($request->status == 'unjustified') {
+                $query->where('Justifier', false)->where('status', '!=', 'pending');
+            } else {
+                $query->where('status', $request->status);
+            }
+        }
+        // AJOUT : filtre par type
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+        // Statistiques
+        $totalAbsences = (clone $query)->count();
+        $justifiedAbsences = (clone $query)->where('Justifier', true)->count();
+        $pendingAbsences = (clone $query)->where('status', 'pending')->count();
+        $unjustifiedAbsences = (clone $query)->where('Justifier', false)->where('status', '!=', 'pending')->count();
+
+        $absences = $query->paginate(20)->appends(request()->query());
+
+        // Tendance des absences sur 30 jours
+        $startDate = now()->subDays(29)->startOfDay();
+        $endDate = now()->endOfDay();
+        $absencesByDay = (clone $query)
+            ->whereBetween('date_absence', [$startDate, $endDate])
+            ->get()
+            ->groupBy(function($item) {
+                return \Carbon\Carbon::parse($item->date_absence)->format('Y-m-d');
+            });
+
+
+        $absenceTrends = [];
+        $max = 0;
+        for ($i = 0; $i < 30; $i++) {
+        $date = now()->subDays(29 - $i)->format('Y-m-d');
+        $count = isset($absencesByDay[$date]) ? count($absencesByDay[$date]) : 0;
+        $absenceTrends[] = [
+            'date' => $date,
+            'day' => Carbon::parse($date)->format('d/m'),
+            'count' => $count,
+        ];
+        if ($count > $max) $max = $count;
     }
-    // AJOUT : filtre par type
-    if ($request->filled('type')) {
-        $query->where('type', $request->type);
+
+        foreach ($absenceTrends as &$trend) {
+            $trend['percentage'] = $max > 0 ? ($trend['count'] / $max) * 100 : 0;
+        }
+
+        // Top 5 classes avec le plus d'absences cette semaine
+        $weekStart = now()->startOfWeek();
+        $weekEnd = now()->endOfWeek();
+        $topClasses = Classe::withCount(['etudiants as absences_count' => function($query) use ($weekStart, $weekEnd) {
+            $query->join('etudiant_absences', 'etudiants.id', '=', 'etudiant_absences.etudiant_id')
+                  ->whereBetween('etudiant_absences.date_absence', [$weekStart->format('Y-m-d'),  $weekEnd->format('Y-m-d')]);
+        }])
+        ->orderByDesc('absences_count')
+        ->take(5)
+        ->get();
+        $maxClassAbsences = $topClasses->max('absences_count') ?: 1; // éviter division par zéro
+        return view('responsable.absences', compact(
+            'absences',
+            'classes',
+            'modules',
+            'professeurs',
+            'totalAbsences',
+            'justifiedAbsences',
+            'pendingAbsences',
+            'unjustifiedAbsences',
+            'absenceTrends',
+            'topClasses',
+            'maxClassAbsences'
+        ));
     }
-    // Statistiques
-    $totalAbsences = (clone $query)->count();
-    $justifiedAbsences = (clone $query)->where('Justifier', true)->count();
-    $pendingAbsences = (clone $query)->where('status', 'pending')->count();
-    $unjustifiedAbsences = (clone $query)->where('Justifier', false)->where('status', '!=', 'pending')->count();
-
-    $absences = $query->paginate(20)->appends(request()->query());
-
-    // Tendance des absences sur 30 jours
-    $startDate = now()->subDays(29)->startOfDay();
-    $endDate = now()->endOfDay();
-    $absencesByDay = (clone $query)
-        ->whereBetween('date_absence', [$startDate, $endDate])
-        ->get()
-        ->groupBy(function($item) {
-            return \Carbon\Carbon::parse($item->date_absence)->format('Y-m-d');
-        });
-       
-
-    $absenceTrends = [];
-    $max = 0;
-    for ($i = 0; $i < 30; $i++) {
-    $date = now()->subDays(29 - $i)->format('Y-m-d');
-    $count = isset($absencesByDay[$date]) ? count($absencesByDay[$date]) : 0;
-    $absenceTrends[] = [
-        'date' => $date,
-        'day' => Carbon::parse($date)->format('d/m'),
-        'count' => $count,
-    ];
-    if ($count > $max) $max = $count;
-}
-
-    foreach ($absenceTrends as &$trend) {
-        $trend['percentage'] = $max > 0 ? ($trend['count'] / $max) * 100 : 0;
-    }
-
-    // Top 5 classes avec le plus d'absences cette semaine
-    $weekStart = now()->startOfWeek();
-    $weekEnd = now()->endOfWeek();
-    $topClasses = Classe::withCount(['etudiants as absences_count' => function($query) use ($weekStart, $weekEnd) {
-        $query->join('etudiant_absences', 'etudiants.id', '=', 'etudiant_absences.etudiant_id')
-              ->whereBetween('etudiant_absences.date_absence', [$weekStart, $weekEnd]);
-    }])
-    ->orderByDesc('absences_count')
-    ->take(5)
-    ->get();
-
-    $maxClassAbsences = $topClasses->max('absences_count') ?: 1; // éviter division par zéro
-
-    return view('responsable.absences', compact(
-        'absences',
-        'classes',
-        'modules',
-        'professeurs',
-        'totalAbsences',
-        'justifiedAbsences',
-        'pendingAbsences',
-        'unjustifiedAbsences',
-        'absenceTrends',
-        'topClasses',
-        'maxClassAbsences'
-    ));
-}
 public function bulkAction(Request $request)
 {
     $request->validate([
@@ -131,7 +128,7 @@ public function bulkAction(Request $request)
                     ->where('etudiant_id', auth('etudiant')->id())
                     ->update(['status' => 'pending']);
                 break;
-                
+
             case 'delete':
                 etudiant_absence::whereIn('id', $request->ids)
                     ->where('etudiant_id', auth('etudiant')->id())
@@ -140,7 +137,7 @@ public function bulkAction(Request $request)
         }
 
         return response()->json(['success' => true]);
-        
+
     } catch (\Exception $e) {
         return response()->json(['success' => false], 500);
     }
@@ -162,7 +159,7 @@ public function bulkAction(Request $request)
         $emplois = emplois_temps::with(['matiere', 'classe'])->get();
     //   dd(   $emplois);
         $classes = Classe::all();
-       
+
         return view('responsable.create_Edit_Form_Absence', compact('classes', 'etudiants', 'emplois'));
     }
 
@@ -214,7 +211,7 @@ public function edit(etudiant_absence $absence)
             if ($absence->justification_file) {
                 Storage::disk('public')->delete($absence->justification_file);
             }
-            
+
             $path = $request->file('justification_file')->store('justificatifs/responsable', 'public');
             $validated['justification_file'] = $path;
             $validated['Justifier'] = true;
@@ -271,7 +268,7 @@ public function edit(etudiant_absence $absence)
     public function downloadJustificatif($id)
     {
         $absence = etudiant_absence::findOrFail($id);
-        
+
         if (!$absence->justification_file) {
             abort(404);
         }
@@ -289,9 +286,9 @@ public function edit(etudiant_absence $absence)
         if ($absence->justification_file) {
             Storage::disk('public')->delete($absence->justification_file);
         }
-        
+
         $absence->delete();
-        
+
         return back()->with('success', 'Absence supprimée avec succès.');
     }
 
@@ -303,7 +300,7 @@ public function edit(etudiant_absence $absence)
         return response()->json($etudiants);
     }
 
-   
+
 public function getSeancesParClasse($classeId)
 {
     // On ne filtre plus par classe_id car la colonne n'existe pas
